@@ -1,33 +1,133 @@
-
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
-  <link rel="stylesheet" href="style.css">
   <meta charset="UTF-8">
-  <title>Lucky Roll13</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Alef&display=swap" rel="stylesheet">
+  <title>Lucky Roll13</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Assistant', sans-serif;
+      background-color: #fff;
+      color: #111;
+    }
+
+    header {
+      background-image: url("images/hero.jpg");
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 120px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+      text-shadow: 2px 2px 5px black;
+    }
+
+    nav {
+      background-color: rgba(0, 0, 0, 0.85);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 40px 20px;
+      max-width: 900px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .contact {
+      background-color: #f2f2f2;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .social-icons img,
+    .map-links img {
+      height: 32px;
+      margin: 0 10px;
+      vertical-align: middle;
+    }
+
+    .whatsapp-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background-color: #25D366;
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px;
+      text-decoration: none;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+  </style>
 </head>
+
 <body>
+
+  <nav>
+    <a href="index.html">ראשי</a>
+    <a href="blog.html">בלוג</a>
+  </nav>
+
   <header>
-    <h1>Lucky Roll13</h1>
-    <nav>
-      <a href="index.html">ראשי</a>
-      <a href="blog.html">בלוג</a>
-    </nav>
+    <h1>Lucky Roll13 - Boxing & Jiu-Jitsu</h1>
   </header>
 
-  <main>
-    
-<section>
-  <h2>על המועדון</h2>
-  <p>לאקי רול13 - איגרוף וג’יו-ג’יטסו, מועדון איגרוף ובית ספר להגנה עצמית, הוקם בשנת 2022 בלב קריית מוצקין. המועדון מציע אימונים ברמה גבוהה לכל הרמות – ממתחילים ועד מתחרים מתקדמים. עם דגש על טכניקות מתקדמות, כולל לחימה על הקרקע ואגרוף ברמה עולמית, האווירה המשפחתית והחמה של לאקי רול יוצרת קהילה תומכת להתקדמות והתפתחות אישית. המיקום הנוח בשכונת נווה גנים והמערכת הגמישה של שיעורי בוקר וערב מתאימים למגוון קבוצות גיל ומטרות כושר. בין אם את/ה ילד/ה או מבוגר/ת המחפש חוויית אמנויות לחימה יוצאת דופן – בלאקי רול תמצא את תוכנית האימונים המושלמת עבורך אימון ניסיון בקבוצה ללא עלות. תגיעו לחוות ולבצע שינוי בחייכם, אם קראתם עד כה אני יודע שאתם רוצים באמת ומחפשים מקום ובית להשתלב בו וללמוד. תגיעו לפגוש אותי, אתם לא תצטערו. מחכה לכם</p>
-</section>
+  <section>
+    <h2>על המועדון</h2>
+    <p>
+      לאקי רול13 הוא בית ספר לאגרוף וג׳יו-ג׳יטסו מקצועי, ממוקם בקריית מוצקין בשכונת נווה גנים.
+      אנו מציעים אימונים בקבוצות ובאופן פרטי, לילדים, נוער ובוגרים, החל מגיל 5 ועד רמות מתקדמות ותחרותיות.
+    </p>
+  </section>
 
-  </main>
+  <section class="contact">
+    <h2>צור קשר</h2>
+    <p><strong>טלפון:</strong> <a href="tel:+972546420206">054-6420206</a></p>
+    <p><strong>כתובת:</strong> מנחם בגין 26, קריית מוצקין</p>
 
-  <footer>
-    <p>© כל הזכויות שמורות - Lucky Roll13</p>
-  </footer>
+    <div class="map-links">
+      <a href="https://www.google.com/maps?q=מנחם+בגין+26+קריית+מוצקין" target="_blank">
+        <img src="images/google-maps.png" alt="Google Maps">
+      </a>
+      <a href="https://waze.com/ul?ll=32.8363,35.0748" target="_blank">
+        <img src="images/waze.png" alt="Waze">
+      </a>
+    </div>
+
+    <div class="social-icons">
+      <a href="https://instagram.com" target="_blank">
+        <img src="images/instagram.png" alt="Instagram">
+      </a>
+      <a href="https://facebook.com" target="_blank">
+        <img src="images/facebook.png" alt="Facebook">
+      </a>
+    </div>
+  </section>
+
+  <a class="whatsapp-btn" href="https://wa.me/972546420206" target="_blank" aria-label="צור קשר בוואטסאפ">💬</a>
+
 </body>
+
 </html>
