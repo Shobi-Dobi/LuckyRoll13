@@ -7,69 +7,107 @@
   <title>Lucky Roll13</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Alef&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Alef', sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .hero {
+      position: relative;
+      height: 100vh;
+      background: url('images/hero.jpg') center/cover no-repeat;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 1rem;
+      font-weight: bold;
+    }
+
+    .overlay {
+      text-align: center;
+      margin: auto;
+    }
+
+    .title {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+
+    .quote {
+      font-size: 1.3rem;
+      margin-top: 1rem;
+    }
+
+    .main {
+      padding: 2rem;
+    }
+
+    footer {
+      background-color: #000;
+      color: #fff;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    footer a {
+      color: #25D366;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+  </style>
 </head>
 
 <body>
-  <header class="hero"
-    style="position: relative; height: 100vh; background: url('images/hero.jpg') center/cover no-repeat; color: white;">
-    <nav class="navbar"
-      style="position: absolute; top: 0; width: 100%; display: flex; justify-content: center; gap: 2rem; padding: 1rem; background-color: rgba(0, 0, 0, 0.6);">
+  <header class="hero">
+    <nav class="navbar">
       <a href="index.html">
         <img src="images/logo.png" alt="Lucky Roll13" style="height: 40px; border-radius: 50%;">
       </a>
-      <a href="#about" style="color: white;">המועדון שלנו</a>
-      <a href="#contact" style="color: white;">יצירת קשר</a>
-      <a href="#booking" style="color: white;">הזמנות</a>
+      <div>
+        <a href="#about">המועדון שלנו</a>
+        <a href="#contact">יצירת קשר</a>
+        <a href="#booking">הזמנות</a>
+      </div>
     </nav>
-    <div class="overlay"
-      style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+    <div class="overlay">
       <h2 class="subtitle">בית ספר לאומנות האגרוף והג׳יו-ג׳יטסו בקריית מוצקין</h2>
-      <h1 class="title" style="font-size: 2.5rem;">Lucky Roll13-Boxing&Jiu-Jitsu</h1>
-      <p class="quote" style="font-size: 1.2rem;">Man don’t lose when he gets knocked down, but when he won’t get up<br>
-        - מתוך הסרט: "Father Stu"</p>
+      <h1 class="title">Lucky Roll13-Boxing&Jiu-Jitsu</h1>
+      <p class="quote">Man don’t lose when he gets knocked down, but when he won’t get up<br> - מתוך הסרט: "Father Stu"
+      </p>
+      <a href="https://wa.me/972546420206" target="_blank"
+        style="display: inline-block; background-color: #25D366; color: white; padding: 15px 30px; font-size: 20px; border-radius: 50px; text-decoration: none; margin-top: 1.5rem;">שלחו
+        לי הודעה בוואטסאפ</a>
     </div>
   </header>
 
-  <div style="text-align: center; margin-top: -3rem;">
-    <a href="https://wa.me/972546420206" target="_blank"
-      style="display: inline-block; background-color: #25D366; color: white; padding: 15px 30px; font-size: 20px; border-radius: 50px; text-decoration: none; margin-top: 1rem;">לחצו
-      כאן לשליחת הודעה בוואטסאפ</a>
-  </div>
-
   <main class="main">
-    <section id="about"
-      style="padding: 2rem; max-width: 800px; margin: auto; background: url('images/שבי תמונה לאתר.jpg') center/cover no-repeat; color: white; border-radius: 12px;">
-      <h2 style="text-align: center; background-color: rgba(0,0,0,0.6); padding: 0.5rem;">על המועדון</h2>
-      <p style="text-align: center; font-size: 18px; background-color: rgba(0,0,0,0.6); padding: 1rem;">
-        "לאקי רול13 - איגרוף וג’יו-ג’יטסו, מועדון איגרוף ובית ספר להגנה עצמית, הוקם בשנת 2022 בלב קריית מוצקין. המועדון
-        מציע אימונים ברמה גבוהה לכל הרמות – ממתחילים ועד מתחרים מתקדמים. עם דגש על טכניקות מתקדמות, כולל לחימה על הקרקע
-        ואגרוף ברמה עולמית, האווירה המשפחתית והחמה של לאקי רול יוצרת קהילה תומכת להתקדמות והתפתחות אישית. המיקום הנוח
-        בשכונת נווה גנים והמערכת הגמישה של שיעורי בוקר וערב מתאימים למגוון קבוצות גיל ומטרות כושר. בין אם את/ה ילד/ה או
-        מבוגר/ת המחפש חוויית אמנויות לחימה יוצאת דופן – בלאקי רול תמצא את תוכנית האימונים המושלמת עבורך אימון ניסיון
-        בקבוצה ללא עלות. תגיעו לחוות ולבצע שינוי בחייכם, אם קראתם עד כה אני יודע שאתם רוצים באמת ומחפשים מקום ובית
-        להשתלב בו וללמוד. תגיעו לפגוש אותי, אתם לא תצטערו. מחכה לכם"
+    <section id="about" style="max-width: 800px; margin: auto;">
+      <h2 style="text-align: center;">על המועדון</h2>
+      <p style="text-align: center; font-size: 18px;">"לאקי רול13 - איגרוף וג’יו-ג’יטסו, מועדון איגרוף ובית ספר להגנה
+        עצמית, הוקם בשנת 2022 בלב קריית מוצקין. המועדון מציע אימונים ברמה גבוהה לכל הרמות – ממתחילים ועד מתחרים מתקדמים.
+        עם דגש על טכניקות מתקדמות, כולל לחימה על הקרקע ואגרוף ברמה עולמית, האווירה המשפחתית והחמה של לאקי רול יוצרת
+        קהילה תומכת להתקדמות והתפתחות אישית. המיקום הנוח בשכונת נווה גנים והמערכת הגמישה של שיעורי בוקר וערב מתאימים
+        למגוון קבוצות גיל ומטרות כושר. בין אם את/ה ילד/ה או מבוגר/ת המחפש חוויית אמנויות לחימה יוצאת דופן – בלאקי רול
+        תמצא את תוכנית האימונים המושלמת עבורך אימון ניסיון בקבוצה ללא עלות. תגיעו לחוות ולבצע שינוי בחייכם, אם קראתם עד
+        כה אני יודע שאתם רוצים באמת ומחפשים מקום ובית להשתלב בו וללמוד. תגיעו לפגוש אותי, אתם לא תצטערו. מחכה לכם"
+
       </p>
-    </section>
-
-    <section style="text-align: center; margin-top: 3rem;">
-      <h2>גלריית תמונות</h2>
-      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 1rem;">
-        <img src="images/IMG_4200.jpeg" alt="גלריה 1" style="width: 200px; border-radius: 8px;">
-        <img src="images/IMG_5201.jpeg" alt="גלריה 2" style="width: 200px; border-radius: 8px;">
-        <img src="images/IMG_5423.jpeg" alt="גלריה 3" style="width: 200px; border-radius: 8px;">
-        <img src="images/IMG_8326.jpeg" alt="גלריה 4" style="width: 200px; border-radius: 8px;">
-        <img src="images/IMG_8532.jpeg" alt="גלריה 5" style="width: 200px; border-radius: 8px;">
-        <img src="images/IMG_8594.jpeg" alt="גלריה 6" style="width: 200px; border-radius: 8px;">
-      </div>
-    </section>
-
-    <section id="blog" style="text-align: center; margin-top: 4rem;">
-      <h2>בלוג מקצועי</h2>
-      <p>קראו את הכתבות שלנו על אגרוף, ג׳יו-ג׳יטסו, תזונה למתאמנים, טיפים למתחרים, ואימוני ילדים. התוכן באתר מתעדכן כל
-        הזמן!</p>
-      <a href="blog.html"
-        style="display: inline-block; margin-top: 1rem; padding: 10px 20px; background: #000; color: #fff; text-decoration: none; border-radius: 6px;">למעבר
-        לבלוג</a>
     </section>
   </main>
 
@@ -86,31 +124,22 @@
   </script>
 
   <footer>
+    <p style="font-weight: bold; font-size: 16px; margin-bottom: 1rem;">
     </p>
-    <div style="text-align: center; margin-bottom: 1rem; font-size: 16px;">
-      <a href="mailto:99shabi@gmail.com" style="color: #000; text-decoration: none;">99shabi@gmail.com</a> |
-      <a href="tel:+972546420206" style="color: #000; text-decoration: none;">+972546420206</a>
+    <p>
+      <a href="mailto:99shabi@gmail.com">99shabi@gmail.com</a> |
+      <a href="tel:+972546420206">+972546420206</a>
+    </p>
+    <div style="margin: 1rem 0;">
+      <a href="https://www.facebook.com/luckyroll13" target="_blank">פייסבוק</a>
+      <a href="https://www.instagram.com/luckyroll13" target="_blank">אינסטגרם</a>
+      <a href="https://wa.me/972546420206" target="_blank">וואטסאפ</a>
+      <a href="https://t.me/luckyroll13" target="_blank">טלגרם</a>
+      <a href="https://twitter.com/luckyroll13" target="_blank">טוויטר</a>
     </div>
-    <div style="display: flex; justify-content: center; gap: 20px; margin: 1rem 0;">
-      <a href="https://www.facebook.com/luckyroll13" target="_blank" title="Facebook">
-        <img src="images/facebook-icon.png" alt="פייסבוק" style="height: 30px;">
-      </a>
-      <a href="https://www.instagram.com/luckyroll13" target="_blank" title="Instagram">
-        <img src="images/instagram-icon.png" alt="אינסטגרם" style="height: 30px;">
-      </a>
-      <a href="https://wa.me/972546420206" target="_blank" title="WhatsApp">
-        <img src="images/whatsapp-icon.png" alt="וואטסאפ" style="height: 30px;">
-      </a>
-      <a href="https://t.me/luckyroll13" target="_blank" title="Telegram">
-        <img src="images/telegram-icon.png" alt="טלגרם" style="height: 30px;">
-      </a>
-      <a href="https://twitter.com/luckyroll13" target="_blank" title="Twitter">
-        <img src="images/twitter-icon.png" alt="טוויטר" style="height: 30px;">
-      </a>
-    </div>
-    <div style="text-align: center; margin-top: 1rem; font-size: 14px;">
+    <p style="font-size: 14px;">
       כל הזכויות שמורות © "לאקי רול13" 2025
-    </div>
+    </p>
   </footer>
 </body>
 
