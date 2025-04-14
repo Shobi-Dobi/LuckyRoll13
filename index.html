@@ -21,7 +21,8 @@
       color: white;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
+      text-align: center;
     }
 
     .slideshow {
@@ -47,6 +48,9 @@
     }
 
     .navbar {
+      position: absolute;
+      top: 0;
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -62,8 +66,7 @@
     }
 
     .overlay {
-      text-align: center;
-      margin: auto;
+      z-index: 1;
     }
 
     .title {
@@ -106,7 +109,7 @@
   <header class="hero">
     <div class="slideshow">
       <img src="images/hero.jpg" class="slide active" alt="Hero Image 1">
-      <img src="images/שבי תמונה לאתר.jpg" class="slide" alt="Hero Image 2">
+      <img src="images/שבי%20תמונה%20לאתר.jpg" class="slide" alt="Hero Image 2">
     </div>
     <nav class="navbar">
       <a href="index.html">
@@ -154,13 +157,15 @@
       document.getElementsByTagName("head")[0].appendChild(script);
     })();
 
-    let currentIndex = 0;
-    const slides = document.querySelectorAll('.slide');
-    setInterval(() => {
-      slides[currentIndex].classList.remove('active');
-      currentIndex = (currentIndex + 1) % slides.length;
-      slides[currentIndex].classList.add('active');
-    }, 6000);
+    window.addEventListener('DOMContentLoaded', () => {
+      let currentIndex = 0;
+      const slides = document.querySelectorAll('.slide');
+      setInterval(() => {
+        slides[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % slides.length;
+        slides[currentIndex].classList.add('active');
+      }, 6000);
+    });
   </script>
 
   <footer>
@@ -172,17 +177,13 @@
       <a href="https://www.facebook.com/luckyroll13" target="_blank">
         <img src="images/facebook-icon.png" alt="Facebook">
       </a>
-      <a href="https://www.instagram.com/luckyroll13/" target="_blank">
+      <a href="https://www.instagram.com/just_shabi/" target="_blank">
         <img src="images/instagram-icon.png" alt="Instagram">
       </a>
       <a href="https://wa.me/972546420206" target="_blank">
         <img src="images/whatsapp-icon.png" alt="WhatsApp">
       </a>
-      <a href="https://t.me/luckyroll13" target="_blank">
-        <img src="images/telegram-icon.png" alt="Telegram">
       </a>
-      <a href="https://twitter.com/luckyroll13" target="_blank">
-        <img src="images/twitter-icon.png" alt="Twitter">
       </a>
     </div>
     <p style="font-size: 14px;">
