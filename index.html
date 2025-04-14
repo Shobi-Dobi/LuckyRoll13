@@ -22,6 +22,17 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      animation: changeImage 10s infinite alternate;
+    }
+
+    @keyframes changeImage {
+      0% {
+        background-image: url('images/hero.jpg');
+      }
+
+      100% {
+        background-image: url('images/שבי תמונה לאתר.jpg');
+      }
     }
 
     .navbar {
@@ -65,6 +76,13 @@
       text-align: center;
     }
 
+    .social-icons img {
+      width: 32px;
+      height: 32px;
+      margin: 0 8px;
+      vertical-align: middle;
+    }
+
     footer a {
       color: #25D366;
       margin: 0 10px;
@@ -104,9 +122,8 @@
         עם דגש על טכניקות מתקדמות, כולל לחימה על הקרקע ואגרוף ברמה עולמית, האווירה המשפחתית והחמה של לאקי רול יוצרת
         קהילה תומכת להתקדמות והתפתחות אישית. המיקום הנוח בשכונת נווה גנים והמערכת הגמישה של שיעורי בוקר וערב מתאימים
         למגוון קבוצות גיל ומטרות כושר. בין אם את/ה ילד/ה או מבוגר/ת המחפש חוויית אמנויות לחימה יוצאת דופן – בלאקי רול
-        תמצא את תוכנית האימונים המושלמת עבורך אימון ניסיון בקבוצה ללא עלות. תגיעו לחוות ולבצע שינוי בחייכם, אם קראתם עד
+        תמצא את תוכנית האימונים המושלמת עבורך. אימון ניסיון בקבוצה ללא עלות. תגיעו לחוות ולבצע שינוי בחייכם. אם קראתם עד
         כה אני יודע שאתם רוצים באמת ומחפשים מקום ובית להשתלב בו וללמוד. תגיעו לפגוש אותי, אתם לא תצטערו. מחכה לכם"
-
       </p>
     </section>
   </main>
@@ -124,18 +141,26 @@
   </script>
 
   <footer>
-    <p style="font-weight: bold; font-size: 16px; margin-bottom: 1rem;">
-    </p>
     <p>
       <a href="mailto:99shabi@gmail.com">99shabi@gmail.com</a> |
       <a href="tel:+972546420206">+972546420206</a>
     </p>
-    <div style="margin: 1rem 0;">
-      <a href="https://www.facebook.com/luckyroll13" target="_blank">פייסבוק</a>
-      <a href="https://www.instagram.com/luckyroll13" target="_blank">אינסטגרם</a>
-      <a href="https://wa.me/972546420206" target="_blank">וואטסאפ</a>
-      <a href="https://t.me/luckyroll13" target="_blank">טלגרם</a>
-      <a href="https://twitter.com/luckyroll13" target="_blank">טוויטר</a>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/luckyroll13" target="_blank">
+        <img src="images/facebook-icon.png" alt="Facebook">
+      </a>
+      <a href="https://www.instagram.com/luckyroll13/" target="_blank">
+        <img src="images/instagram-icon.png" alt="Instagram">
+      </a>
+      <a href="https://wa.me/972546420206" target="_blank">
+        <img src="images/whatsapp-icon.png" alt="WhatsApp">
+      </a>
+      <a href="https://t.me/luckyroll13" target="_blank">
+        <img src="images/telegram-icon.png" alt="Telegram">
+      </a>
+      <a href="https://twitter.com/luckyroll13" target="_blank">
+        <img src="images/twitter-icon.png" alt="Twitter">
+      </a>
     </div>
     <p style="font-size: 14px;">
       כל הזכויות שמורות © "לאקי רול13" 2025
