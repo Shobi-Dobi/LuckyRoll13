@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://luckyroll13.com/sitemap.xml
