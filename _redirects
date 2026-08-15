@@ -1,0 +1,4 @@
+/kids.html /kids/ 301
+/adults.html /adults/ 301
+/index.html / 301
+https://luckyroll13.netlify.app/* https://luckyroll13.com/:splat 301!
