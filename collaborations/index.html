@@ -15,11 +15,11 @@
        SEO
   ====================================================== -->
 
-  <title>סמינרים ושיתופי פעולה באומנויות לחימה | Lucky Roll13</title>
+  <title>שיתופי פעולה וסמינרים באומנויות לחימה | Lucky Roll13</title>
 
   <meta
     name="description"
-    content="סמינרים, אירועים ושיתופי פעולה מקצועיים של Lucky Roll13 בתחומי האגרוף, ג׳יו־ג׳יטסו BJJ, MMA ואומנויות הלחימה בקריות ובנשר."
+    content="שיתופי פעולה, סמינרים, מחנות אימון ואירועים מקצועיים של Lucky Roll13 בתחומי האגרוף, ג׳יו־ג׳יטסו BJJ, MMA ואומנויות הלחימה בקריות ובנשר."
   >
 
   <meta
@@ -54,12 +54,12 @@
 
   <meta
     property="og:title"
-    content="סמינרים ושיתופי פעולה באומנויות לחימה | Lucky Roll13"
+    content="שיתופי פעולה וסמינרים באומנויות לחימה | Lucky Roll13"
   >
 
   <meta
     property="og:description"
-    content="סמינרים, אירועים ושיתופי פעולה מקצועיים בתחומי האגרוף, ג׳יו־ג׳יטסו BJJ, MMA ואומנויות הלחימה בקריות ובנשר."
+    content="סמינרים, מחנות אימון ושיתופי פעולה מקצועיים של Lucky Roll13 באגרוף, ג׳יו־ג׳יטסו BJJ, MMA ואומנויות לחימה."
   >
 
   <meta
@@ -74,7 +74,7 @@
 
   <meta
     property="og:image:alt"
-    content="סמינרים ושיתופי פעולה של Lucky Roll13"
+    content="שיתופי פעולה וסמינרים של Lucky Roll13"
   >
 
 
@@ -89,12 +89,12 @@
 
   <meta
     name="twitter:title"
-    content="סמינרים ושיתופי פעולה באומנויות לחימה | Lucky Roll13"
+    content="שיתופי פעולה וסמינרים | Lucky Roll13"
   >
 
   <meta
     name="twitter:description"
-    content="סמינרים, אירועים ושיתופי פעולה מקצועיים של Lucky Roll13 בקריות ובנשר."
+    content="שיתופי פעולה, סמינרים ואירועים מקצועיים בתחומי האגרוף, הג׳יו־ג׳יטסו וה-MMA."
   >
 
   <meta
@@ -117,7 +117,6 @@
     href="/assets/style.css"
   >
 
-  <!-- Hero image preload -->
   <link
     rel="preload"
     as="image"
@@ -134,11 +133,11 @@
     .page-hero {
       background:
         linear-gradient(
-          rgba(8,11,14,.70),
-          rgba(8,11,14,.82)
+          rgba(8, 11, 14, 0.66),
+          rgba(8, 11, 14, 0.84)
         ),
         url("/assets/images/collaborations-hero.jpeg")
-        center 42% / cover no-repeat;
+        center center / cover no-repeat;
     }
 
     .page-hero .wrap {
@@ -149,7 +148,7 @@
 
     .partner-grid {
       display: grid;
-      grid-template-columns: repeat(2,minmax(0,1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 24px;
       margin-top: 32px;
     }
@@ -163,6 +162,7 @@
     }
 
     .partner-card img {
+      display: block;
       width: 100%;
       height: 260px;
       object-fit: contain;
@@ -176,14 +176,14 @@
     }
 
 
-    .collab-photo {
-      margin-top: 32px;
+    .featured-collaboration {
+      margin-top: 38px;
     }
 
-    .collab-photo img {
+    .featured-collaboration img {
       display: block;
       width: 100%;
-      max-height: 620px;
+      max-height: 720px;
       object-fit: cover;
       border-radius: 22px;
     }
@@ -191,9 +191,16 @@
 
     .collab-gallery {
       display: grid;
-      grid-template-columns: repeat(3,minmax(0,1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 18px;
       margin-top: 34px;
+    }
+
+    .collab-gallery figure {
+      margin: 0;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #090b0e;
     }
 
     .collab-gallery img {
@@ -201,17 +208,20 @@
       width: 100%;
       height: 360px;
       object-fit: cover;
-      border-radius: 18px;
-      background: #090b0e;
+      transition: transform .25s ease;
     }
 
-    .collab-gallery img:nth-child(2),
-    .collab-gallery img:nth-child(5) {
+    .collab-gallery figure:nth-child(2) img,
+    .collab-gallery figure:nth-child(5) img {
       height: 500px;
     }
 
+    .collab-gallery figure:hover img {
+      transform: scale(1.02);
+    }
 
-    .internal-links {
+
+    .service-links {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
@@ -219,16 +229,16 @@
     }
 
 
-    @media (max-width:900px) {
+    @media (max-width: 900px) {
 
       .collab-gallery {
-        grid-template-columns: repeat(2,minmax(0,1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
     }
 
 
-    @media (max-width:720px) {
+    @media (max-width: 720px) {
 
       .partner-grid {
         grid-template-columns: 1fr;
@@ -243,10 +253,10 @@
       }
 
       .collab-gallery img,
-      .collab-gallery img:nth-child(2),
-      .collab-gallery img:nth-child(5) {
+      .collab-gallery figure:nth-child(2) img,
+      .collab-gallery figure:nth-child(5) img {
         height: auto;
-        max-height: 620px;
+        max-height: 650px;
         object-fit: cover;
       }
 
@@ -273,6 +283,8 @@
         "url": "https://luckyroll13.com/",
 
         "telephone": "+972546420206",
+
+        "logo": "https://luckyroll13.com/assets/images/luckyroll13-header-logo.webp",
 
         "image": "https://luckyroll13.com/assets/images/hero.webp",
 
@@ -302,6 +314,10 @@
           },
           {
             "@type": "Place",
+            "name": "קריית חיים"
+          },
+          {
+            "@type": "Place",
             "name": "הקריות"
           },
           {
@@ -317,32 +333,16 @@
 
 
       {
-        "@type": "WebSite",
-        "@id": "https://luckyroll13.com/#website",
-
-        "url": "https://luckyroll13.com/",
-
-        "name": "Lucky Roll13",
-
-        "inLanguage": "he-IL"
-      },
-
-
-      {
         "@type": "WebPage",
         "@id": "https://luckyroll13.com/collaborations/#webpage",
 
         "url": "https://luckyroll13.com/collaborations/",
 
-        "name": "סמינרים ושיתופי פעולה באומנויות לחימה | Lucky Roll13",
+        "name": "שיתופי פעולה וסמינרים באומנויות לחימה | Lucky Roll13",
 
-        "description": "סמינרים, אירועים ושיתופי פעולה מקצועיים של Lucky Roll13 בתחומי האגרוף, ג׳יו־ג׳יטסו BJJ, MMA ואומנויות הלחימה בקריות ובנשר.",
+        "description": "שיתופי פעולה, סמינרים, אירועים ומחנות אימון של Lucky Roll13 בתחומי האגרוף, ג׳יו־ג׳יטסו BJJ, MMA ואומנויות הלחימה בקריות ובנשר.",
 
         "inLanguage": "he-IL",
-
-        "isPartOf": {
-          "@id": "https://luckyroll13.com/#website"
-        },
 
         "about": {
           "@id": "https://luckyroll13.com/#business"
@@ -415,26 +415,20 @@
       'https://connect.facebook.net/en_US/fbevents.js'
     );
 
-    fbq(
-      'init',
-      '1404519714948556'
-    );
-
-    fbq(
-      'track',
-      'PageView'
-    );
+    fbq('init', '1404519714948556');
+    fbq('track', 'PageView');
 
   </script>
 
 </head>
 
 
-
 <body>
 
 
-  <!-- Meta Pixel fallback -->
+  <!-- =====================================================
+       META PIXEL FALLBACK
+  ====================================================== -->
 
   <noscript>
 
@@ -447,6 +441,7 @@
     >
 
   </noscript>
+
 
 
   <a
@@ -473,18 +468,17 @@
       >
 
         <img
-          alt="Lucky Roll13 - Boxing & Jiu-Jitsu"
           class="logo"
           src="/assets/images/luckyroll13-header-logo.webp"
+          alt="Lucky Roll13 – Boxing & Jiu-Jitsu"
         >
 
       </a>
 
 
-
       <nav
-        aria-label="ניווט ראשי"
         class="links"
+        aria-label="ניווט ראשי"
       >
 
         <a href="/bjj/">
@@ -541,7 +535,9 @@
   <main id="main">
 
 
-    <!-- HERO -->
+    <!-- ===================================================
+         HERO
+    ==================================================== -->
 
     <section class="page-hero">
 
@@ -552,13 +548,14 @@
         </div>
 
         <h1>
-          סמינרים ושיתופי פעולה באומנויות לחימה
+          שיתופי פעולה וסמינרים באומנויות לחימה
         </h1>
 
         <p class="lead">
-          סמינרים, אירועים, פרויקטים ושיתופי פעולה
-          מקצועיים בתחומי האגרוף, הג׳יו־ג׳יטסו
-          ואומנויות הלחימה.
+          סמינרים, מחנות אימון, אירועים ומפגשים מקצועיים
+          בתחומי האגרוף, הג׳יו־ג׳יטסו BJJ וה-MMA.
+          חיבורים מקצועיים שמאפשרים ללמוד,
+          להתפתח ולחזק את קהילת אומנויות הלחימה.
         </p>
 
 
@@ -579,9 +576,9 @@
 
 
 
-    <!-- =====================================================
+    <!-- ===================================================
          PARTNERS
-    ====================================================== -->
+    ==================================================== -->
 
     <section class="section">
 
@@ -593,14 +590,15 @@
         </div>
 
         <h2>
-          מועדונים שאנחנו משתפים איתם פעולה
+          מועדונים וקהילות שאנחנו משתפים איתם פעולה
         </h2>
 
         <p class="lead">
-          Lucky Roll13 מקיים קשרים ושיתופי פעולה
-          מקצועיים עם מועדוני ג׳יו־ג׳יטסו
-          ואומנויות לחימה, מתוך חיבור מקצועי,
-          למידה, קהילה והתפתחות משותפת.
+          ב-Lucky Roll13 אנחנו רואים בשיתופי פעולה
+          חלק חשוב מהדרך המקצועית שלנו.
+          מפגשים עם מאמנים, מועדונים ומתאמנים
+          מאפשרים לנו להיחשף לשיטות עבודה שונות,
+          לחלוק ידע ולבנות קשרים בתוך קהילת אומנויות הלחימה.
         </p>
 
 
@@ -610,10 +608,10 @@
           <article class="partner-card">
 
             <img
+              src="/assets/images/pariente-academy.webp"
               alt="Pariente Academy"
               loading="lazy"
               decoding="async"
-              src="/assets/images/pariente-academy.webp"
             >
 
             <h3>
@@ -627,10 +625,10 @@
           <article class="partner-card">
 
             <img
+              src="/assets/images/alliance-jiujitsu.webp"
               alt="Alliance Jiu-Jitsu"
               loading="lazy"
               decoding="async"
-              src="/assets/images/alliance-jiujitsu.webp"
             >
 
             <h3>
@@ -643,65 +641,15 @@
         </div>
 
 
+        <!-- Main collaboration photo -->
 
-        <div class="collab-photo">
-
-          <img
-            alt="אימון ושיתוף פעולה מקצועי בג׳יו־ג׳יטסו"
-            loading="lazy"
-            decoding="async"
-            src="/assets/images/pariente-collaboration.webp"
-          >
-
-        </div>
-
-
-
-        <div
-          aria-label="גלריית סמינרים ושיתופי פעולה של Lucky Roll13"
-          class="collab-gallery"
-        >
+        <div class="featured-collaboration">
 
           <img
-            alt="אימון ג׳יו־ג׳יטסו משותף"
+            src="/assets/images/collab-group-certificate.jpeg"
+            alt="מפגש ושיתוף פעולה מקצועי בג׳יו־ג׳יטסו"
             loading="lazy"
             decoding="async"
-            src="/assets/images/collab-01.jpeg"
-          >
-
-          <img
-            alt="סמינר ואימון משותף באומנויות לחימה"
-            loading="lazy"
-            decoding="async"
-            src="/assets/images/collab-02.png"
-          >
-
-          <img
-            alt="אימון מקצועי במועדון שותף"
-            loading="lazy"
-            decoding="async"
-            src="/assets/images/collab-03.jpeg"
-          >
-
-          <img
-            alt="אירוע ג׳יו־ג׳יטסו מקצועי"
-            loading="lazy"
-            decoding="async"
-            src="/assets/images/collab-05.jpeg"
-          >
-
-          <img
-            alt="מפגש עם שותפים מקצועיים באומנויות לחימה"
-            loading="lazy"
-            decoding="async"
-            src="/assets/images/collab-06.jpeg"
-          >
-
-          <img
-            alt="אימון משותף באגרוף ואומנויות לחימה"
-            loading="lazy"
-            decoding="async"
-            src="/assets/images/collab-07.jpeg"
           >
 
         </div>
@@ -713,9 +661,190 @@
 
 
 
-    <!-- =====================================================
-         LOCAL / INTERNAL LINKS
-    ====================================================== -->
+    <!-- ===================================================
+         NEW COLLABORATION GALLERY
+    ==================================================== -->
+
+    <section class="section">
+
+      <div class="wrap">
+
+
+        <div class="eyebrow">
+          מהדרך שלנו
+        </div>
+
+        <h2>
+          מפגשים, אימונים וחיבורים מקצועיים
+        </h2>
+
+        <p class="lead">
+          חלק מהמפגשים, הביקורים והאימונים המשותפים
+          שמחברים את Lucky Roll13 לקהילות ומועדוני
+          אומנויות לחימה בארץ ובעולם.
+        </p>
+
+
+        <div
+          class="collab-gallery"
+          aria-label="גלריית שיתופי פעולה וסמינרים של Lucky Roll13"
+        >
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-fighttlv.jpeg"
+              alt="מפגש ושיתוף פעולה עם קהילת Fight TLV"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-japan-poster.jpeg"
+              alt="ביקור מקצועי במועדון אומנויות לחימה"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-blacklotus-bw.jpeg"
+              alt="מפגש ואימון ג׳יו־ג׳יטסו מקצועי"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-blacklotus-dojo.jpeg"
+              alt="ביקור ושיתוף פעולה ב-Black Lotus Dojo"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-group-certificate.jpeg"
+              alt="תמונה קבוצתית לאחר אימון ושיתוף פעולה בג׳יו־ג׳יטסו"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-01.jpeg"
+              alt="אימון ג׳יו־ג׳יטסו משותף"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-02.png"
+              alt="סמינר ואימון משותף באומנויות לחימה"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-03.jpeg"
+              alt="אימון מקצועי במועדון שותף"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-05.jpeg"
+              alt="אירוע ג׳יו־ג׳יטסו מקצועי"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-06.jpeg"
+              alt="מפגש עם מאמנים ושותפים מקצועיים"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+
+          <figure>
+
+            <img
+              src="/assets/images/collab-07.jpeg"
+              alt="אימון משותף באגרוף ואומנויות לחימה"
+              loading="lazy"
+              decoding="async"
+            >
+
+          </figure>
+
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <!-- ===================================================
+         LOCAL SEO + INTERNAL LINKS
+    ==================================================== -->
 
     <section class="section">
 
@@ -727,20 +856,20 @@
         </div>
 
         <h2>
-          Lucky Roll13 בקריות ובנשר
+          Lucky Roll13 – אומנויות לחימה בקריות ובנשר
         </h2>
 
         <p class="lead">
           לצד סמינרים ושיתופי פעולה מקצועיים,
           Lucky Roll13 מקיים אימוני אגרוף,
-          ג׳יו־ג׳יטסו BJJ ואומנויות לחימה
-          לילדים ולמבוגרים באזור הקריות ובנשר.
+          ג׳יו־ג׳יטסו BJJ, MMA ואומנויות לחימה
+          לילדים, נוער ומבוגרים באזור הקריות ובנשר.
           הפעילות המרכזית בקריות מתקיימת
           במנחם בגין 26, קריית מוצקין.
         </p>
 
 
-        <div class="internal-links">
+        <div class="service-links">
 
           <a
             class="btn alt"
@@ -767,7 +896,7 @@
             class="btn alt"
             href="/kids/"
           >
-            אימוני ילדים ונוער
+            ילדים ונוער
           </a>
 
           <a
@@ -786,24 +915,29 @@
 
 
 
-    <!-- =====================================================
-         COLLABORATION CTA
-    ====================================================== -->
+    <!-- ===================================================
+         CTA
+    ==================================================== -->
 
     <section class="section">
 
       <div class="wrap contact">
 
 
+        <div class="eyebrow">
+          שיתופי פעולה
+        </div>
+
         <h2>
-          בואו נעבוד יחד
+          רוצים לעבוד איתנו?
         </h2>
 
         <p class="lead">
-          אנחנו פתוחים לשיתופי פעולה מקצועיים,
-          סמינרים, אירועים ופעילויות משותפות
-          שמתאימות לעולם אומנויות הלחימה
-          ולקהילה שלנו.
+          אנחנו פתוחים לסמינרים,
+          אירועים, מחנות אימון,
+          מפגשים מקצועיים ויוזמות
+          שמחברות בין אנשים וקהילות
+          בעולם אומנויות הלחימה.
         </p>
 
 
@@ -856,7 +990,7 @@
 
         <br>
 
-        אגרוף וג׳יו־ג׳יטסו בקריות ובנשר
+        אומנויות לחימה בקריות ובנשר
 
         <br>
 
@@ -908,22 +1042,32 @@
 
       <div>
 
-        <a
-          href="https://www.google.com/maps/search/?api=1&amp;query=%D7%9E%D7%A0%D7%97%D7%9D%20%D7%91%D7%92%D7%99%D7%9F%2026%2C%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%9E%D7%95%D7%A6%D7%A7%D7%99%D7%9F"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Google Maps
+        <a href="/boxing/">
+          אגרוף
         </a>
 
         ·
 
-        <a
-          href="https://www.waze.com/ul?q=%D7%9E%D7%A0%D7%97%D7%9D%20%D7%91%D7%92%D7%99%D7%9F%2026%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%9E%D7%95%D7%A6%D7%A7%D7%99%D7%9F&amp;navigate=yes"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Waze
+        <a href="/bjj/">
+          ג׳יו־ג׳יטסו
+        </a>
+
+        ·
+
+        <a href="/women-boxing/">
+          אגרוף נשים
+        </a>
+
+        ·
+
+        <a href="/kids/">
+          ילדים
+        </a>
+
+        ·
+
+        <a href="/mma/">
+          MMA
         </a>
 
       </div>
@@ -949,7 +1093,7 @@
 
 
   <!-- =====================================================
-       META - WHATSAPP CONTACT EVENT
+       META CONTACT TRACKING
   ====================================================== -->
 
   <script>
@@ -960,9 +1104,7 @@
       {
 
         const link =
-          event.target.closest(
-            'a[href*="wa.me"], a[href*="whatsapp.com"]'
-          );
+          event.target.closest('a[href]');
 
 
         if(!link)
@@ -971,18 +1113,53 @@
         }
 
 
-        if(typeof fbq === 'function')
+        const href =
+          link.getAttribute('href') || '';
+
+
+        if(
+          href.includes('wa.me') ||
+          href.includes('whatsapp.com')
+        )
         {
 
-          fbq(
-            'track',
-            'Contact',
-            {
-              content_name: 'Collaborations WhatsApp',
-              content_category: 'Lead',
-              page_url: window.location.href
-            }
-          );
+          if(typeof fbq === 'function')
+          {
+
+            fbq(
+              'track',
+              'Contact',
+              {
+                contact_method: 'whatsapp',
+                page_name: 'collaborations',
+                page_url: window.location.href
+              }
+            );
+
+          }
+
+        }
+
+
+        if(
+          href.startsWith('tel:')
+        )
+        {
+
+          if(typeof fbq === 'function')
+          {
+
+            fbq(
+              'track',
+              'Contact',
+              {
+                contact_method: 'phone',
+                page_name: 'collaborations',
+                page_url: window.location.href
+              }
+            );
+
+          }
 
         }
 
