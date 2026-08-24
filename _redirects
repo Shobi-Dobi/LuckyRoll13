@@ -1,5 +1,6 @@
 # Primary URL aliases
 /index.html / 301!
+/blog.html /blog 301!
 
 # Canonical adults route
 /adults /adults/ 301
