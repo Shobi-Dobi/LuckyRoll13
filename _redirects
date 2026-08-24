@@ -1,4 +1,42 @@
-/kids.html /kids/ 301
+# Primary URL aliases
+/index.html / 301!
 /adults.html /about/ 301
-/index.html / 301
+
+# Legacy kids URLs
+/kids.html /kids/ 301
+/kids_index /kids/ 301!
+/kids_index.html /kids/ 301!
+/kids/kids /kids/ 301!
+/kids/kids/ /kids/ 301!
+/kids/kids/index.html /kids/ 301!
+
+# Physical index.html aliases
+/bjj/index.html /bjj/ 301!
+/boxing/index.html /boxing/ 301!
+/women-boxing/index.html /women-boxing/ 301!
+/kids/index.html /kids/ 301!
+/mma/index.html /mma/ 301!
+/about/index.html /about/ 301!
+/collaborations/index.html /collaborations/ 301!
+/contact/index.html /contact/ 301!
+
+# Publicly exposed legacy patch pages
+/luckyroll13-html-patch / 301!
+/luckyroll13-html-patch/ / 301!
+/luckyroll13-html-patch/index.html / 301!
+/luckyroll13-html-patch/bjj /bjj/ 301!
+/luckyroll13-html-patch/bjj/ /bjj/ 301!
+/luckyroll13-html-patch/bjj/index.html /bjj/ 301!
+/luckyroll13-html-patch/boxing /boxing/ 301!
+/luckyroll13-html-patch/boxing/ /boxing/ 301!
+/luckyroll13-html-patch/boxing/index.html /boxing/ 301!
+/luckyroll13-html-patch/kids /kids/ 301!
+/luckyroll13-html-patch/kids/ /kids/ 301!
+/luckyroll13-html-patch/kids/index.html /kids/ 301!
+/luckyroll13-html-patch/contact /contact/ 301!
+/luckyroll13-html-patch/contact/ /contact/ 301!
+/luckyroll13-html-patch/contact/index.html /contact/ 301!
+/luckyroll13-html-patch/* / 301!
+
+# Keep the Netlify subdomain consolidated on the primary domain
 https://luckyroll13.netlify.app/* https://luckyroll13.com/:splat 301!
