@@ -39,13 +39,14 @@
   <link href="/assets/logo.png" rel="icon" />
   <link href="/assets/style.css" rel="stylesheet" />
   <script defer src="/assets/tracking.js"></script><script defer src="/assets/site.js"></script>
+  <link rel="preload" as="image" href="/assets/images/mma-hero.webp" />
 
   <style>
     .page-hero {
       position: relative;
       background-image:
         linear-gradient(rgba(10,13,17,.62), rgba(10,13,17,.72)),
-        url('/assets/images/mma-hero.jpeg');
+        url('/assets/images/mma-hero.webp');
       background-size: cover;
       background-position: center 45%;
       background-repeat: no-repeat;
@@ -167,8 +168,7 @@
         <img
           alt="Lucky Roll13 - Boxing & Jiu-Jitsu"
           class="logo"
-          src="/assets/images/luckyroll13-header-logo.webp"
-        />
+          src="/assets/images/luckyroll13-header-logo.webp" width="1431" height="359"/>
       </a>
 
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">תפריט</button>
