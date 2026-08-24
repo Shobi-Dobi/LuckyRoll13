@@ -117,6 +117,8 @@
     href="/assets/style.css"
   >
 
+  <script defer src="/assets/tracking.js"></script>
+
   <link
     rel="preload"
     as="image"
@@ -377,70 +379,11 @@
   </script>
 
 
-  <!-- =====================================================
-       META PIXEL
-  ====================================================== -->
-
-  <script>
-
-    !function(f,b,e,v,n,t,s)
-    {
-      if(f.fbq)return;
-
-      n=f.fbq=function()
-      {
-        n.callMethod
-          ? n.callMethod.apply(n,arguments)
-          : n.queue.push(arguments);
-      };
-
-      if(!f._fbq)f._fbq=n;
-
-      n.push=n;
-      n.loaded=!0;
-      n.version='2.0';
-      n.queue=[];
-
-      t=b.createElement(e);
-      t.async=!0;
-      t.src=v;
-
-      s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s);
-
-    }(
-      window,
-      document,
-      'script',
-      'https://connect.facebook.net/en_US/fbevents.js'
-    );
-
-    fbq('init', '1404519714948556');
-    fbq('track', 'PageView');
-
-  </script>
-
 </head>
 
 
 <body>
 
-
-  <!-- =====================================================
-       META PIXEL FALLBACK
-  ====================================================== -->
-
-  <noscript>
-
-    <img
-      height="1"
-      width="1"
-      style="display:none"
-      src="https://www.facebook.com/tr?id=1404519714948556&ev=PageView&noscript=1"
-      alt=""
-    >
-
-  </noscript>
 
 
 
@@ -1090,83 +1033,6 @@
     שלחו הודעה ב-WhatsApp
   </a>
 
-
-
-  <!-- =====================================================
-       META CONTACT TRACKING
-  ====================================================== -->
-
-  <script>
-
-    document.addEventListener(
-      'click',
-      function(event)
-      {
-
-        const link =
-          event.target.closest('a[href]');
-
-
-        if(!link)
-        {
-          return;
-        }
-
-
-        const href =
-          link.getAttribute('href') || '';
-
-
-        if(
-          href.includes('wa.me') ||
-          href.includes('whatsapp.com')
-        )
-        {
-
-          if(typeof fbq === 'function')
-          {
-
-            fbq(
-              'track',
-              'Contact',
-              {
-                contact_method: 'whatsapp',
-                page_name: 'collaborations',
-                page_url: window.location.href
-              }
-            );
-
-          }
-
-        }
-
-
-        if(
-          href.startsWith('tel:')
-        )
-        {
-
-          if(typeof fbq === 'function')
-          {
-
-            fbq(
-              'track',
-              'Contact',
-              {
-                contact_method: 'phone',
-                page_name: 'collaborations',
-                page_url: window.location.href
-              }
-            );
-
-          }
-
-        }
-
-      }
-    );
-
-  </script>
 
 
 </body>
