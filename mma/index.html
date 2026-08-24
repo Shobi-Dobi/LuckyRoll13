@@ -18,6 +18,7 @@
 
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="he_IL" />
+  <meta property="og:site_name" content="Lucky Roll13" />
   <meta property="og:title" content="אימוני MMA לילדים ונוער בקריות ובנשר | Lucky Roll13" />
   <meta
     property="og:description"
@@ -25,6 +26,7 @@
   />
   <meta property="og:url" content="https://luckyroll13.com/mma/" />
   <meta property="og:image" content="https://luckyroll13.com/assets/images/mma-hero.jpeg" />
+  <meta property="og:image:alt" content="אימוני MMA לילדים ונוער ב-Lucky Roll13" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="אימוני MMA לילדים ונוער בקריות ובנשר | Lucky Roll13" />
@@ -32,16 +34,19 @@
     name="twitter:description"
     content="אימוני MMA לילדים ונוער בקריות ובנשר, כולל קריית מוצקין, קריית ביאליק וקריית ים."
   />
+  <meta name="twitter:image" content="https://luckyroll13.com/assets/images/mma-hero.jpeg" />
 
   <link href="/assets/logo.png" rel="icon" />
   <link href="/assets/style.css" rel="stylesheet" />
+  <script defer src="/assets/tracking.js"></script><script defer src="/assets/site.js"></script>
+  <link rel="preload" as="image" href="/assets/images/mma-hero.webp" />
 
   <style>
     .page-hero {
       position: relative;
       background-image:
         linear-gradient(rgba(10,13,17,.62), rgba(10,13,17,.72)),
-        url('/assets/images/mma-hero.jpeg');
+        url('/assets/images/mma-hero.webp');
       background-size: cover;
       background-position: center 45%;
       background-repeat: no-repeat;
@@ -81,6 +86,7 @@
   {
     "@context":"https://schema.org",
     "@type":"SportsActivityLocation",
+    "@id":"https://luckyroll13.com/#business",
     "name":"Lucky Roll13",
     "url":"https://luckyroll13.com/",
     "telephone":"+972546420206",
@@ -98,7 +104,32 @@
       {"@type":"Place","name":"נשר"}
     ],
     "sameAs":[
-      "https://www.instagram.com/luckyroll13_boxing_jiujitsu/?hl=en"
+      "https://www.instagram.com/luckyroll13_boxing_jiujitsu/"
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {
+        "@type":"Service",
+        "@id":"https://luckyroll13.com/mma/#service",
+        "name":"אימוני MMA לילדים ונוער",
+        "serviceType":"MMA לילדים ונוער",
+        "url":"https://luckyroll13.com/mma/",
+        "provider":{"@id":"https://luckyroll13.com/#business"}
+      },
+      {
+        "@type":"WebPage",
+        "@id":"https://luckyroll13.com/mma/#webpage",
+        "url":"https://luckyroll13.com/mma/",
+        "name":"אימוני MMA לילדים ונוער בקריות ובנשר | Lucky Roll13",
+        "description":"אימוני MMA לילדים ונוער בקריות ובנשר, כולל קריית מוצקין, קריית ביאליק וקריית ים. טכניקה, כושר, ביטחון ומשמעת במסגרת מקצועית ב-Lucky Roll13.",
+        "inLanguage":"he-IL",
+        "about":{"@id":"https://luckyroll13.com/mma/#service"}
+      }
     ]
   }
   </script>
@@ -137,26 +168,22 @@
         <img
           alt="Lucky Roll13 - Boxing & Jiu-Jitsu"
           class="logo"
-          src="/assets/images/luckyroll13-header-logo.webp"
-        />
+          src="/assets/images/luckyroll13-header-logo.webp" width="1431" height="359"/>
       </a>
 
-      <nav aria-label="ניווט ראשי" class="links">
-        <a href="/bjj/">ג׳יו־ג׳יטסו</a>
-        <a href="/boxing/">אגרוף</a>
-        <a href="/women-boxing/">אגרוף נשים</a>
-        <a href="/kids/">ילדים</a>
-        <a href="/mma/">MMA</a>
-        <a href="/about/">עלינו</a>
-        <a href="/collaborations/">שיתופי פעולה</a>
-
-        <a
-          class="cta"
-          href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים"
-        >
-          דברו איתי
-        </a>
-      </nav>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">תפריט</button>
+<nav id="primary-navigation" class="links" aria-label="ניווט ראשי">
+  <a href="/bjj/">ג׳יו־ג׳יטסו</a>
+  <a href="/boxing/">אגרוף</a>
+  <a href="/women-boxing/">אגרוף נשים</a>
+  <a href="/kids/">ילדים</a>
+  <a href="/mma/">MMA</a>
+  <a href="/adults/">אימונים אישיים</a>
+  <a href="/about/">עלינו</a>
+  <a href="/collaborations/">שיתופי פעולה</a>
+  <a href="/contact/">צור קשר</a>
+  <a class="cta" href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים">דברו איתי</a>
+</nav>
 
     </div>
   </header>

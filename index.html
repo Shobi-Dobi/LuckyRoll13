@@ -116,6 +116,8 @@
     href="/assets/style.css"
   >
 
+  <script defer src="/assets/tracking.js"></script><script defer src="/assets/site.js"></script>
+
   <link
     rel="preload"
     as="image"
@@ -343,69 +345,12 @@
   </script>
 
 
-  <!-- =====================================================
-       META PIXEL
-  ====================================================== -->
-
-  <script>
-
-    !function(f,b,e,v,n,t,s)
-    {
-      if(f.fbq)return;
-
-      n=f.fbq=function()
-      {
-        n.callMethod
-          ? n.callMethod.apply(n,arguments)
-          : n.queue.push(arguments);
-      };
-
-      if(!f._fbq)f._fbq=n;
-
-      n.push=n;
-      n.loaded=!0;
-      n.version='2.0';
-      n.queue=[];
-
-      t=b.createElement(e);
-      t.async=!0;
-      t.src=v;
-
-      s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s);
-
-    }(
-      window,
-      document,
-      'script',
-      'https://connect.facebook.net/en_US/fbevents.js'
-    );
-
-    fbq('init','1404519714948556');
-    fbq('track','PageView');
-
-  </script>
-
 </head>
 
 
 
 <body>
 
-
-  <!-- Meta Pixel fallback -->
-
-  <noscript>
-
-    <img
-      height="1"
-      width="1"
-      style="display:none"
-      src="https://www.facebook.com/tr?id=1404519714948556&ev=PageView&noscript=1"
-      alt=""
-    >
-
-  </noscript>
 
 
 
@@ -434,53 +379,24 @@
         <img
           class="logo"
           src="/assets/images/luckyroll13-header-logo.webp"
-          alt="Lucky Roll13 – Boxing & Jiu-Jitsu"
-        >
+          alt="Lucky Roll13 – Boxing & Jiu-Jitsu" width="1431" height="359">
 
       </a>
 
 
-      <nav
-        aria-label="ניווט ראשי"
-        class="links"
-      >
-
-        <a href="/bjj/">
-          ג׳יו־ג׳יטסו
-        </a>
-
-        <a href="/boxing/">
-          אגרוף
-        </a>
-
-        <a href="/women-boxing/">
-          אגרוף נשים
-        </a>
-
-        <a href="/kids/">
-          ילדים
-        </a>
-
-        <a href="/mma/">
-          MMA
-        </a>
-
-        <a href="/about/">
-          עלינו
-        </a>
-
-        <a href="/collaborations/">
-          שיתופי פעולה
-        </a>
-
-        <a
-          class="cta"
-          href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים%20על%20אימון"
-        >
-          דברו איתי
-        </a>
-
-      </nav>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">תפריט</button>
+<nav id="primary-navigation" class="links" aria-label="ניווט ראשי">
+  <a href="/bjj/">ג׳יו־ג׳יטסו</a>
+  <a href="/boxing/">אגרוף</a>
+  <a href="/women-boxing/">אגרוף נשים</a>
+  <a href="/kids/">ילדים</a>
+  <a href="/mma/">MMA</a>
+  <a href="/adults/">אימונים אישיים</a>
+  <a href="/about/">עלינו</a>
+  <a href="/collaborations/">שיתופי פעולה</a>
+  <a href="/contact/">צור קשר</a>
+  <a class="cta" href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים">דברו איתי</a>
+</nav>
 
     </div>
 
@@ -582,8 +498,7 @@
               src="/assets/images/bjj.webp"
               alt="אימון ג׳יו־ג׳יטסו BJJ בקריות ב-Lucky Roll13"
               loading="lazy"
-              decoding="async"
-            >
+              decoding="async" width="1206" height="1235">
 
             <div class="card-body">
 
@@ -613,11 +528,10 @@
           <article class="card">
 
             <img
-              src="/assets/images/boxing.webp"
+              src="/assets/images/boxing-optimized.webp"
               alt="אימוני אגרוף בקריות ובנשר ב-Lucky Roll13"
               loading="lazy"
-              decoding="async"
-            >
+              decoding="async" width="1686" height="2108">
 
             <div class="card-body">
 
@@ -647,11 +561,10 @@
           <article class="card">
 
             <img
-              src="/assets/images/women-boxing-hero.png"
+              src="/assets/images/women-boxing-hero.webp"
               alt="אגרוף לנשים בקריות ב-Lucky Roll13"
               loading="lazy"
-              decoding="async"
-            >
+              decoding="async" width="941" height="2048">
 
             <div class="card-body">
 
@@ -684,8 +597,7 @@
               src="/assets/images/kids.webp"
               alt="אומנויות לחימה לילדים בקריות ב-Lucky Roll13"
               loading="lazy"
-              decoding="async"
-            >
+              decoding="async" width="1600" height="1200">
 
             <div class="card-body">
 
@@ -718,8 +630,7 @@
               src="/assets/images/mma-hero.jpeg"
               alt="אימוני MMA לילדים ונוער בקריות"
               loading="lazy"
-              decoding="async"
-            >
+              decoding="async" width="941" height="2048">
 
             <div class="card-body">
 
@@ -764,8 +675,7 @@
           src="/assets/images/home-coach.jpeg"
           alt="אימון ב-Lucky Roll13 בקריית מוצקין"
           loading="lazy"
-          decoding="async"
-        >
+          decoding="async" width="1154" height="2048">
 
 
         <div>
@@ -966,6 +876,20 @@
             MMA
           </a>
 
+          <a
+            class="btn alt"
+            href="/adults/"
+          >
+            אימונים אישיים
+          </a>
+
+          <a
+            class="btn alt"
+            href="/contact/"
+          >
+            יצירת קשר
+          </a>
+
         </div>
 
 
@@ -998,22 +922,19 @@
             src="/assets/images/community.webp"
             alt="קהילת Lucky Roll13 באימון אומנויות לחימה"
             loading="lazy"
-            decoding="async"
-          >
+            decoding="async" width="1600" height="1066">
 
           <img
             src="/assets/images/team.webp"
             alt="מתאמני Lucky Roll13 בקריות"
             loading="lazy"
-            decoding="async"
-          >
+            decoding="async" width="1365" height="2048">
 
           <img
             src="/assets/images/bjj2.webp"
             alt="אימון ג׳יו־ג׳יטסו ב-Lucky Roll13"
             loading="lazy"
-            decoding="async"
-          >
+            decoding="async" width="1206" height="1237">
 
         </div>
 
@@ -1276,6 +1197,18 @@
           שיתופי פעולה
         </a>
 
+        ·
+
+        <a href="/adults/">
+          אימונים אישיים
+        </a>
+
+        ·
+
+        <a href="/contact/">
+          צור קשר
+        </a>
+
       </div>
 
 
@@ -1296,1078 +1229,6 @@
     שלחו הודעה ב-WhatsApp
   </a>
 
-
-
-  <!-- =====================================================
-       META CONTACT TRACKING
-  ====================================================== -->
-
-  <script>
-
-    document.addEventListener(
-      'click',
-      function(event)
-      {
-
-        const link =
-          event.target.closest('a[href]');
-
-        if(!link)
-        {
-          return;
-        }
-
-
-        const href =
-          link.getAttribute('href') || '';
-
-
-        if(
-          href.includes('wa.me') ||
-          href.includes('whatsapp.com')
-        )
-        {
-
-          if(typeof fbq === 'function')
-          {
-
-            fbq(
-              'track',
-              'Contact',
-              {
-                contact_method: 'whatsapp',
-                page_url: window.location.href
-              }
-            );
-
-          }
-
-        }
-
-
-        if(
-          href.startsWith('tel:')
-        )
-        {
-
-          if(typeof fbq === 'function')
-          {
-
-            fbq(
-              'track',
-              'Contact',
-              {
-                contact_method: 'phone',
-                page_url: window.location.href
-              }
-            );
-
-          }
-
-        }
-
-      }
-    );
-
-  </script>
-
-
-</body>
-
-</html>       OPEN GRAPH
-  ======================================================= -->
-
-  <meta property="og:type" content="website">
-
-  <meta property="og:locale" content="he_IL">
-
-  <meta
-    property="og:site_name"
-    content="Lucky Roll13"
-  >
-
-  <meta
-    property="og:title"
-    content="Lucky Roll13 | אגרוף וג׳יו־ג׳יטסו בקריות ובנשר"
-  >
-
-  <meta
-    property="og:description"
-    content="אימוני אגרוף, ג׳יו־ג׳יטסו BJJ, אגרוף לנשים ו-MMA לילדים ולמבוגרים בקריות ובנשר."
-  >
-
-  <meta
-    property="og:url"
-    content="https://luckyroll13.com/"
-  >
-
-  <meta
-    property="og:image"
-    content="https://luckyroll13.com/assets/images/hero.webp"
-  >
-
-  <meta
-    property="og:image:alt"
-    content="Lucky Roll13 – אגרוף וג׳יו־ג׳יטסו בקריות ובנשר"
-  >
-
-
-  <!-- ======================================================
-       TWITTER / X
-  ======================================================= -->
-
-  <meta
-    name="twitter:card"
-    content="summary_large_image"
-  >
-
-  <meta
-    name="twitter:title"
-    content="Lucky Roll13 | אגרוף וג׳יו־ג׳יטסו בקריות ובנשר"
-  >
-
-  <meta
-    name="twitter:description"
-    content="אימוני אגרוף, ג׳יו־ג׳יטסו BJJ, אגרוף לנשים ו-MMA לילדים ולמבוגרים בקריות ובנשר."
-  >
-
-  <meta
-    name="twitter:image"
-    content="https://luckyroll13.com/assets/images/hero.webp"
-  >
-
-
-  <!-- ======================================================
-       SITE ASSETS
-  ======================================================= -->
-
-  <link
-    rel="icon"
-    href="/assets/logo.png"
-  >
-
-  <link
-    rel="stylesheet"
-    href="/assets/style.css"
-  >
-
-
-  <!-- ======================================================
-       LOCAL BUSINESS STRUCTURED DATA
-  ======================================================= -->
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SportsActivityLocation",
-    "@id": "https://luckyroll13.com/#business",
-    "name": "Lucky Roll13",
-    "url": "https://luckyroll13.com/",
-    "telephone": "+972546420206",
-    "image": "https://luckyroll13.com/assets/images/hero.webp",
-
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "מנחם בגין 26",
-      "addressLocality": "קריית מוצקין",
-      "addressCountry": "IL"
-    },
-
-    "areaServed": [
-      {
-        "@type": "City",
-        "name": "קריית מוצקין"
-      },
-      {
-        "@type": "City",
-        "name": "קריית ביאליק"
-      },
-      {
-        "@type": "City",
-        "name": "קריית ים"
-      },
-      {
-        "@type": "City",
-        "name": "קריית אתא"
-      },
-      {
-        "@type": "Place",
-        "name": "הקריות"
-      },
-      {
-        "@type": "City",
-        "name": "נשר"
-      }
-    ],
-
-    "sameAs": [
-      "https://www.instagram.com/luckyroll13_boxing_jiujitsu/"
-    ],
-
-    "makesOffer": [
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "אימוני אגרוף",
-          "url": "https://luckyroll13.com/boxing/"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "אגרוף לנשים",
-          "url": "https://luckyroll13.com/women-boxing/"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "ג׳יו־ג׳יטסו ברזילאי BJJ",
-          "url": "https://luckyroll13.com/bjj/"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "אימוני ילדים ונוער",
-          "url": "https://luckyroll13.com/kids/"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "MMA",
-          "url": "https://luckyroll13.com/mma/"
-        }
-      }
-    ]
-  }
-  </script>
-
-
-  <!-- ======================================================
-       WEBSITE STRUCTURED DATA
-  ======================================================= -->
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "@id": "https://luckyroll13.com/#website",
-    "url": "https://luckyroll13.com/",
-    "name": "Lucky Roll13",
-    "inLanguage": "he-IL"
-  }
-  </script>
-
-
-  <!-- ======================================================
-       META PIXEL
-  ======================================================= -->
-
-  <script>
-    !function(f,b,e,v,n,t,s)
-    {
-      if(f.fbq)return;
-
-      n=f.fbq=function()
-      {
-        n.callMethod ?
-          n.callMethod.apply(n,arguments) :
-          n.queue.push(arguments);
-      };
-
-      if(!f._fbq)f._fbq=n;
-
-      n.push=n;
-      n.loaded=!0;
-      n.version='2.0';
-      n.queue=[];
-
-      t=b.createElement(e);
-      t.async=!0;
-      t.src=v;
-
-      s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s);
-
-    }(
-      window,
-      document,
-      'script',
-      'https://connect.facebook.net/en_US/fbevents.js'
-    );
-
-    fbq(
-      'init',
-      '1404519714948556'
-    );
-
-    fbq(
-      'track',
-      'PageView'
-    );
-  </script>
-
-</head>
-
-
-<body>
-
-
-  <!-- Meta Pixel fallback -->
-
-  <noscript>
-    <img
-      height="1"
-      width="1"
-      style="display:none"
-      src="https://www.facebook.com/tr?id=1404519714948556&ev=PageView&noscript=1"
-      alt=""
-    >
-  </noscript>
-
-
-  <a
-    class="skip"
-    href="#main"
-  >
-    דלגו לתוכן
-  </a>
-
-
-
-  <!-- ======================================================
-       HEADER
-  ======================================================= -->
-
-  <header class="top">
-
-    <div class="wrap nav">
-
-      <a
-        href="/"
-        aria-label="Lucky Roll13 – דף הבית"
-      >
-
-        <img
-          class="logo"
-          src="/assets/images/luckyroll13-header-logo.webp"
-          alt="Lucky Roll13 – Boxing & Jiu-Jitsu"
-        >
-
-      </a>
-
-
-      <nav
-        class="links"
-        aria-label="ניווט ראשי"
-      >
-
-        <a href="/bjj/">
-          ג׳יו־ג׳יטסו
-        </a>
-
-        <a href="/boxing/">
-          אגרוף
-        </a>
-
-        <a href="/women-boxing/">
-          אגרוף נשים
-        </a>
-
-        <a href="/kids/">
-          ילדים
-        </a>
-
-        <a href="/mma/">
-          MMA
-        </a>
-
-        <a href="/about/">
-          עלינו
-        </a>
-
-        <a href="/collaborations/">
-          שיתופי פעולה
-        </a>
-
-        <a
-          class="cta"
-          href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים"
-        >
-          דברו איתי
-        </a>
-
-      </nav>
-
-    </div>
-
-  </header>
-
-
-
-  <!-- ======================================================
-       MAIN CONTENT
-  ======================================================= -->
-
-  <main id="main">
-
-
-    <!-- HERO -->
-
-    <section class="hero">
-
-      <div class="wrap">
-
-        <div class="hero-inner">
-
-          <div class="eyebrow">
-            BOXING • JIU-JITSU • KRAYOT &amp; NESHER
-          </div>
-
-          <h1>
-            אגרוף וג׳יו־ג׳יטסו בקריות ובנשר
-          </h1>
-
-          <p>
-            לומדים להילחם. בונים ביטחון.
-            אימוני אגרוף, ג׳יו־ג׳יטסו ואומנויות לחימה
-            לילדים ולמבוגרים, למתחילים ולמתקדמים.
-          </p>
-
-
-          <div class="actions">
-
-            <a
-              class="btn"
-              href="https://wa.me/972546420206?text=היי,%20אשמח%20לקבוע%20אימון%20ניסיון"
-            >
-              לקביעת אימון ניסיון
-            </a>
-
-            <a
-              class="btn alt"
-              href="#programs"
-            >
-              למסלולי האימון
-            </a>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ======================================================
-         PROGRAMS
-    ======================================================= -->
-
-    <section
-      class="section"
-      id="programs"
-    >
-
-      <div class="wrap">
-
-        <div class="eyebrow">
-          האימונים שלנו
-        </div>
-
-        <h2>
-          אומנויות לחימה בקריות ובנשר
-        </h2>
-
-        <p class="lead">
-          אפשר להתחיל גם ללא ניסיון קודם.
-          בחרו את מסלול האימון שמתאים לכם.
-        </p>
-
-
-        <div class="grid">
-
-
-          <!-- BJJ -->
-
-          <article class="card">
-
-            <img
-              src="/assets/images/bjj.webp"
-              alt="אימון ג׳יו־ג׳יטסו BJJ ב-Lucky Roll13"
-              loading="lazy"
-              decoding="async"
-            >
-
-            <div class="card-body">
-
-              <h3>
-                ג׳יו־ג׳יטסו BJJ
-              </h3>
-
-              <p>
-                אימוני GI ו-No-Gi למתחילים ולמתקדמים,
-                עם דגש על טכניקה, תנועה, שליטה והתקדמות.
-              </p>
-
-              <a href="/bjj/">
-                אימוני ג׳יו־ג׳יטסו בקריות ובנשר ←
-              </a>
-
-            </div>
-
-          </article>
-
-
-
-          <!-- BOXING -->
-
-          <article class="card">
-
-            <img
-              src="/assets/images/boxing.webp"
-              alt="אימוני אגרוף בקריות ובנשר"
-              loading="lazy"
-              decoding="async"
-            >
-
-            <div class="card-body">
-
-              <h3>
-                אגרוף
-              </h3>
-
-              <p>
-                טכניקה, עבודת רגליים, דיוק, קצב וכושר
-                למתחילים ולמתקדמים.
-              </p>
-
-              <a href="/boxing/">
-                אימוני אגרוף בקריות ובנשר ←
-              </a>
-
-            </div>
-
-          </article>
-
-
-
-          <!-- WOMEN BOXING -->
-
-          <article class="card">
-
-            <img
-              src="/assets/images/women-boxing-hero.png"
-              alt="אגרוף לנשים בקריות ב-Lucky Roll13"
-              loading="lazy"
-              decoding="async"
-            >
-
-            <div class="card-body">
-
-              <h3>
-                אגרוף לנשים
-              </h3>
-
-              <p>
-                קבוצת אגרוף לנשים,
-                מתאימה גם למתחילות ללא ניסיון קודם.
-              </p>
-
-              <a href="/women-boxing/">
-                אגרוף לנשים בקריות ←
-              </a>
-
-            </div>
-
-          </article>
-
-
-
-          <!-- KIDS -->
-
-          <article class="card">
-
-            <img
-              src="/assets/images/kids.webp"
-              alt="אומנויות לחימה לילדים בקריות"
-              loading="lazy"
-              decoding="async"
-            >
-
-            <div class="card-body">
-
-              <h3>
-                ילדים ונוער
-              </h3>
-
-              <p>
-                אימונים לילדים ונוער עם דגש על
-                ביטחון עצמי, משמעת, חברות והתפתחות.
-              </p>
-
-              <a href="/kids/">
-                אימוני ילדים ונוער ←
-              </a>
-
-            </div>
-
-          </article>
-
-
-
-          <!-- MMA -->
-
-          <article class="card">
-
-            <img
-              src="/assets/images/mma-hero.jpeg"
-              alt="אימוני MMA לילדים ונוער בקריות"
-              loading="lazy"
-              decoding="async"
-            >
-
-            <div class="card-body">
-
-              <h3>
-                MMA
-              </h3>
-
-              <p>
-                אומנויות לחימה משולבות
-                עם עבודה על טכניקה, תנועה,
-                כושר ושליטה.
-              </p>
-
-              <a href="/mma/">
-                לפרטים על אימוני MMA ←
-              </a>
-
-            </div>
-
-          </article>
-
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ======================================================
-         ABOUT / TRUST
-    ======================================================= -->
-
-    <section class="section">
-
-      <div class="wrap split">
-
-        <img
-          src="/assets/images/home-coach.jpeg"
-          alt="מאמן Lucky Roll13 בקריות"
-          loading="lazy"
-          decoding="async"
-        >
-
-
-        <div>
-
-          <div class="eyebrow">
-            LUCKY ROLL13
-          </div>
-
-          <h2>
-            אימון מקצועי. יחס אישי. קהילה אמיתית.
-          </h2>
-
-          <p class="lead">
-            Lucky Roll13 הוא בית ספר לאומנויות לחימה
-            בקריות ובנשר.
-            המטרה היא ללמוד בצורה רצינית ומקצועית
-            בתוך מסגרת אישית, נגישה ותומכת.
-          </p>
-
-          <p>
-            יש מקום למי שמגיע בפעם הראשונה,
-            לילדים ולנוער, למתאמנים שרוצים לשפר
-            כושר וביטחון עצמי וגם למי שרוצה
-            להתקדם לרמה תחרותית.
-          </p>
-
-
-          <div class="badges">
-
-            <span class="badge">
-              מתחילים
-            </span>
-
-            <span class="badge">
-              מתקדמים
-            </span>
-
-            <span class="badge">
-              ילדים ונוער
-            </span>
-
-            <span class="badge">
-              אגרוף לנשים
-            </span>
-
-            <span class="badge">
-              אימונים אישיים
-            </span>
-
-          </div>
-
-
-          <a
-            class="btn"
-            href="/about/"
-          >
-            להכיר את Lucky Roll13
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ======================================================
-         LOCATIONS
-    ======================================================= -->
-
-    <section class="section">
-
-      <div class="wrap content">
-
-        <div class="eyebrow">
-          קריות ונשר
-        </div>
-
-        <h2>
-          איפה מתאמנים?
-        </h2>
-
-        <h3>
-          קריית מוצקין
-        </h3>
-
-        <p>
-          Lucky Roll13,
-          מנחם בגין 26, קריית מוצקין.
-          המועדון משרת מתאמנים מקריית מוצקין,
-          קריית ביאליק, קריית ים, קריית אתא
-          והקריות.
-        </p>
-
-
-        <h3>
-          נשר
-        </h3>
-
-        <p>
-          אימונים מתקיימים גם ב-UFC Gym נשר,
-          בתוך מתחם Great Shape.
-        </p>
-
-
-        <div class="actions">
-
-          <a
-            class="btn"
-            href="https://www.google.com/maps/search/?api=1&amp;query=%D7%9E%D7%A0%D7%97%D7%9D%20%D7%91%D7%92%D7%99%D7%9F%2026%2C%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%9E%D7%95%D7%A6%D7%A7%D7%99%D7%9F"
-            target="_blank"
-            rel="noopener"
-          >
-            Google Maps
-          </a>
-
-          <a
-            class="btn alt"
-            href="https://www.waze.com/ul?q=%D7%9E%D7%A0%D7%97%D7%9D%20%D7%91%D7%92%D7%99%D7%9F%2026%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%9E%D7%95%D7%A6%D7%A7%D7%99%D7%9F&amp;navigate=yes"
-            target="_blank"
-            rel="noopener"
-          >
-            Waze
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ======================================================
-         GALLERY
-    ======================================================= -->
-
-    <section class="section">
-
-      <div class="wrap">
-
-        <div class="eyebrow">
-          מהמזרן
-        </div>
-
-        <h2>
-          ככה זה נראה אצלנו
-        </h2>
-
-
-        <div class="gallery">
-
-          <img
-            src="/assets/images/community.webp"
-            alt="קהילת Lucky Roll13 באימון ג׳יו־ג׳יטסו"
-            loading="lazy"
-            decoding="async"
-          >
-
-          <img
-            src="/assets/images/team.webp"
-            alt="מתאמני Lucky Roll13"
-            loading="lazy"
-            decoding="async"
-          >
-
-          <img
-            src="/assets/images/bjj2.webp"
-            alt="תרגול BJJ ב-Lucky Roll13"
-            loading="lazy"
-            decoding="async"
-          >
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- ======================================================
-         CONTACT
-    ======================================================= -->
-
-    <section class="section">
-
-      <div class="wrap contact">
-
-        <h2>
-          רוצים להגיע לאימון ניסיון?
-        </h2>
-
-        <p class="lead">
-          שלחו הודעה ב-WhatsApp וספרו אם אתם מחפשים
-          אגרוף, ג׳יו־ג׳יטסו, אגרוף לנשים,
-          MMA או אימונים לילדים.
-        </p>
-
-
-        <div class="actions">
-
-          <a
-            class="btn"
-            href="https://wa.me/972546420206?text=היי,%20ראיתי%20את%20האתר%20ואשמח%20לפרטים%20על%20אימון"
-          >
-            שלחו WhatsApp
-          </a>
-
-          <a
-            class="btn alt"
-            href="tel:+972546420206"
-          >
-            <bdi dir="ltr">
-              054-642-0206
-            </bdi>
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-  </main>
-
-
-
-  <!-- ======================================================
-       FOOTER
-  ======================================================= -->
-
-  <footer class="footer">
-
-    <div class="wrap footer-row">
-
-
-      <div>
-
-        <strong>
-          Lucky Roll13
-        </strong>
-
-        <br>
-
-        אגרוף וג׳יו־ג׳יטסו בקריות ובנשר
-
-        <br>
-
-        <a
-          href="https://www.instagram.com/luckyroll13_boxing_jiujitsu/"
-          target="_blank"
-          rel="noopener"
-        >
-          Instagram
-        </a>
-
-      </div>
-
-
-
-      <div>
-
-        <strong>
-          קריות
-        </strong>
-
-        <br>
-
-        מנחם בגין 26, קריית מוצקין
-
-        <br>
-
-        <strong>
-          נשר
-        </strong>
-
-        <br>
-
-        UFC Gym נשר – בתוך מתחם Great Shape
-
-        <br>
-
-        <a href="tel:+972546420206">
-
-          <bdi dir="ltr">
-            054-642-0206
-          </bdi>
-
-        </a>
-
-      </div>
-
-
-
-      <div>
-
-        <a href="/boxing/">
-          אגרוף
-        </a>
-
-        ·
-
-        <a href="/women-boxing/">
-          אגרוף נשים
-        </a>
-
-        ·
-
-        <a href="/bjj/">
-          ג׳יו־ג׳יטסו
-        </a>
-
-        ·
-
-        <a href="/kids/">
-          ילדים
-        </a>
-
-        ·
-
-        <a href="/mma/">
-          MMA
-        </a>
-
-      </div>
-
-
-    </div>
-
-  </footer>
-
-
-
-  <!-- ======================================================
-       MOBILE WHATSAPP
-  ======================================================= -->
-
-  <a
-    class="mobile-wa"
-    href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים%20על%20אימון"
-  >
-    שלחו הודעה ב-WhatsApp
-  </a>
-
-
-
-  <!-- ======================================================
-       META – TRACK WHATSAPP CLICKS
-  ======================================================= -->
-
-  <script>
-
-    document.addEventListener(
-      'click',
-      function(event)
-      {
-
-        const link =
-          event.target.closest(
-            'a[href*="wa.me"], a[href*="whatsapp.com"]'
-          );
-
-        if(!link)
-        {
-          return;
-        }
-
-
-        if(typeof fbq === 'function')
-        {
-
-          fbq(
-            'track',
-            'Contact',
-            {
-              content_name: 'WhatsApp Click',
-              content_category: 'Lead',
-              page_url: window.location.href
-            }
-          );
-
-        }
-
-      }
-    );
-
-  </script>
 
 
 </body>

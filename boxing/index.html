@@ -117,10 +117,12 @@
     href="/assets/style.css"
   >
 
+  <script defer src="/assets/tracking.js"></script><script defer src="/assets/site.js"></script>
+
   <link
     rel="preload"
     as="image"
-    href="/assets/images/boxing-hero.jpeg"
+    href="/assets/images/boxing-hero.webp"
   >
 
 
@@ -140,7 +142,7 @@
           rgba(11,14,18,.55),
           rgba(11,14,18,.78)
         ),
-        url("/assets/images/boxing-hero.jpeg")
+        url("/assets/images/boxing-hero.webp")
         center center / cover no-repeat;
     }
 
@@ -457,89 +459,12 @@
   </script>
 
 
-  <!-- =====================================================
-       META PIXEL
-  ====================================================== -->
-
-  <script>
-
-    !function(f,b,e,v,n,t,s)
-    {
-
-      if(f.fbq)return;
-
-      n=f.fbq=function()
-      {
-
-        n.callMethod
-          ? n.callMethod.apply(n,arguments)
-          : n.queue.push(arguments);
-
-      };
-
-      if(!f._fbq)f._fbq=n;
-
-      n.push=n;
-
-      n.loaded=!0;
-
-      n.version='2.0';
-
-      n.queue=[];
-
-      t=b.createElement(e);
-
-      t.async=!0;
-
-      t.src=v;
-
-      s=b.getElementsByTagName(e)[0];
-
-      s.parentNode.insertBefore(t,s);
-
-    }(
-      window,
-      document,
-      'script',
-      'https://connect.facebook.net/en_US/fbevents.js'
-    );
-
-
-    fbq(
-      'init',
-      '1404519714948556'
-    );
-
-
-    fbq(
-      'track',
-      'PageView'
-    );
-
-  </script>
-
 </head>
 
 
 
 <body>
 
-
-  <!-- =====================================================
-       META PIXEL FALLBACK
-  ====================================================== -->
-
-  <noscript>
-
-    <img
-      height="1"
-      width="1"
-      style="display:none"
-      src="https://www.facebook.com/tr?id=1404519714948556&ev=PageView&noscript=1"
-      alt=""
-    >
-
-  </noscript>
 
 
 
@@ -569,64 +494,25 @@
         <img
           class="logo"
           src="/assets/images/luckyroll13-header-logo.webp"
-          alt="Lucky Roll13 – Boxing & Jiu-Jitsu"
-        >
+          alt="Lucky Roll13 – Boxing & Jiu-Jitsu" width="1431" height="359">
 
       </a>
 
 
 
-      <nav
-        class="links"
-        aria-label="ניווט ראשי"
-      >
-
-        <a href="/bjj/">
-          ג׳יו־ג׳יטסו
-        </a>
-
-
-        <a
-          href="/boxing/"
-          aria-current="page"
-        >
-          אגרוף
-        </a>
-
-
-        <a href="/women-boxing/">
-          אגרוף נשים
-        </a>
-
-
-        <a href="/kids/">
-          ילדים
-        </a>
-
-
-        <a href="/mma/">
-          MMA
-        </a>
-
-
-        <a href="/about/">
-          עלינו
-        </a>
-
-
-        <a href="/collaborations/">
-          שיתופי פעולה
-        </a>
-
-
-        <a
-          class="cta"
-          href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים%20על%20אימוני%20האגרוף"
-        >
-          דברו איתי
-        </a>
-
-      </nav>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">תפריט</button>
+<nav id="primary-navigation" class="links" aria-label="ניווט ראשי">
+  <a href="/bjj/">ג׳יו־ג׳יטסו</a>
+  <a href="/boxing/">אגרוף</a>
+  <a href="/women-boxing/">אגרוף נשים</a>
+  <a href="/kids/">ילדים</a>
+  <a href="/mma/">MMA</a>
+  <a href="/adults/">אימונים אישיים</a>
+  <a href="/about/">עלינו</a>
+  <a href="/collaborations/">שיתופי פעולה</a>
+  <a href="/contact/">צור קשר</a>
+  <a class="cta" href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים">דברו איתי</a>
+</nav>
 
 
     </div>
@@ -713,11 +599,10 @@
 
 
         <img
-          src="/assets/images/boxing.webp"
+          src="/assets/images/boxing-optimized.webp"
           alt="אימון אגרוף בקריות ב-Lucky Roll13"
           loading="lazy"
-          decoding="async"
-        >
+          decoding="async" width="1686" height="2108">
 
 
         <div class="content">
@@ -940,11 +825,10 @@
 
 
         <img
-          src="/assets/images/boxing-hero.jpeg"
+          src="/assets/images/boxing-hero.webp"
           alt="אימון אגרוף מקצועי ב-Lucky Roll13"
           loading="lazy"
-          decoding="async"
-        >
+          decoding="async" width="1206" height="1410">
 
 
       </div>
@@ -1082,11 +966,10 @@
 
 
         <img
-          src="/assets/images/women-boxing-hero.png"
+          src="/assets/images/women-boxing-hero.webp"
           alt="אגרוף לנשים בקריות ב-Lucky Roll13"
           loading="lazy"
-          decoding="async"
-        >
+          decoding="async" width="941" height="2048">
 
 
         <div class="content">
@@ -1510,83 +1393,6 @@
     שלחו הודעה ב-WhatsApp
   </a>
 
-
-
-  <!-- =====================================================
-       META CONTACT TRACKING
-  ====================================================== -->
-
-  <script>
-
-    document.addEventListener(
-      'click',
-      function(event)
-      {
-
-        const link =
-          event.target.closest('a[href]');
-
-
-        if(!link)
-        {
-          return;
-        }
-
-
-        const href =
-          link.getAttribute('href') || '';
-
-
-        if(
-          href.includes('wa.me') ||
-          href.includes('whatsapp.com')
-        )
-        {
-
-          if(typeof fbq === 'function')
-          {
-
-            fbq(
-              'track',
-              'Contact',
-              {
-                contact_method: 'whatsapp',
-                page_name: 'boxing',
-                page_url: window.location.href
-              }
-            );
-
-          }
-
-        }
-
-
-        if(
-          href.startsWith('tel:')
-        )
-        {
-
-          if(typeof fbq === 'function')
-          {
-
-            fbq(
-              'track',
-              'Contact',
-              {
-                contact_method: 'phone',
-                page_name: 'boxing',
-                page_url: window.location.href
-              }
-            );
-
-          }
-
-        }
-
-      }
-    );
-
-  </script>
 
 
 </body>

@@ -15,18 +15,23 @@
 
 <meta content="website" property="og:type"/>
 <meta content="he_IL" property="og:locale"/>
+<meta content="Lucky Roll13" property="og:site_name"/>
 <meta content="אומנויות לחימה לילדים בקריות ובנשר | Lucky Roll13" property="og:title"/>
 <meta content="אימוני MMA וג׳יו־ג׳יטסו לילדים ונוער בקריות ובנשר. ההרשמה לשנת האימונים החדשה פתוחה – קבוצות למתחילים ולמתקדמים עם דגש על ביטחון עצמי, משמעת, כושר וטכניקה." property="og:description"/>
 <meta content="https://luckyroll13.com/kids/" property="og:url"/>
 <meta content="https://luckyroll13.com/assets/images/kids-hero.jpeg" property="og:image"/>
+<meta content="אימוני אומנויות לחימה לילדים ב-Lucky Roll13" property="og:image:alt"/>
 
 <link href="/assets/logo.png" rel="icon"/>
 <link href="/assets/style.css" rel="stylesheet"/>
+<script defer src="/assets/tracking.js"></script><script defer src="/assets/site.js"></script>
+<link as="image" href="/assets/images/kids-hero.webp" rel="preload"/>
 
 <script type="application/ld+json">
 {
   "@context":"https://schema.org",
   "@type":"SportsActivityLocation",
+  "@id":"https://luckyroll13.com/#business",
   "name":"Lucky Roll13",
   "url":"https://luckyroll13.com/",
   "telephone":"+972546420206",
@@ -41,7 +46,7 @@
     {"@type":"Place","name":"נשר"}
   ],
   "sameAs":[
-    "https://www.instagram.com/luckyroll13_boxing_jiujitsu/?hl=en"
+    "https://www.instagram.com/luckyroll13_boxing_jiujitsu/"
   ]
 }
 </script>
@@ -49,6 +54,32 @@
 <meta content="summary_large_image" name="twitter:card"/>
 <meta content="אומנויות לחימה לילדים בקריות ובנשר | Lucky Roll13" name="twitter:title"/>
 <meta content="אימוני MMA וג׳יו־ג׳יטסו לילדים ונוער בקריות ובנשר. ההרשמה לשנת האימונים החדשה פתוחה – קבוצות למתחילים ולמתקדמים עם דגש על ביטחון עצמי, משמעת, כושר וטכניקה." name="twitter:description"/>
+<meta content="https://luckyroll13.com/assets/images/kids-hero.jpeg" name="twitter:image"/>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@graph":[
+    {
+      "@type":"Service",
+      "@id":"https://luckyroll13.com/kids/#service",
+      "name":"אומנויות לחימה לילדים ונוער",
+      "serviceType":"אימוני MMA וג׳יו־ג׳יטסו לילדים ונוער",
+      "url":"https://luckyroll13.com/kids/",
+      "provider":{"@id":"https://luckyroll13.com/#business"}
+    },
+    {
+      "@type":"WebPage",
+      "@id":"https://luckyroll13.com/kids/#webpage",
+      "url":"https://luckyroll13.com/kids/",
+      "name":"אומנויות לחימה לילדים בקריות ובנשר | Lucky Roll13",
+      "description":"אימוני MMA וג׳יו־ג׳יטסו לילדים ונוער בקריות ובנשר. ההרשמה לשנת האימונים החדשה פתוחה – קבוצות למתחילים ולמתקדמים עם דגש על ביטחון עצמי, משמעת, כושר וטכניקה.",
+      "inLanguage":"he-IL",
+      "about":{"@id":"https://luckyroll13.com/kids/#service"}
+    }
+  ]
+}
+</script>
 
 <script type="application/ld+json">
 {
@@ -79,17 +110,20 @@
 <header class="top">
   <div class="wrap nav">
     <a href="/">
-      <img alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" class="logo" src="/assets/images/luckyroll13-header-logo.webp"/>
+      <img alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" class="logo" src="/assets/images/luckyroll13-header-logo.webp" width="1431" height="359"/>
     </a>
 
-    <nav aria-label="ניווט ראשי" class="links">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">תפריט</button>
+<nav id="primary-navigation" class="links" aria-label="ניווט ראשי">
   <a href="/bjj/">ג׳יו־ג׳יטסו</a>
   <a href="/boxing/">אגרוף</a>
   <a href="/women-boxing/">אגרוף נשים</a>
   <a href="/kids/">ילדים</a>
   <a href="/mma/">MMA</a>
+  <a href="/adults/">אימונים אישיים</a>
   <a href="/about/">עלינו</a>
   <a href="/collaborations/">שיתופי פעולה</a>
+  <a href="/contact/">צור קשר</a>
   <a class="cta" href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים">דברו איתי</a>
 </nav>
   </div>
@@ -99,7 +133,7 @@
 
 <section
   class="page-hero"
-  style="background-image:linear-gradient(rgba(11,14,18,.72),rgba(11,14,18,.78)),url('/assets/images/kids-hero.jpeg');background-size:cover;background-position:center 52%;background-repeat:no-repeat;"
+  style="background-image:linear-gradient(rgba(11,14,18,.72),rgba(11,14,18,.78)),url('/assets/images/kids-hero.webp');background-size:cover;background-position:center 52%;background-repeat:no-repeat;"
 >
   <div class="wrap">
     <div class="eyebrow">LUCKY ROLL13 • קריות ונשר</div>
@@ -161,8 +195,7 @@
       <article class="card">
         <img
           alt="קבוצת ג׳יו־ג׳יטסו לילדים ב-Lucky Roll13 בקריות"
-          src="/assets/images/kids.webp"
-        />
+          src="/assets/images/kids.webp" width="1600" height="1200" loading="lazy" decoding="async"/>
 
         <div class="card-body">
           <h3>ג׳יו־ג׳יטסו לילדים</h3>
@@ -184,8 +217,7 @@
       <article class="card">
         <img
           alt="אימוני MMA לילדים ונוער ב-Lucky Roll13"
-          src="/assets/images/kids2.webp"
-        />
+          src="/assets/images/kids2-optimized.webp" width="2048" height="1365" loading="lazy" decoding="async"/>
 
         <div class="card-body">
           <h3>MMA לילדים ונוער</h3>
@@ -207,8 +239,7 @@
       <article class="card">
         <img
           alt="קהילת Lucky Roll13 ואימוני ילדים בקריות ובנשר"
-          src="/assets/images/community.webp"
-        />
+          src="/assets/images/community.webp" width="1600" height="1066" loading="lazy" decoding="async"/>
 
         <div class="card-body">
           <h3>מסגרת שנותנת ערך</h3>
@@ -236,8 +267,7 @@
 
     <img
       alt="אימון ילדים ונוער ב-Lucky Roll13"
-      src="/assets/images/kids2.webp"
-    />
+      src="/assets/images/kids2-optimized.webp" width="2048" height="1365" loading="lazy" decoding="async"/>
 
     <div class="content">
 

@@ -16,15 +16,26 @@
 
   <meta name="robots" content="index,follow,max-image-preview:large" />
 
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="he_IL" />
+  <meta property="og:site_name" content="Lucky Roll13" />
+  <meta property="og:title" content="על Lucky Roll13 | מועדון אגרוף וג׳יו־ג׳יטסו בקריות ובנשר" />
+  <meta property="og:description" content="הכירו את Lucky Roll13, מועדון לאגרוף וג׳יו־ג׳יטסו בקריות ובנשר: הגישה המקצועית, הקהילה וצוות המאמנים." />
+  <meta property="og:url" content="https://luckyroll13.com/about/" />
+  <meta property="og:image" content="https://luckyroll13.com/assets/images/about-hero.jpeg" />
+  <meta property="og:image:alt" content="קהילת Lucky Roll13 באימון אומנויות לחימה" />
+
   <link href="/assets/logo.png" rel="icon" />
   <link href="/assets/style.css" rel="stylesheet" />
+  <script defer src="/assets/tracking.js"></script><script defer src="/assets/site.js"></script>
+  <link rel="preload" as="image" href="/assets/images/about-hero.webp" />
 
   <style>
     .page-hero {
       position: relative;
       background-image:
         linear-gradient(rgba(10,13,17,.62), rgba(10,13,17,.72)),
-        url('/assets/images/about-hero.jpeg');
+        url('/assets/images/about-hero.webp');
       background-size: cover;
       background-position: center 55%;
       background-repeat: no-repeat;
@@ -133,6 +144,42 @@
     name="twitter:description"
     content="הכירו את Lucky Roll13, מועדון לאגרוף וג׳יו־ג׳יטסו בקריות ובנשר: הגישה המקצועית, הקהילה וצוות המאמנים."
   />
+  <meta name="twitter:image" content="https://luckyroll13.com/assets/images/about-hero.jpeg" />
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {
+        "@type":"SportsActivityLocation",
+        "@id":"https://luckyroll13.com/#business",
+        "name":"Lucky Roll13",
+        "url":"https://luckyroll13.com/",
+        "telephone":"+972546420206",
+        "address":{
+          "@type":"PostalAddress",
+          "streetAddress":"מנחם בגין 26",
+          "addressLocality":"קריית מוצקין",
+          "addressCountry":"IL"
+        },
+        "areaServed":[
+          {"@type":"Place","name":"הקריות"},
+          {"@type":"Place","name":"נשר"}
+        ],
+        "sameAs":["https://www.instagram.com/luckyroll13_boxing_jiujitsu/"]
+      },
+      {
+        "@type":"WebPage",
+        "@id":"https://luckyroll13.com/about/#webpage",
+        "url":"https://luckyroll13.com/about/",
+        "name":"על Lucky Roll13 | מועדון אגרוף וג׳יו־ג׳יטסו בקריות ובנשר",
+        "description":"הכירו את Lucky Roll13, מועדון לאגרוף וג׳יו־ג׳יטסו בקריות ובנשר: הגישה המקצועית, הקהילה וצוות המאמנים.",
+        "inLanguage":"he-IL",
+        "about":{"@id":"https://luckyroll13.com/#business"}
+      }
+    ]
+  }
+  </script>
 
   <script type="application/ld+json">
   {
@@ -168,26 +215,22 @@
         <img
           alt="Lucky Roll13 - Boxing & Jiu-Jitsu"
           class="logo"
-          src="/assets/images/luckyroll13-header-logo.webp"
-        />
+          src="/assets/images/luckyroll13-header-logo.webp" width="1431" height="359"/>
       </a>
 
-      <nav aria-label="ניווט ראשי" class="links">
-        <a href="/bjj/">ג׳יו־ג׳יטסו</a>
-        <a href="/boxing/">אגרוף</a>
-        <a href="/women-boxing/">אגרוף נשים</a>
-        <a href="/kids/">ילדים</a>
-        <a href="/mma/">MMA</a>
-        <a href="/about/">עלינו</a>
-        <a href="/collaborations/">שיתופי פעולה</a>
-
-        <a
-          class="cta"
-          href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים"
-        >
-          דברו איתי
-        </a>
-      </nav>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">תפריט</button>
+<nav id="primary-navigation" class="links" aria-label="ניווט ראשי">
+  <a href="/bjj/">ג׳יו־ג׳יטסו</a>
+  <a href="/boxing/">אגרוף</a>
+  <a href="/women-boxing/">אגרוף נשים</a>
+  <a href="/kids/">ילדים</a>
+  <a href="/mma/">MMA</a>
+  <a href="/adults/">אימונים אישיים</a>
+  <a href="/about/">עלינו</a>
+  <a href="/collaborations/">שיתופי פעולה</a>
+  <a href="/contact/">צור קשר</a>
+  <a class="cta" href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים">דברו איתי</a>
+</nav>
 
     </div>
   </header>
@@ -282,13 +325,11 @@
 
           <img
             alt="שבי מ-Lucky Roll13"
-            src="/assets/images/shabi-personal-1.jpeg"
-          />
+            src="/assets/images/shabi-personal-1.jpeg" width="1206" height="1145" loading="lazy" decoding="async"/>
 
           <img
             alt="שבי מ-Lucky Roll13"
-            src="/assets/images/shabi-personal-2.jpeg"
-          />
+            src="/assets/images/shabi-personal-2.jpeg" width="1206" height="1847" loading="lazy" decoding="async"/>
 
         </div>
 
@@ -355,8 +396,7 @@
 
         <img
           alt="בר סרוסי מאמן אגרוף ואגרוף תאילנדי ב-Lucky Roll13"
-          src="/assets/images/bar-sarusi-coach.webp"
-        />
+          src="/assets/images/bar-sarusi-coach.webp" width="1280" height="1600" loading="lazy" decoding="async"/>
 
       </div>
     </section>
@@ -370,20 +410,17 @@
           <img
             alt="בר סרוסי בזירת אגרוף"
             src="/assets/images/bar-sarusi-ring.webp"
-            loading="lazy"
-          />
+            loading="lazy" width="1152" height="1536" decoding="async"/>
 
           <img
             alt="בר סרוסי בפינת הזירה"
             src="/assets/images/bar-sarusi-corner.webp"
-            loading="lazy"
-          />
+            loading="lazy" width="1280" height="1600" decoding="async"/>
 
           <img
             alt="אימון אגרוף תאילנדי עם בר סרוסי"
             src="/assets/images/bar-sarusi-training.webp"
-            loading="lazy"
-          />
+            loading="lazy" width="736" height="1600" decoding="async"/>
 
         </div>
 
