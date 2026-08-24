@@ -1,6 +1,10 @@
 # Primary URL aliases
 /index.html / 301!
-/adults.html /about/ 301
+
+# Canonical adults route
+/adults /adults/ 301
+/adults.html /adults/ 301
+/adults/index.html /adults/ 301!
 
 # Legacy kids URLs
 /kids.html /kids/ 301
@@ -36,6 +40,9 @@
 /luckyroll13-html-patch/contact /contact/ 301!
 /luckyroll13-html-patch/contact/ /contact/ 301!
 /luckyroll13-html-patch/contact/index.html /contact/ 301!
+/luckyroll13-html-patch/adults /adults/ 301!
+/luckyroll13-html-patch/adults/ /adults/ 301!
+/luckyroll13-html-patch/adults/index.html /adults/ 301!
 /luckyroll13-html-patch/* / 301!
 
 # Keep the Netlify subdomain consolidated on the primary domain
