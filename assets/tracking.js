@@ -7,7 +7,32 @@
 
   window.__luckyRoll13TrackingLoaded = true;
 
+  var gaMeasurementId = 'G-P90EZYYDSS';
   var pixelId = '1404519714948556';
+
+  window.dataLayer = window.dataLayer || [];
+
+  if (!window.gtag) {
+    window.gtag = function () {
+      window.dataLayer.push(arguments);
+    };
+  }
+
+  if (!document.getElementById('ga4-script')) {
+    var gaScript = document.createElement('script');
+    gaScript.id = 'ga4-script';
+    gaScript.async = true;
+    gaScript.src =
+      'https://www.googletagmanager.com/gtag/js?id=' +
+      encodeURIComponent(gaMeasurementId);
+    document.head.appendChild(gaScript);
+  }
+
+  if (!window.__luckyRoll13Ga4Initialized) {
+    window.gtag('js', new Date());
+    window.gtag('config', gaMeasurementId);
+    window.__luckyRoll13Ga4Initialized = true;
+  }
 
   if (!window.fbq) {
     var fbq = function () {
@@ -84,6 +109,14 @@
 
     if (!contactMethod) {
       return;
+    }
+
+    if (contactMethod === 'whatsapp') {
+      window.gtag('event', 'whatsapp_lead', {
+        link_url: link.href,
+        page_location: window.location.href,
+        transport_type: 'beacon'
+      });
     }
 
     window.fbq('track', 'Contact', {
