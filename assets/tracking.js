@@ -112,11 +112,48 @@
     }
 
     if (contactMethod === 'whatsapp') {
-      window.gtag('event', 'whatsapp_lead', {
+      var shouldWaitForGa4 =
+        !event.defaultPrevented &&
+        (typeof event.button !== 'number' || event.button === 0) &&
+        !event.metaKey &&
+        !event.ctrlKey &&
+        !event.shiftKey &&
+        !event.altKey &&
+        (!link.target || link.target.toLowerCase() === '_self');
+      var continueNavigation = null;
+
+      if (shouldWaitForGa4) {
+        event.preventDefault();
+
+        var navigationCompleted = false;
+
+        continueNavigation = function () {
+          if (navigationCompleted) {
+            return;
+          }
+
+          navigationCompleted = true;
+          window.location.assign(link.href);
+        };
+      }
+
+      var ga4EventParameters = {
+        send_to: gaMeasurementId,
         link_url: link.href,
         page_location: window.location.href,
         transport_type: 'beacon'
-      });
+      };
+
+      if (continueNavigation) {
+        ga4EventParameters.event_callback = continueNavigation;
+        ga4EventParameters.event_timeout = 300;
+      }
+
+      window.gtag('event', 'whatsapp_lead', ga4EventParameters);
+
+      if (continueNavigation) {
+        window.setTimeout(continueNavigation, 350);
+      }
     }
 
     window.fbq('track', 'Contact', {
