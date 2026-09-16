@@ -113,8 +113,8 @@ body{background:var(--event-bg);color:var(--event-text)}
 .event-video-frame{position:relative;overflow:hidden;aspect-ratio:16/9;border:1px solid #323b44;border-radius:18px;background:#020304;box-shadow:0 18px 42px #0006}.event-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .achievements{position:relative;background:#0b0e12;border-block:1px solid var(--event-line);overflow:hidden}
 .achievements::after{content:"WORLD CLASS";position:absolute;inset-inline-end:-30px;bottom:-58px;color:#ffffff04;font-size:clamp(90px,15vw,210px);font-weight:900;line-height:1;white-space:nowrap;pointer-events:none}
-.achievements .wrap{position:relative;z-index:1}.achievements-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.achievement-card{position:relative;min-height:272px;padding:30px 28px;background:linear-gradient(145deg,#151a20,#0d1115);border:1px solid #2b323a;border-radius:24px;overflow:hidden}
+.achievements .wrap{position:relative;z-index:1}.achievements-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px}
+.achievement-card{position:relative;grid-column:span 2;min-height:272px;padding:30px 28px;background:linear-gradient(145deg,#151a20,#0d1115);border:1px solid #2b323a;border-radius:24px;overflow:hidden}.achievement-card:nth-last-child(-n+2){grid-column:span 3}
 .achievement-card::before{content:"";position:absolute;inset-inline-start:0;top:0;width:70px;height:4px;background:var(--event-gold)}
 .achievement-card p{min-height:42px;margin:0 0 32px;color:var(--event-gold);font-size:13px;font-weight:900;letter-spacing:.04em;text-transform:uppercase}
 .achievement-card h3{margin:0 0 18px;font-size:clamp(26px,3vw,38px);line-height:1.05;text-align:start}.achievement-card span{color:var(--event-muted)}
@@ -145,7 +145,7 @@ body{background:var(--event-bg);color:var(--event-text)}
 @media(max-width:900px){
   .event-hero{min-height:auto;padding-block:96px}
   .event-meta{grid-template-columns:repeat(3,minmax(0,1fr))}.meta-card:nth-child(n+4){grid-column:span 1}
-  .narrow-split{grid-template-columns:1fr;gap:24px}.achievements-grid{grid-template-columns:1fr}.achievement-card{min-height:0}
+  .narrow-split{grid-template-columns:1fr;gap:24px}.achievements-grid{grid-template-columns:1fr}.achievement-card,.achievement-card:nth-last-child(-n+2){grid-column:auto;min-height:0}
   .registration-layout,.event-summary-card{grid-template-columns:1fr}.why-grid{grid-template-columns:1fr}.location-card{grid-template-columns:auto 1fr}.location-card .btn{grid-column:1/-1}
   .featured-event-card{grid-template-columns:.9fr 1.1fr}.featured-facts{grid-template-columns:1fr}.featured-facts li+li{padding-inline-start:0;border-inline-start:0;border-top:1px solid var(--event-line)}
   .event-gallery{grid-template-columns:minmax(220px,.9fr) repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,220px)}

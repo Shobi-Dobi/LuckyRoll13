@@ -147,6 +147,7 @@ const payboxLinks = [...seminarHtml.matchAll(/href=["'](https:\/\/links\.payboxa
 if (payboxLinks.length !== 5) fail(`seminar: expected 5 PayBox CTAs, found ${payboxLinks.length}`);
 if (payboxLinks.some((href) => href !== payboxUrl)) fail('seminar: PayBox URL altered or contains parameters');
 if (eventSchema?.['@id'] !== 'https://luckyroll13.com/javier-zaruski-seminar/#event') fail('seminar: invalid Event @id');
+if (!Array.isArray(eventSchema?.performer?.award) || eventSchema.performer.award.length !== 5) fail('seminar: Event performer is missing Javier awards');
 if (eventSchema?.startDate !== '2026-09-25T12:00:00+03:00') fail('seminar: invalid startDate');
 if (eventSchema?.endDate !== '2026-09-25T15:00:00+03:00') fail('seminar: invalid endDate');
 if (eventSchema?.organizer?.['@id'] !== 'https://luckyroll13.com/#business') fail('seminar: organizer does not reference business');
@@ -158,6 +159,14 @@ if (!seminarHtml.includes('<li><a href="/events/">סמינרים ואירועי�
 if (meta(seminarHtml, 'property', 'og:image') !== 'https://luckyroll13.com/assets/images/javier-zaruski-seminar-poster-v2.jpg') fail('seminar: official poster is not the social image');
 const eventGallery = seminarHtml.match(/<div class="event-gallery"[\s\S]*?<\/div>\s*<\/div>\s*<\/section>/i)?.[0] || '';
 if ((eventGallery.match(/<figure\b/gi) || []).length !== 4) fail('seminar: expected four-image Javier gallery');
+const achievementSection = seminarHtml.match(/<section class="section achievements"[\s\S]*?<\/section>/i)?.[0] || '';
+if ((achievementSection.match(/class="achievement-card"/g) || []).length !== 5) fail('seminar: expected five Javier achievement cards');
+for (const achievement of ['IBJJF Adult Black Belt World Champion', 'ADCC Veteran', '7× ADCC Open Champion', '18× IBJJF International Open Champion', '4× No-Gi World Champion']) {
+  if (!achievementSection.includes(achievement)) fail(`seminar: missing updated Javier achievement: ${achievement}`);
+}
+for (const staleAchievement of ['Double Gold Champion', '2024 &amp; 2026 Competitor']) {
+  if (achievementSection.includes(staleAchievement)) fail(`seminar: stale Javier achievement remains: ${staleAchievement}`);
+}
 if (!seminarHtml.includes('https://www.youtube-nocookie.com/embed/JFVUv_njAX8?rel=0')) fail('seminar: missing privacy-enhanced YouTube embed');
 if (!seminarHtml.includes('href="https://www.youtube.com/watch?v=JFVUv_njAX8"')) fail('seminar: missing original YouTube link');
 
