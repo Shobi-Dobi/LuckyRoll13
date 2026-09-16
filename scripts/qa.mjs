@@ -80,6 +80,7 @@ function localTarget(href) {
 }
 
 const titles = new Map();
+const googleMapsBusinessUrl = 'https://maps.google.com/?cid=8832126799717426719';
 
 for (const [file, expectedCanonical] of primaryPages) {
   const fullPath = resolve(root, file);
@@ -113,6 +114,14 @@ for (const [file, expectedCanonical] of primaryPages) {
 
   const schemas = jsonLd(html, file);
   if (!schemas.length) fail(`${file}: missing JSON-LD`);
+
+  const localBusiness = flattenSchemas(schemas).find((schema) => schema['@type'] === 'SportsActivityLocation');
+  if (localBusiness) {
+    if (!Array.isArray(localBusiness.sameAs) || !localBusiness.sameAs.includes(googleMapsBusinessUrl)) fail(`${file}: LocalBusiness does not reference the Google Business Profile`);
+    if (localBusiness.hasMap !== googleMapsBusinessUrl) fail(`${file}: LocalBusiness hasMap is not the exact Google Business Profile`);
+  }
+
+  if (html.includes('https://www.google.com/maps/search/')) fail(`${file}: still uses a generic Google Maps address search`);
 
   const internalLinks = [...html.matchAll(/\bhref=["']([^"']+)["']/gi)].map((match) => match[1]);
   for (const href of internalLinks) {
@@ -194,6 +203,7 @@ const sitemap = readFileSync(resolve(root, 'sitemap.xml'), 'utf8');
 for (const [, url] of primaryPages) {
   if (!sitemap.includes(`<loc>${url}</loc>`)) fail(`sitemap: missing ${url}`);
 }
+if ((sitemap.match(/<lastmod>2026-09-16<\/lastmod>/g) || []).length !== primaryPages.length) fail('sitemap: primary URLs do not have accurate lastmod dates');
 if (sitemap.includes('/events/javier-zaruski/')) fail('sitemap: contains redirected seminar URL');
 
 const robots = readFileSync(resolve(root, 'robots.txt'), 'utf8');
