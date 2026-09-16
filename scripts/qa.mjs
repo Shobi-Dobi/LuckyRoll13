@@ -155,7 +155,7 @@ if (!Array.isArray(eventSchema?.image) || eventSchema.image.length !== 4) fail('
 if (!seminarHtml.includes('עד 21.9 כולל') || !seminarHtml.includes('החל מ־22.9')) fail('seminar: invalid visible pricing dates');
 if (!seminarHtml.includes('target="_blank" rel="noopener noreferrer" data-seminar-track="seminar_paybox_click"')) fail('seminar: unsafe PayBox link attributes');
 if (!seminarHtml.includes('<li><a href="/events/">סמינרים ואירועים</a></li>')) fail('seminar: missing events breadcrumb');
-if (meta(seminarHtml, 'property', 'og:image') !== 'https://luckyroll13.com/assets/images/javier-zaruski-seminar-poster.jpg') fail('seminar: official poster is not the social image');
+if (meta(seminarHtml, 'property', 'og:image') !== 'https://luckyroll13.com/assets/images/javier-zaruski-seminar-poster-v2.jpg') fail('seminar: official poster is not the social image');
 const eventGallery = seminarHtml.match(/<div class="event-gallery"[\s\S]*?<\/div>\s*<\/div>\s*<\/section>/i)?.[0] || '';
 if ((eventGallery.match(/<figure\b/gi) || []).length !== 4) fail('seminar: expected four-image Javier gallery');
 if (!seminarHtml.includes('https://www.youtube-nocookie.com/embed/JFVUv_njAX8?rel=0')) fail('seminar: missing privacy-enhanced YouTube embed');
