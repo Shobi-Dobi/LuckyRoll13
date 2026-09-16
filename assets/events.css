@@ -68,7 +68,7 @@ body{background:var(--event-bg);color:var(--event-text)}
 .event-hero{position:relative;display:grid;align-items:center;min-height:calc(100svh - 76px);padding:clamp(36px,6vw,76px) 0;overflow:hidden;background:radial-gradient(circle at 18% 24%,#00aeea29,transparent 34%),linear-gradient(135deg,#07090b 0%,#0d1116 56%,#12171d 100%)}
 .event-hero::before{content:"";position:absolute;inset:-25%;pointer-events:none;background:repeating-linear-gradient(117deg,transparent 0 84px,#ffffff05 85px,#ffffff05 86px);transform:rotate(-4deg)}
 .event-hero-grid{position:relative;display:grid;grid-template-columns:minmax(300px,.82fr) minmax(0,1.18fr);gap:clamp(32px,7vw,86px);align-items:center}
-.event-poster{position:relative;margin:0;border:1px solid #303740;border-radius:28px;overflow:hidden;box-shadow:0 30px 70px #0009;transform:rotate(-1.5deg)}
+.event-poster{position:relative;margin:0;border:1px solid #303740;border-radius:28px;overflow:hidden;box-shadow:0 30px 70px #0009;transform:none}
 .event-poster picture{display:block}.event-poster img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover}
 .event-poster figcaption{position:absolute;inset-inline:18px;bottom:18px;padding:11px 14px;border:1px solid #ffffff47;border-radius:999px;background:#07090bd9;backdrop-filter:blur(10px);color:#fff;text-align:center;font-size:12px;font-weight:900;letter-spacing:.05em}
 .photo-credit{position:absolute;top:12px;inset-inline-end:12px;padding:5px 8px;border-radius:999px;background:#07090ba8;color:#d8dde1;font-size:10px;text-decoration:none;opacity:.78}.photo-credit:hover{opacity:1}
