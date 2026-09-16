@@ -96,6 +96,7 @@
 
     var hostname = url.hostname.toLowerCase();
     var contactMethod = null;
+    var clickEventName = null;
 
     if (
       hostname === 'wa.me' ||
@@ -103,13 +104,29 @@
       hostname.endsWith('.whatsapp.com')
     ) {
       contactMethod = 'whatsapp';
+      clickEventName = 'whatsapp_click';
     } else if (url.protocol === 'tel:') {
       contactMethod = 'phone';
+      clickEventName = 'phone_click';
+    } else if (
+      hostname === 'maps.app.goo.gl' ||
+      (hostname.endsWith('google.com') && url.pathname.indexOf('/maps') !== -1)
+    ) {
+      clickEventName = 'maps_click';
+    } else if (hostname === 'waze.com' || hostname.endsWith('.waze.com')) {
+      clickEventName = 'waze_click';
     }
 
-    if (!contactMethod) {
+    if (!clickEventName) {
       return;
     }
+
+    window.gtag('event', clickEventName, {
+      send_to: gaMeasurementId,
+      link_url: link.href,
+      page_location: window.location.href,
+      transport_type: 'beacon'
+    });
 
     if (contactMethod === 'whatsapp') {
       var shouldWaitForGa4 =
@@ -156,9 +173,30 @@
       }
     }
 
-    window.fbq('track', 'Contact', {
-      contact_method: contactMethod,
-      page_url: window.location.href
+    if (contactMethod) {
+      window.fbq('track', 'Contact', {
+        contact_method: contactMethod,
+        page_url: window.location.href
+      });
+    }
+  });
+
+  document.addEventListener('submit', function trackTrialFormSubmit(event) {
+    var form = event.target;
+
+    if (!form || !form.matches || !form.matches('form[data-netlify="true"]')) {
+      return;
+    }
+
+    var formName = form.getAttribute('name') || '';
+
+    if (formName.indexOf('lead') === -1) return;
+
+    window.gtag('event', 'trial_form_submit', {
+      send_to: gaMeasurementId,
+      form_name: formName,
+      page_location: window.location.href,
+      transport_type: 'beacon'
     });
   });
 })(window, document);

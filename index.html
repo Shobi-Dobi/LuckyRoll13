@@ -116,7 +116,7 @@
     href="/assets/style.css"
   >
 
-  <script defer src="/assets/tracking.js"></script><script defer src="/assets/site.js"></script>
+  <script defer src="/assets/tracking.js"></script><script defer src="/assets/site.js"></script><script defer src="/assets/events.js"></script>
 
   <link
     rel="preload"
@@ -156,6 +156,23 @@
       margin-top: 24px;
     }
 
+    .seminar-promo {
+      border-bottom: 1px solid #254f61;
+      background: linear-gradient(90deg,#071117,#0b3445 52%,#101820);
+    }
+
+    .seminar-promo-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding-block: 18px;
+    }
+
+    .seminar-promo-copy { display: grid; gap: 3px; }
+    .seminar-promo-copy strong { font-size: clamp(18px,2.2vw,25px); line-height: 1.2; }
+    .seminar-promo-copy span { color: #d9e2e7; font-weight: 700; }
+
     .faq-grid {
       display: grid;
       gap: 18px;
@@ -184,6 +201,9 @@
         grid-template-columns: 1fr;
       }
 
+      .seminar-promo-inner { align-items: stretch; flex-direction: column; gap: 12px; }
+      .seminar-promo .btn { width: 100%; }
+
     }
 
   </style>
@@ -203,6 +223,8 @@
         "@id": "https://luckyroll13.com/#business",
 
         "name": "Lucky Roll13",
+
+        "alternateName": "Lucky Roll13 – Boxing & Jiu-Jitsu",
 
         "url": "https://luckyroll13.com/",
 
@@ -313,7 +335,13 @@
 
         "name": "Lucky Roll13",
 
-        "alternateName": "Lucky Roll13 Boxing & Jiu-Jitsu",
+        "alternateName": "Lucky Roll13 – Boxing & Jiu-Jitsu",
+
+        "publisher": {
+          "@id": "https://luckyroll13.com/#business"
+        },
+
+        "logo": "https://luckyroll13.com/assets/images/luckyroll13-header-logo.webp",
 
         "inLanguage": "he-IL"
       },
@@ -394,6 +422,7 @@
   <a href="/adults/">אימונים אישיים</a>
   <a href="/about/">עלינו</a>
   <a href="/collaborations/">שיתופי פעולה</a>
+  <a href="/events/">סמינרים ואירועים</a>
   <a href="/contact/">צור קשר</a>
   <a class="cta" href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים">דברו איתי</a>
 </nav>
@@ -409,6 +438,16 @@
   ====================================================== -->
 
   <main id="main">
+
+    <aside class="seminar-promo" data-home-event-promo aria-label="סמינר Javier Zaruski בישראל">
+      <div class="wrap seminar-promo-inner">
+        <div class="seminar-promo-copy">
+          <strong lang="en" dir="ltr">JAVIER ZARUSKI 🇺🇾 · ISRAEL SEMINAR 🇮🇱</strong>
+          <span><bdi dir="ltr">25.9 · 12:00–15:00</bdi> · UFC Gym Nesher</span>
+        </div>
+        <a class="btn" href="/javier-zaruski-seminar/" data-preserve-utm>לפרטים והרשמה</a>
+      </div>
+    </aside>
 
 
     <!-- HERO -->
@@ -787,6 +826,13 @@
 
               <a
                 class="btn"
+                href="/kiryat-motzkin/"
+              >
+                אומנויות לחימה בקריית מוצקין
+              </a>
+
+              <a
+                class="btn alt"
                 href="https://www.google.com/maps/search/?api=1&amp;query=%D7%9E%D7%A0%D7%97%D7%9D%20%D7%91%D7%92%D7%99%D7%9F%2026%2C%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%9E%D7%95%D7%A6%D7%A7%D7%99%D7%9F"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -1201,6 +1247,12 @@
 
         <a href="/adults/">
           אימונים אישיים
+        </a>
+
+        ·
+
+        <a href="/kiryat-motzkin/">
+          אומנויות לחימה בקריית מוצקין
         </a>
 
         ·
