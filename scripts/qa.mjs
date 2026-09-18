@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { runInNewContext } from 'node:vm';
 
 const root = resolve(import.meta.dirname, '..');
 const failures = [];
@@ -183,6 +184,66 @@ if (!seminarHtml.includes('href="https://www.youtube.com/watch?v=JFVUv_njAX8"'))
 
 const tracking = readFileSync(resolve(root, 'assets/tracking.js'), 'utf8');
 const events = readFileSync(resolve(root, 'assets/events.js'), 'utf8');
+
+function simulateSeminarExperience(now, search = '?utm_source=instagram&utm_medium=paid_social&utm_campaign=javier_zaruski_north_2026&utm_content=poster') {
+  const gaEvents = [];
+  const metaEvents = [];
+  const handlers = {};
+  const bodyClasses = new Set(['seminar-page']);
+  const salesNodes = Array.from({ length: 3 }, () => ({ hidden: false }));
+  const statusNode = {
+    classList: { add: (name) => bodyClasses.add(`status:${name}`) },
+    innerHTML: '<span aria-hidden="true"></span>ההרשמה פתוחה'
+  };
+  const historyNode = { hidden: true };
+  const priceNode = { textContent: '' };
+  const stickyNode = { textContent: '' };
+  const storage = new Map();
+  const pageUrl = new URL(`https://luckyroll13.com/javier-zaruski-seminar/${search}`);
+
+  const document = {
+    body: {
+      classList: {
+        contains: (name) => bodyClasses.has(name),
+        add: (name) => bodyClasses.add(name)
+      }
+    },
+    addEventListener: (type, handler) => { handlers[type] = handler; },
+    getElementById: () => null,
+    querySelector: () => null,
+    querySelectorAll: (selector) => ({
+      '[data-current-price]': [priceNode],
+      '[data-sticky-label]': [stickyNode],
+      '[data-event-sales]': salesNodes,
+      '[data-event-status]': [statusNode],
+      '[data-event-history]': [historyNode]
+    })[selector] || []
+  };
+
+  const window = {
+    location: pageUrl,
+    sessionStorage: {
+      getItem: (key) => storage.get(key) || null,
+      setItem: (key, value) => storage.set(key, value)
+    },
+    gtag: (...args) => gaEvents.push(args),
+    fbq: (...args) => metaEvents.push(args)
+  };
+  const TestDate = class extends Date { static now() { return now; } };
+
+  runInNewContext(events, { window, document, URL, URLSearchParams, Date: TestDate, Number, Object, JSON });
+
+  const click = (eventName, href) => handlers.click({
+    target: {
+      closest: (selector) => selector === 'a[data-seminar-track]'
+        ? { href, getAttribute: () => eventName }
+        : null
+    }
+  });
+
+  return { bodyClasses, click, gaEvents, historyNode, metaEvents, priceNode, salesNodes, statusNode, stickyNode };
+}
+
 for (const eventName of ['whatsapp_click', 'phone_click', 'maps_click', 'waze_click', 'trial_form_submit']) {
   if (!tracking.includes(eventName)) fail(`tracking: missing ${eventName}`);
 }
@@ -198,6 +259,27 @@ if (!events.includes("2026-09-25T15:00:00+03:00")) fail('events: missing automat
 const eventEnd = Date.parse('2026-09-25T15:00:00+03:00');
 if (Date.parse('2026-09-25T14:59:59.999+03:00') >= eventEnd) fail('events: historical state starts before the approved cutoff');
 if (Date.parse('2026-09-25T15:00:00+03:00') < eventEnd) fail('events: historical state does not start at the approved cutoff');
+
+const preEvent = simulateSeminarExperience(eventEnd - 1);
+if (preEvent.bodyClasses.has('event-is-past')) fail('events runtime: seminar becomes historical before 15:00 Israel time');
+if (preEvent.salesNodes.some((node) => node.hidden)) fail('events runtime: sales CTA hidden before event end');
+if (!preEvent.historyNode.hidden) fail('events runtime: historical message visible before event end');
+if (preEvent.priceNode.textContent !== '₪299' || preEvent.stickyNode.textContent !== 'הרשמה – ₪299') fail('events runtime: current price missing before event end');
+
+preEvent.click('seminar_paybox_click', 'https://links.payboxapp.com/uCxBVtnBs6b');
+preEvent.click('seminar_whatsapp_click', 'https://wa.me/972546420206');
+for (const eventName of ['seminar_page_view', 'seminar_paybox_click', 'seminar_whatsapp_click']) {
+  if (!preEvent.gaEvents.some((entry) => entry[0] === 'event' && entry[1] === eventName && entry[2]?.utm_campaign === 'javier_zaruski_north_2026')) fail(`events runtime: GA4 ${eventName} attribution failed`);
+}
+for (const eventName of ['ViewContent', 'InitiateCheckout', 'Lead']) {
+  if (!preEvent.metaEvents.some((entry) => entry[0] === 'track' && entry[1] === eventName && entry[2]?.utm_campaign === 'javier_zaruski_north_2026')) fail(`events runtime: Meta ${eventName} attribution failed`);
+}
+if (preEvent.metaEvents.some((entry) => entry[1] === 'Purchase')) fail('events runtime: Meta Purchase fired without payment confirmation');
+
+const atEventEnd = simulateSeminarExperience(eventEnd);
+if (!atEventEnd.bodyClasses.has('event-is-past')) fail('events runtime: historical mode missing at exact event end');
+if (atEventEnd.salesNodes.some((node) => !node.hidden)) fail('events runtime: sales CTA remains visible after event end');
+if (atEventEnd.historyNode.hidden || !atEventEnd.statusNode.innerHTML.includes('הסמינר התקיים')) fail('events runtime: historical message missing after event end');
 if (!events.includes("[data-event-card][data-event-end]")) fail('events: missing reusable event archive automation');
 if (!events.includes("[data-seminar-promo]")) fail('events: missing long-term seminar promo archive mode');
 
