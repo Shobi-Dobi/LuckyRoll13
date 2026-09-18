@@ -40,7 +40,7 @@
   });
 
   var campaignParameters = {
-    campaign_name: 'javier_zaruski_israel_2026',
+    campaign_name: campaign.utm_campaign || 'javier_zaruski_north_2026',
     event_location: 'nesher',
     event_date: '2026-09-25'
   };
@@ -50,14 +50,25 @@
   });
 
   function trackSeminarEvent(eventName, link) {
-    if (typeof window.gtag !== 'function') return;
-
     var parameters = Object.assign({}, campaignParameters, {
       page_location: window.location.href
     });
 
     if (link) parameters.link_url = link.href;
-    window.gtag('event', eventName, parameters);
+
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', eventName, parameters);
+    }
+
+    var metaEventMap = {
+      seminar_page_view: 'ViewContent',
+      seminar_paybox_click: 'InitiateCheckout',
+      seminar_whatsapp_click: 'Lead'
+    };
+
+    if (typeof window.fbq === 'function' && metaEventMap[eventName]) {
+      window.fbq('track', metaEventMap[eventName], parameters);
+    }
   }
 
   var isSeminarPage = document.body.classList.contains('seminar-page');
@@ -83,7 +94,7 @@
   var now = Date.now();
   var priceCutoff = Date.parse('2026-09-22T00:00:00+03:00');
   var eventEnd = Date.parse('2026-09-25T15:00:00+03:00');
-  var eventIsPast = now >= eventEnd;
+  var eventIsPast = Number.isFinite(eventEnd) && now >= eventEnd;
   var currentTier = now < priceCutoff ? 'early' : 'regular';
 
   document.querySelectorAll('[data-pricing]').forEach(function (pricing) {
@@ -146,6 +157,18 @@
 
   document.querySelectorAll('[data-home-event-promo]').forEach(function (promo) {
     if (eventIsPast) promo.hidden = true;
+  });
+
+  document.querySelectorAll('[data-seminar-promo]').forEach(function (promo) {
+    if (!eventIsPast) return;
+
+    promo.classList.add('is-past-event');
+
+    var promoEyebrow = promo.querySelector('[data-seminar-promo-eyebrow]');
+    if (promoEyebrow) promoEyebrow.textContent = 'סמינר עבר · 25.9.2026';
+
+    var promoCta = promo.querySelector('[data-seminar-promo-cta]');
+    if (promoCta) promoCta.textContent = 'לפרטי הסמינר מהארכיון';
   });
 
   var upcomingList = document.querySelector('[data-upcoming-list]');

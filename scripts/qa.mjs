@@ -163,6 +163,8 @@ if (eventSchema?.organizer?.['@id'] !== 'https://luckyroll13.com/#business') fai
 if (eventSchema?.offers?.price !== '250' || eventSchema?.offers?.priceValidUntil !== '2026-09-21') fail('seminar: invalid current offer');
 if (!Array.isArray(eventSchema?.image) || eventSchema.image.length !== 4) fail('seminar: expected four Event schema images');
 if (!seminarHtml.includes('עד 21.9 כולל') || !seminarHtml.includes('החל מ־22.9')) fail('seminar: invalid visible pricing dates');
+if (!seminarHtml.includes('<section class="section" data-event-history hidden>')) fail('seminar: historical state must be hidden by default');
+if (!seminarHtml.includes('/assets/events.js?v=20260918-1')) fail('seminar: current event-state script version is not loaded');
 if (!seminarHtml.includes('target="_blank" rel="noopener noreferrer" data-seminar-track="seminar_paybox_click"')) fail('seminar: unsafe PayBox link attributes');
 if (!seminarHtml.includes('<li><a href="/events/">סמינרים ואירועים</a></li>')) fail('seminar: missing events breadcrumb');
 if (meta(seminarHtml, 'property', 'og:image') !== 'https://luckyroll13.com/assets/images/javier-zaruski-seminar-poster-v3.jpg') fail('seminar: official poster is not the social image');
@@ -187,9 +189,17 @@ for (const eventName of ['whatsapp_click', 'phone_click', 'maps_click', 'waze_cl
 for (const eventName of ['seminar_page_view', 'seminar_paybox_click', 'seminar_whatsapp_click', 'seminar_maps_click', 'seminar_video_click']) {
   if (!events.includes(eventName)) fail(`events tracking: missing ${eventName}`);
 }
+for (const metaEventName of ['ViewContent', 'InitiateCheckout', 'Lead']) {
+  if (!events.includes(metaEventName)) fail(`events tracking: missing Meta ${metaEventName}`);
+}
+if (events.includes("'Purchase'") || events.includes('"Purchase"')) fail('events tracking: Purchase must not fire without confirmed payment data');
 if (!events.includes("2026-09-22T00:00:00+03:00")) fail('events: missing Israel-time price cutoff');
 if (!events.includes("2026-09-25T15:00:00+03:00")) fail('events: missing automatic promotion cutoff');
+const eventEnd = Date.parse('2026-09-25T15:00:00+03:00');
+if (Date.parse('2026-09-25T14:59:59.999+03:00') >= eventEnd) fail('events: historical state starts before the approved cutoff');
+if (Date.parse('2026-09-25T15:00:00+03:00') < eventEnd) fail('events: historical state does not start at the approved cutoff');
 if (!events.includes("[data-event-card][data-event-end]")) fail('events: missing reusable event archive automation');
+if (!events.includes("[data-seminar-promo]")) fail('events: missing long-term seminar promo archive mode');
 
 const eventsHubHtml = readFileSync(resolve(root, 'events/index.html'), 'utf8');
 if (!eventsHubHtml.includes('data-upcoming-list') || !eventsHubHtml.includes('data-past-list')) fail('events hub: missing upcoming/past collections');
@@ -210,7 +220,22 @@ const robots = readFileSync(resolve(root, 'robots.txt'), 'utf8');
 if (!robots.includes('Sitemap: https://luckyroll13.com/sitemap.xml')) fail('robots.txt: missing sitemap reference');
 
 const campaign = readFileSync(resolve(root, 'marketing/javier-zaruski-campaign.md'), 'utf8');
+const campaignBase = 'https://luckyroll13.com/javier-zaruski-seminar/?utm_source=instagram&utm_medium=paid_social&utm_campaign=javier_zaruski_north_2026&utm_content=';
+for (const creative of ['poster', 'reel', 'story']) {
+  if (!campaign.includes(`${campaignBase}${creative}`)) fail(`campaign: missing ${creative} attribution URL`);
+}
+if ((campaign.match(/utm_campaign=javier_zaruski_north_2026/g) || []).length !== 3) fail('campaign: expected exactly three North campaign URLs');
+if (!campaign.includes('All paid ads land on the seminar page, never directly on PayBox.')) fail('campaign: missing landing-page routing rule');
 if (!campaign.includes('On 22.9.2026 update the PayBox group amount manually from ₪250 to ₪299.')) fail('campaign: missing PayBox admin reminder');
+
+for (const page of ['bjj/index.html', 'collaborations/index.html']) {
+  const pageHtml = readFileSync(resolve(root, page), 'utf8');
+  if (!pageHtml.includes('Javier Zaruski – Israel Seminar 🇮🇱')) fail(`${page}: missing approved seminar heading`);
+  if (!pageHtml.includes('25.9 | 12:00–15:00 | UFC Gym Nesher')) fail(`${page}: missing approved seminar summary`);
+  if (!pageHtml.includes('href="/javier-zaruski-seminar/"')) fail(`${page}: missing seminar link`);
+  if (!pageHtml.includes('data-preserve-utm') || !pageHtml.includes('data-seminar-promo')) fail(`${page}: seminar promotion does not preserve attribution or archive cleanly`);
+  if (!pageHtml.includes('/assets/events.js?v=20260918-1')) fail(`${page}: current event-state script version is not loaded`);
+}
 
 if (failures.length) {
   console.error(`QA failed with ${failures.length} issue(s):`);

@@ -1,9 +1,23 @@
-# Javier Zaruski Israel 2026 — campaign links
+# Javier Zaruski North 2026 — paid campaign
 
-- Instagram organic: https://luckyroll13.com/javier-zaruski-seminar/?utm_source=instagram&utm_medium=organic&utm_campaign=javier_zaruski_israel_2026
-- Instagram paid: https://luckyroll13.com/javier-zaruski-seminar/?utm_source=instagram&utm_medium=paid_social&utm_campaign=javier_zaruski_israel_2026
-- Facebook paid: https://luckyroll13.com/javier-zaruski-seminar/?utm_source=facebook&utm_medium=paid_social&utm_campaign=javier_zaruski_israel_2026
-- WhatsApp sharing: https://luckyroll13.com/javier-zaruski-seminar/?utm_source=whatsapp&utm_medium=share&utm_campaign=javier_zaruski_israel_2026
+One primary North Israel campaign: `javier_zaruski_north_2026`.
+
+Primary geography: Nesher, Haifa, Kiryat Motzkin, Kiryat Bialik, Kiryat Yam, Kiryat Ata, Kiryat Haim.
+
+## Instagram ad links
+
+- Poster: https://luckyroll13.com/javier-zaruski-seminar/?utm_source=instagram&utm_medium=paid_social&utm_campaign=javier_zaruski_north_2026&utm_content=poster
+- Reel: https://luckyroll13.com/javier-zaruski-seminar/?utm_source=instagram&utm_medium=paid_social&utm_campaign=javier_zaruski_north_2026&utm_content=reel
+- Story: https://luckyroll13.com/javier-zaruski-seminar/?utm_source=instagram&utm_medium=paid_social&utm_campaign=javier_zaruski_north_2026&utm_content=story
+
+Do not split campaign URLs by city. All paid ads land on the seminar page, never directly on PayBox.
+
+## Attribution
+
+- Seminar page: GA4 `seminar_page_view`; Meta Pixel `ViewContent`
+- PayBox click: GA4 `seminar_paybox_click`; Meta Pixel `InitiateCheckout`
+- WhatsApp click: GA4 `seminar_whatsapp_click`; Meta Pixel `Lead`
+- Never send `Purchase` without confirmed payment data.
 
 ## PayBox
 
