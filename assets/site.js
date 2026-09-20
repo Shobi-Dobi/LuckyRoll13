@@ -1,6 +1,29 @@
 (function initializeSiteNavigation(window, document) {
   'use strict';
 
+  var footerColumn = document.querySelector('.footer .footer-row > div:first-child');
+  var accessibilityLink = document.querySelector('a[href="/accessibility/"]');
+
+  if (footerColumn && !accessibilityLink) {
+    accessibilityLink = document.createElement('a');
+    accessibilityLink.href = '/accessibility/';
+    accessibilityLink.textContent = 'הצהרת נגישות';
+    footerColumn.appendChild(document.createElement('br'));
+    footerColumn.appendChild(accessibilityLink);
+  }
+
+  var skipLink = document.querySelector('.skip[href="#main"]');
+  var main = document.getElementById('main');
+
+  if (skipLink && main) {
+    main.setAttribute('tabindex', '-1');
+    skipLink.addEventListener('click', function focusMainContent() {
+      window.setTimeout(function () {
+        main.focus({ preventScroll: true });
+      }, 0);
+    });
+  }
+
   var menuButton = document.querySelector('.menu-toggle');
   var navigation = document.getElementById('primary-navigation');
 
@@ -29,7 +52,7 @@
   });
 
   document.addEventListener('keydown', function closeWithEscape(event) {
-    if (event.key === 'Escape') {
+    if (event.key === 'Escape' && navigation.classList.contains('is-open')) {
       closeMenu();
       menuButton.focus();
     }

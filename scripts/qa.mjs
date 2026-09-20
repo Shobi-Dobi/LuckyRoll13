@@ -18,7 +18,8 @@ const primaryPages = [
   ['contact/index.html', 'https://luckyroll13.com/contact/'],
   ['events/index.html', 'https://luckyroll13.com/events/'],
   ['kiryat-motzkin/index.html', 'https://luckyroll13.com/kiryat-motzkin/'],
-  ['javier-zaruski-seminar/index.html', 'https://luckyroll13.com/javier-zaruski-seminar/']
+  ['javier-zaruski-seminar/index.html', 'https://luckyroll13.com/javier-zaruski-seminar/'],
+  ['accessibility/index.html', 'https://luckyroll13.com/accessibility/']
 ];
 
 function fail(message) {
@@ -81,6 +82,7 @@ function localTarget(href) {
 }
 
 const titles = new Map();
+const descriptions = new Map();
 const googleMapsBusinessUrl = 'https://maps.google.com/?cid=8832126799717426719';
 
 for (const [file, expectedCanonical] of primaryPages) {
@@ -92,6 +94,7 @@ for (const [file, expectedCanonical] of primaryPages) {
 
   const html = readFileSync(fullPath, 'utf8');
   const title = html.match(/<title>([\s\S]*?)<\/title>/i)?.[1].trim();
+  const description = meta(html, 'name', 'description');
   const h1Count = (html.match(/<h1\b/gi) || []).length;
   const robots = meta(html, 'name', 'robots');
 
@@ -99,7 +102,9 @@ for (const [file, expectedCanonical] of primaryPages) {
   if (!title) fail(`${file}: missing title`);
   if (title && titles.has(title)) fail(`${file}: duplicate title with ${titles.get(title)}`);
   if (title) titles.set(title, file);
-  if (!meta(html, 'name', 'description')) fail(`${file}: missing meta description`);
+  if (!description) fail(`${file}: missing meta description`);
+  if (description && descriptions.has(description)) fail(`${file}: duplicate meta description with ${descriptions.get(description)}`);
+  if (description) descriptions.set(description, file);
   if (canonical(html) !== expectedCanonical) fail(`${file}: canonical mismatch`);
   if (!robots || !robots.includes('index') || robots.includes('noindex')) fail(`${file}: invalid robots directive`);
   if (h1Count !== 1) fail(`${file}: expected one H1, found ${h1Count}`);
@@ -133,6 +138,12 @@ for (const [file, expectedCanonical] of primaryPages) {
   const localAssets = [...html.matchAll(/\b(?:src|href)=["'](\/assets\/[^"'?#]+)["']/gi)].map((match) => match[1]);
   for (const asset of localAssets) {
     if (!existsSync(resolve(root, asset.slice(1)))) fail(`${file}: missing asset ${asset}`);
+  }
+
+  for (const imageTag of tags(html, 'img')) {
+    const attributes = parseAttributes(imageTag);
+    if (!Object.hasOwn(attributes, 'alt')) fail(`${file}: image is missing alt text (${attributes.src || 'unknown source'})`);
+    if (!attributes.width || !attributes.height) fail(`${file}: image is missing width/height (${attributes.src || 'unknown source'})`);
   }
 }
 
@@ -290,13 +301,61 @@ if (!eventsHubHtml.includes('מבחני דרגה')) fail('events hub: missing fu
 
 const notFoundHtml = readFileSync(resolve(root, '404.html'), 'utf8');
 if (!/href=["']\/events\/["'][^>]*>\s*סמינרים ואירועים\s*<\/a>/i.test(notFoundHtml)) fail('404.html: missing seminars and events navigation tab');
+if (!notFoundHtml.includes(googleMapsBusinessUrl)) fail('404.html: Google Maps link does not use the verified business profile');
+if (!notFoundHtml.includes('www.waze.com/ul?q=') || !notFoundHtml.includes('navigate=yes')) fail('404.html: Waze link does not use the verified address query');
+
+const localPageHtml = readFileSync(resolve(root, 'kiryat-motzkin/index.html'), 'utf8');
+const localPageSchemas = flattenSchemas(jsonLd(localPageHtml, 'kiryat-motzkin/index.html'));
+const localFaq = localPageSchemas.find((schema) => schema['@type'] === 'FAQPage');
+if (!localFaq || !Array.isArray(localFaq.mainEntity) || localFaq.mainEntity.length !== 3) fail('kiryat-motzkin: missing matching local FAQ schema');
+for (const phrase of ['אגרוף בקריית מוצקין', 'ג׳יו־ג׳יטסו BJJ בקריית מוצקין', 'אגרוף לנשים בקריית מוצקין', 'MMA לילדים ונוער']) {
+  if (!localPageHtml.includes(phrase)) fail(`kiryat-motzkin: missing useful local service content: ${phrase}`);
+}
+if (!localPageHtml.includes('href="/women-boxing/"')) fail('kiryat-motzkin: missing women boxing service link');
+
+const bjjHtml = readFileSync(resolve(root, 'bjj/index.html'), 'utf8');
+const bjjGallery = bjjHtml.match(/<div class="bjj-gallery">([\s\S]*?)<\/div>/i)?.[1] || '';
+if ((bjjGallery.match(/<img\b/gi) || []).length !== 21) fail('bjj: expected 21 gallery images');
+for (let number = 13; number <= 21; number += 1) {
+  const filename = `bjj-gallery-${number}.webp`;
+  if (!bjjGallery.includes(filename)) fail(`bjj: missing new gallery image ${filename}`);
+  if (!existsSync(resolve(root, 'assets/images', filename))) fail(`bjj: missing gallery asset ${filename}`);
+}
+
+const womenBoxingHtml = readFileSync(resolve(root, 'women-boxing/index.html'), 'utf8');
+const womenBoxingGallery = womenBoxingHtml.match(/<div class="women-gallery">([\s\S]*?)<\/div>/i)?.[1] || '';
+if ((womenBoxingGallery.match(/<img\b/gi) || []).length !== 2) fail('women-boxing: expected two gallery images');
+for (const filename of ['women-boxing-gallery-01.webp', 'women-boxing-gallery-02.webp']) {
+  if (!womenBoxingGallery.includes(filename)) fail(`women-boxing: missing gallery image ${filename}`);
+  if (!existsSync(resolve(root, 'assets/images', filename))) fail(`women-boxing: missing gallery asset ${filename}`);
+}
+
+const blogHtml = readFileSync(resolve(root, 'blog.html'), 'utf8');
+if (!blogHtml.includes('<meta name="robots" content="noindex,follow">')) fail('blog: placeholder must remain noindex,follow');
+if (!blogHtml.includes('href="/assets/logo.png"')) fail('blog: missing explicit favicon');
+if (!blogHtml.includes('href="/accessibility/"')) fail('blog: missing accessibility statement link');
+
+const thankYouHtml = readFileSync(resolve(root, 'thank-you.html'), 'utf8');
+if (!meta(thankYouHtml, 'name', 'description')) fail('thank-you: missing meta description');
+if (!thankYouHtml.includes('href="/assets/logo.png"')) fail('thank-you: missing explicit favicon');
 
 const sitemap = readFileSync(resolve(root, 'sitemap.xml'), 'utf8');
 for (const [, url] of primaryPages) {
   if (!sitemap.includes(`<loc>${url}</loc>`)) fail(`sitemap: missing ${url}`);
 }
-if ((sitemap.match(/<lastmod>2026-09-16<\/lastmod>/g) || []).length !== primaryPages.length) fail('sitemap: primary URLs do not have accurate lastmod dates');
+for (const [, url] of primaryPages) {
+  const escapedUrl = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  if (!new RegExp(`<url><loc>${escapedUrl}<\\/loc><lastmod>\\d{4}-\\d{2}-\\d{2}<\\/lastmod><\\/url>`).test(sitemap)) {
+    fail(`sitemap: ${url} is missing a valid lastmod date`);
+  }
+}
 if (sitemap.includes('/events/javier-zaruski/')) fail('sitemap: contains redirected seminar URL');
+if (!sitemap.includes('<loc>https://luckyroll13.com/bjj/</loc><lastmod>2026-09-20</lastmod>')) fail('sitemap: BJJ lastmod does not reflect the gallery update');
+if (!sitemap.includes('<loc>https://luckyroll13.com/women-boxing/</loc><lastmod>2026-09-20</lastmod>')) fail('sitemap: women boxing lastmod does not reflect the gallery update');
+if (!sitemap.includes('<loc>https://luckyroll13.com/kiryat-motzkin/</loc><lastmod>2026-09-20</lastmod>')) fail('sitemap: Kiryat Motzkin lastmod does not reflect the local content update');
+
+const siteScript = readFileSync(resolve(root, 'assets/site.js'), 'utf8');
+if (!siteScript.includes("accessibilityLink.href = '/accessibility/'")) fail('site navigation: accessibility statement link is not added to public footers');
 
 const robots = readFileSync(resolve(root, 'robots.txt'), 'utf8');
 if (!robots.includes('Sitemap: https://luckyroll13.com/sitemap.xml')) fail('robots.txt: missing sitemap reference');
