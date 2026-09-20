@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,follow">
+<meta name="description" content="תודה שפניתם ל-Lucky Roll13. הפרטים התקבלו וניצור איתכם קשר בהקדם.">
+<link rel="icon" href="/assets/logo.png">
 
 <title>תודה שהשארתם פרטים | Lucky Roll13</title>
 
@@ -49,6 +51,24 @@ body {
   cursor: pointer;
 }
 
+.back-link:focus-visible {
+  outline: 4px solid #00aeea;
+  outline-offset: 6px;
+  border-radius: 14px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* התאמה לטלפון */
 @media (max-width: 700px) {
   body {
@@ -69,11 +89,15 @@ body {
 
 <body>
 
-<a
-  class="back-link"
-  href="/"
-  aria-label="חזרה לאתר Lucky Roll13"
-></a>
+<main id="main">
+  <h1 class="sr-only">תודה שהשארתם פרטים</h1>
+  <p class="sr-only">קיבלנו את הפרטים וניצור איתכם קשר בהקדם.</p>
+  <a
+    class="back-link"
+    href="/"
+    aria-label="חזרה לאתר Lucky Roll13"
+  ></a>
+</main>
 
 </body>
 </html>

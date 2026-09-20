@@ -61,7 +61,7 @@ body{background:var(--event-bg);color:var(--event-text)}
 .featured-event-card.is-past-event{border-color:#343b43;background:linear-gradient(135deg,#101419,#090c0f)}
 .featured-event-card.is-past-event .featured-event-media img{filter:saturate(.72)}
 .past-empty{display:flex;align-items:center;gap:28px;padding:28px 32px;background:#0d1115;border:1px solid var(--event-line);border-radius:22px;color:var(--event-muted)}
-.past-empty>span{display:grid;place-items:center;flex:0 0 76px;aspect-ratio:1;border:1px solid #303840;border-radius:50%;color:#ffffff22;font-size:32px;font-weight:900}
+.past-empty>span{display:grid;place-items:center;flex:0 0 76px;aspect-ratio:1;border:1px solid #303840;border-radius:50%;color:#89939d;font-size:32px;font-weight:900}
 .past-empty h3{margin:0;color:#fff;font-size:22px}.past-empty p{margin:4px 0 8px}.past-empty a{color:var(--event-blue);font-weight:800;text-decoration:none}
 
 /* Detail hero */
@@ -175,4 +175,4 @@ body{background:var(--event-bg);color:var(--event-text)}
 }
 
 @media(hover:hover){.card:hover,.achievement-card:hover{border-color:#3a444e}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.menu-toggle,.btn,a,.featured-event-media img{transition:none}.btn:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.menu-toggle,.btn,a,.featured-event-media img,.event-gallery img{transition:none}.btn:hover{transform:none}}
