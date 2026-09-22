@@ -162,7 +162,7 @@ if (!homeHtml.includes('href="/kiryat-motzkin/"')) fail('index.html: missing Kir
 const seminarHtml = readFileSync(resolve(root, 'javier-zaruski-seminar/index.html'), 'utf8');
 const seminarSchemas = flattenSchemas(jsonLd(seminarHtml, 'javier-zaruski-seminar/index.html'));
 const eventSchema = seminarSchemas.find((schema) => schema['@type'] === 'Event');
-const payboxUrl = 'https://links.payboxapp.com/uCxBVtnBs6b';
+const payboxUrl = 'https://links.payboxapp.com/b6oGjcjjD6b';
 const payboxLinks = [...seminarHtml.matchAll(/href=["'](https:\/\/links\.payboxapp\.com\/[^"']+)["']/g)].map((match) => match[1]);
 
 if (payboxLinks.length !== 5) fail(`seminar: expected 5 PayBox CTAs, found ${payboxLinks.length}`);
@@ -277,7 +277,7 @@ if (preEvent.salesNodes.some((node) => node.hidden)) fail('events runtime: sales
 if (!preEvent.historyNode.hidden) fail('events runtime: historical message visible before event end');
 if (preEvent.priceNode.textContent !== '₪299' || preEvent.stickyNode.textContent !== 'הרשמה – ₪299') fail('events runtime: current price missing before event end');
 
-preEvent.click('seminar_paybox_click', 'https://links.payboxapp.com/uCxBVtnBs6b');
+preEvent.click('seminar_paybox_click', 'https://links.payboxapp.com/b6oGjcjjD6b');
 preEvent.click('seminar_whatsapp_click', 'https://wa.me/972546420206');
 for (const eventName of ['seminar_page_view', 'seminar_paybox_click', 'seminar_whatsapp_click']) {
   if (!preEvent.gaEvents.some((entry) => entry[0] === 'event' && entry[1] === eventName && entry[2]?.utm_campaign === 'javier_zaruski_north_2026')) fail(`events runtime: GA4 ${eventName} attribution failed`);

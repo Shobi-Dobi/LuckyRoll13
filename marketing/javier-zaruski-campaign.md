@@ -21,7 +21,7 @@ Do not split campaign URLs by city. All paid ads land on the seminar page, never
 
 ## PayBox
 
-Registration URL: https://links.payboxapp.com/uCxBVtnBs6b
+Registration URL: https://links.payboxapp.com/b6oGjcjjD6b
 
 The PayBox group uses a fixed amount. Do not append UTM or price parameters to this URL.
 
