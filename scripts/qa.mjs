@@ -198,11 +198,15 @@ const homeHtml = readFileSync(resolve(root, 'index.html'), 'utf8');
 const homeSchemas = flattenSchemas(jsonLd(homeHtml, 'index.html'));
 const business = homeSchemas.find((schema) => schema['@type'] === 'SportsActivityLocation');
 const website = homeSchemas.find((schema) => schema['@type'] === 'WebSite');
+const founder = homeSchemas.find((schema) => schema['@type'] === 'Person' && schema['@id'] === 'https://luckyroll13.com/#shabi-shilon');
 
 if (business?.['@id'] !== 'https://luckyroll13.com/#business') fail('index.html: inconsistent business @id');
 if (business?.telephone !== '+972546420206') fail('index.html: inconsistent business telephone');
 if (business?.address?.streetAddress !== 'מנחם בגין 26') fail('index.html: inconsistent business address');
 if (website?.publisher?.['@id'] !== 'https://luckyroll13.com/#business') fail('index.html: WebSite publisher does not reference business');
+if (business?.founder?.['@id'] !== 'https://luckyroll13.com/#shabi-shilon') fail('index.html: business does not reference Shabi Shilon as founder');
+if (founder?.name !== 'שבי שילון' || founder?.worksFor?.['@id'] !== 'https://luckyroll13.com/#business') fail('index.html: Shabi Shilon Person entity is incomplete');
+if (!homeHtml.includes('href="/about/"><strong>שבי שילון</strong>')) fail('index.html: visible founder identity is missing');
 if (!homeHtml.includes('data-home-event-promo')) fail('index.html: missing temporary seminar promotion');
 if (!homeHtml.includes('href="/kiryat-motzkin/"')) fail('index.html: missing Kiryat Motzkin link');
 
@@ -216,6 +220,19 @@ if (englishWebsite?.['@id'] !== 'https://luckyroll13.com/#website') fail('en/ind
 if (englishWebPage?.['@id'] !== 'https://luckyroll13.com/en/#webpage' || englishWebPage?.url !== 'https://luckyroll13.com/en/') fail('en/index.html: English WebPage identity is not localized');
 if (englishWebPage?.isPartOf?.['@id'] !== 'https://luckyroll13.com/#website' || englishWebPage?.about?.['@id'] !== 'https://luckyroll13.com/#business') fail('en/index.html: English WebPage does not reference the stable site and business identities');
 if (meta(englishHomeHtml, 'property', 'og:image') !== 'https://luckyroll13.com/assets/images/hero.webp') fail('en/index.html: English social image URL is invalid');
+const englishFounder = englishHomeSchemas.find((schema) => schema['@type'] === 'Person' && schema['@id'] === 'https://luckyroll13.com/#shabi-shilon');
+if (englishFounder?.name !== 'Shabi Shilon' || englishBusiness?.founder?.['@id'] !== 'https://luckyroll13.com/#shabi-shilon') fail('en/index.html: English founder entity is incomplete');
+
+const aboutHtml = readFileSync(resolve(root, 'about/index.html'), 'utf8');
+const aboutSchemas = flattenSchemas(jsonLd(aboutHtml, 'about/index.html'));
+const aboutFounder = aboutSchemas.find((schema) => schema['@type'] === 'Person' && schema['@id'] === 'https://luckyroll13.com/#shabi-shilon');
+if (!aboutFounder || aboutFounder.subjectOf?.length !== 2) fail('about/index.html: founder entity is missing verified competition references');
+if (!aboutHtml.includes('ADCC Amateur World Championship') || !aboutHtml.includes('smoothcomp.com/en/event/29650')) fail('about/index.html: verified international competition record is missing');
+
+const englishAboutHtml = readFileSync(resolve(root, 'en/about/index.html'), 'utf8');
+const englishAboutSchemas = flattenSchemas(jsonLd(englishAboutHtml, 'en/about/index.html'));
+const englishAboutFounder = englishAboutSchemas.find((schema) => schema['@type'] === 'Person' && schema['@id'] === 'https://luckyroll13.com/#shabi-shilon');
+if (!englishAboutFounder || englishAboutFounder.name !== 'Shabi Shilon') fail('en/about/index.html: English founder entity is incomplete');
 
 const localSearchChecks = [
   ['index.html', ['אומנויות לחימה בקריות ובנשר', 'אגרוף', 'ג׳יו־ג׳יטסו', 'MMA', 'קריית מוצקין', 'נשר']],
