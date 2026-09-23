@@ -1,12 +1,18 @@
 <!doctype html>
 <html lang="he" dir="rtl">
 <head>
+  <script>document.documentElement.classList.add('js-enabled');</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>אומנויות לחימה בקריית מוצקין | אגרוף ו-BJJ | Lucky Roll13</title>
   <meta name="description" content="Lucky Roll13 בקריית מוצקין – אימוני אגרוף, ג׳יו־ג׳יטסו BJJ, MMA, אגרוף לנשים, אימונים אישיים ואומנויות לחימה לילדים ונוער במנחם בגין 26.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://luckyroll13.com/kiryat-motzkin/">
+  <link rel="alternate" hreflang="he" href="https://luckyroll13.com/kiryat-motzkin/">
+  <link rel="alternate" hreflang="en" href="https://luckyroll13.com/en/kiryat-motzkin/">
+  <link rel="alternate" hreflang="x-default" href="https://luckyroll13.com/kiryat-motzkin/">
+
+
   <meta property="og:type" content="website">
   <meta property="og:locale" content="he_IL">
   <meta property="og:site_name" content="Lucky Roll13">
@@ -20,7 +26,7 @@
   <meta name="twitter:description" content="אגרוף, BJJ, No-Gi, MMA ואימונים אישיים במנחם בגין 26, קריית מוצקין.">
   <meta name="twitter:image" content="https://luckyroll13.com/assets/images/hero.webp">
   <link rel="icon" href="/assets/logo.png">
-  <link rel="stylesheet" href="/assets/style.css?v=20260920-1">
+  <link rel="stylesheet" href="/assets/style.css?v=20260923-1">
   <style>
     .location-intro{background:linear-gradient(135deg,#0b3445,#0d1116)}
     .location-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:30px}
@@ -63,7 +69,7 @@
         "url": "https://luckyroll13.com/kiryat-motzkin/",
         "name": "אומנויות לחימה בקריית מוצקין – Lucky Roll13",
         "description": "אימוני אגרוף, ג׳יו־ג׳יטסו BJJ, MMA, אגרוף לנשים ואומנויות לחימה לילדים ונוער בקריית מוצקין.",
-        "inLanguage": "he-IL",
+        "inLanguage":"he-IL",
         "about": {"@id": "https://luckyroll13.com/#business"},
         "mainEntity": {"@id": "https://luckyroll13.com/#business"}
       },
@@ -107,16 +113,45 @@
     ]
   }
   </script>
-  <script defer src="/assets/tracking.js"></script>
-  <script defer src="/assets/site.js?v=20260920-1"></script>
+  <script defer src="/assets/tracking.js?v=20260923-1"></script>
+  <script defer src="/assets/site.js?v=20260923-1"></script>
 </head>
 <body>
   <a class="skip" href="#main">דלגו לתוכן</a>
-  <header class="top"><div class="wrap nav">
-    <a href="/" aria-label="Lucky Roll13 – דף הבית"><img class="logo" src="/assets/images/luckyroll13-header-logo.webp" alt="Lucky Roll13 – Boxing &amp; Jiu-Jitsu" width="1431" height="359"></a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">תפריט</button>
-    <nav id="primary-navigation" class="links" aria-label="ניווט ראשי"><a href="/bjj/">ג׳יו־ג׳יטסו</a><a href="/boxing/">אגרוף</a><a href="/women-boxing/">אגרוף נשים</a><a href="/kids/">ילדים</a><a href="/mma/">MMA</a><a href="/adults/">אימונים אישיים</a><a href="/about/">עלינו</a><a href="/collaborations/">שיתופי פעולה</a><a href="/events/">סמינרים ואירועים</a><a href="/contact/">צור קשר</a></nav>
-  </div></header>
+  <header class="top">
+  <div class="wrap nav">
+    <a class="brand-link" href="/" aria-label="Lucky Roll13 דף הבית">
+      <img class="logo" src="/assets/images/luckyroll13-header-logo.webp" alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" width="1431" height="359">
+    </a>
+    <div class="header-tools">
+      <div class="language-switcher" aria-label="בחירת שפה">
+        <a href="/kiryat-motzkin/" hreflang="he" lang="he" aria-current="page">עברית</a>
+        <span class="language-switcher-separator" aria-hidden="true">|</span>
+        <a href="/en/kiryat-motzkin/" hreflang="en" lang="en">English</a>
+      </div>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="פתיחת תפריט ניווט" data-open-label="פתיחת תפריט ניווט" data-close-label="סגירת תפריט ניווט">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </div>
+    <nav id="primary-navigation" class="links" aria-label="ניווט ראשי">
+      <button class="menu-close" type="button"><span>סגירה</span><span class="menu-close-icon" aria-hidden="true">×</span></button>
+        <a href="/">דף הבית</a>
+        <a href="/bjj/">ג׳יו־ג׳יטסו</a>
+        <a href="/boxing/">אגרוף</a>
+        <a href="/women-boxing/">אגרוף נשים</a>
+        <a href="/kids/">ילדים ונוער</a>
+        <a href="/mma/">MMA</a>
+        <a href="/adults/">אימונים אישיים</a>
+        <a href="/about/">עלינו</a>
+        <a href="/collaborations/">שיתופי פעולה</a>
+        <a href="/events/">סמינרים ואירועים</a>
+        <a href="/kiryat-motzkin/" aria-current="page">קריית מוצקין</a>
+        <a class="cta" href="/contact/">צור קשר</a>
+    </nav>
+  </div>
+</header>
   <main id="main">
     <section class="page-hero location-intro"><div class="wrap"><div class="eyebrow">LUCKY ROLL13 · קריית מוצקין</div><h1>אומנויות לחימה בקריית מוצקין – Lucky Roll13</h1><p class="lead">Lucky Roll13 הוא בית לאימוני אגרוף, ג׳יו־ג׳יטסו ואומנויות לחימה בקריית מוצקין, המשרת מתאמנים מקריית מוצקין ומכל אזור הקריות.</p><div class="actions"><a class="btn" href="https://wa.me/972546420206?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A7%D7%91%D7%95%D7%A2%20%D7%90%D7%99%D7%9E%D7%95%D7%9F%20%D7%A0%D7%99%D7%A1%D7%99%D7%95%D7%9F%20%D7%91%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%9E%D7%95%D7%A6%D7%A7%D7%99%D7%9F">לקביעת אימון ניסיון</a><a class="btn alt" href="tel:+972546420206"><bdi dir="ltr">054-642-0206</bdi></a></div></div></section>
 
