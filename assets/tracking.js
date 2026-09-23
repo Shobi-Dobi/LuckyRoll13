@@ -1,6 +1,14 @@
 (function initializeLuckyRoll13Tracking(window, document) {
   'use strict';
 
+  var localQaHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  var localQaDisabled = new URLSearchParams(window.location.search).get('qa_no_tracking') === '1';
+
+  if (localQaHost && localQaDisabled) {
+    window.__luckyRoll13TrackingSuppressedForQa = true;
+    return;
+  }
+
   if (window.__luckyRoll13TrackingLoaded) {
     return;
   }

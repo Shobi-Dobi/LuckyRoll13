@@ -1,6 +1,33 @@
 (function initializeSeminarExperience(window, document) {
   'use strict';
 
+  var isEnglish = document.documentElement.lang.toLowerCase().indexOf('en') === 0;
+  var copy = isEnglish
+    ? {
+        currentPrice: 'Current price',
+        earlyRegistration: 'Early registration – ₪250',
+        registration: 'Registration – ₪299',
+        regularPrice: 'Regular price',
+        seminarCompleted: 'Seminar completed',
+        pastSeminar: 'Past seminar · 25.9.2026',
+        archivedSeminar: 'View archived seminar',
+        eventCompleted: 'Event completed',
+        archive: 'Archive',
+        eventDetails: 'Event details <span aria-hidden="true">→</span>'
+      }
+    : {
+        currentPrice: 'המחיר הנוכחי',
+        earlyRegistration: 'הרשמה מוקדמת – ₪250',
+        registration: 'הרשמה – ₪299',
+        regularPrice: 'מחיר רגיל',
+        seminarCompleted: 'הסמינר התקיים',
+        pastSeminar: 'סמינר עבר · 25.9.2026',
+        archivedSeminar: 'לפרטי הסמינר מהארכיון',
+        eventCompleted: 'האירוע התקיים',
+        archive: 'מהארכיון',
+        eventDetails: 'לפרטי האירוע <span aria-hidden="true">←</span>'
+      };
+
   var campaignKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
   var campaignStorageKey = 'luckyroll13_campaign';
   var campaign = {};
@@ -103,7 +130,7 @@
       card.classList.toggle('is-current', current && !eventIsPast);
 
       var label = card.querySelector('[data-current-label]');
-      if (label) label.textContent = current && !eventIsPast ? 'המחיר הנוכחי' : '';
+      if (label) label.textContent = current && !eventIsPast ? copy.currentPrice : '';
     });
   });
 
@@ -112,7 +139,7 @@
   });
 
   document.querySelectorAll('[data-sticky-label]').forEach(function (node) {
-    node.textContent = currentTier === 'early' ? 'הרשמה מוקדמת – ₪250' : 'הרשמה – ₪299';
+    node.textContent = currentTier === 'early' ? copy.earlyRegistration : copy.registration;
   });
 
   var eventSchema = document.getElementById('seminar-event-schema');
@@ -127,10 +154,12 @@
       } else if (currentTier === 'regular') {
         schema.offers = {
           '@type': 'Offer',
-          name: 'מחיר רגיל',
+          name: copy.regularPrice,
           price: '299',
           priceCurrency: 'ILS',
-          url: 'https://luckyroll13.com/javier-zaruski-seminar/',
+          url: isEnglish
+            ? 'https://luckyroll13.com/en/javier-zaruski-seminar/'
+            : 'https://luckyroll13.com/javier-zaruski-seminar/',
           availability: 'https://schema.org/InStock'
         };
       }
@@ -148,7 +177,7 @@
     });
     document.querySelectorAll('[data-event-status]').forEach(function (status) {
       status.classList.add('is-past');
-      status.innerHTML = '<span aria-hidden="true"></span>הסמינר התקיים';
+      status.innerHTML = '<span aria-hidden="true"></span>' + copy.seminarCompleted;
     });
     document.querySelectorAll('[data-event-history]').forEach(function (node) {
       node.hidden = false;
@@ -165,10 +194,10 @@
     promo.classList.add('is-past-event');
 
     var promoEyebrow = promo.querySelector('[data-seminar-promo-eyebrow]');
-    if (promoEyebrow) promoEyebrow.textContent = 'סמינר עבר · 25.9.2026';
+    if (promoEyebrow) promoEyebrow.textContent = copy.pastSeminar;
 
     var promoCta = promo.querySelector('[data-seminar-promo-cta]');
-    if (promoCta) promoCta.textContent = 'לפרטי הסמינר מהארכיון';
+    if (promoCta) promoCta.textContent = copy.archivedSeminar;
   });
 
   var upcomingList = document.querySelector('[data-upcoming-list]');
@@ -187,14 +216,14 @@
 
       if (cardStatus) {
         cardStatus.classList.add('is-past');
-        cardStatus.innerHTML = '<span aria-hidden="true"></span>האירוע התקיים';
+        cardStatus.innerHTML = '<span aria-hidden="true"></span>' + copy.eventCompleted;
       }
 
       var cardEyebrow = card.querySelector('.featured-event-copy > .eyebrow');
-      if (cardEyebrow) cardEyebrow.textContent = 'מהארכיון';
+      if (cardEyebrow) cardEyebrow.textContent = copy.archive;
 
       var cardCta = card.querySelector('[data-event-card-cta]');
-      if (cardCta) cardCta.innerHTML = 'לפרטי האירוע <span aria-hidden="true">←</span>';
+      if (cardCta) cardCta.innerHTML = copy.eventDetails;
     });
 
     var upcomingEmpty = document.querySelector('[data-upcoming-empty]');

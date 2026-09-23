@@ -22,6 +22,16 @@ const primaryPages = [
   ['accessibility/index.html', 'https://luckyroll13.com/accessibility/']
 ];
 
+const englishPages = primaryPages.map(([file, url]) => {
+  const englishFile = file === 'index.html' ? 'en/index.html' : `en/${file}`;
+  const englishUrl = url === 'https://luckyroll13.com/'
+    ? 'https://luckyroll13.com/en/'
+    : url.replace('https://luckyroll13.com/', 'https://luckyroll13.com/en/');
+  return [englishFile, englishUrl];
+});
+
+const allIndexablePages = [...primaryPages, ...englishPages];
+
 function fail(message) {
   failures.push(message);
 }
@@ -52,6 +62,12 @@ function canonical(html) {
   return tags(html, 'link')
     .map(parseAttributes)
     .find((attributes) => attributes.rel === 'canonical')?.href;
+}
+
+function alternate(html, language) {
+  return tags(html, 'link')
+    .map(parseAttributes)
+    .find((attributes) => attributes.rel === 'alternate' && attributes.hreflang === language)?.href;
 }
 
 function jsonLd(html, file) {
@@ -85,7 +101,7 @@ const titles = new Map();
 const descriptions = new Map();
 const googleMapsBusinessUrl = 'https://maps.google.com/?cid=8832126799717426719';
 
-for (const [file, expectedCanonical] of primaryPages) {
+for (const [file, expectedCanonical] of allIndexablePages) {
   const fullPath = resolve(root, file);
   if (!existsSync(fullPath)) {
     fail(`${file}: missing primary page`);
@@ -98,7 +114,17 @@ for (const [file, expectedCanonical] of primaryPages) {
   const h1Count = (html.match(/<h1\b/gi) || []).length;
   const robots = meta(html, 'name', 'robots');
 
-  if (!/<html\b[^>]*lang=["']he["'][^>]*dir=["']rtl["']|<html\b[^>]*dir=["']rtl["'][^>]*lang=["']he["']/i.test(html)) fail(`${file}: missing he/rtl document attributes`);
+  const isEnglish = file.startsWith('en/');
+  const expectedLanguage = isEnglish ? 'en' : 'he';
+  const expectedDirection = isEnglish ? 'ltr' : 'rtl';
+  const hebrewUrl = isEnglish ? expectedCanonical.replace('/en/', '/') : expectedCanonical;
+  const englishUrl = isEnglish
+    ? expectedCanonical
+    : expectedCanonical === 'https://luckyroll13.com/'
+      ? 'https://luckyroll13.com/en/'
+      : expectedCanonical.replace('https://luckyroll13.com/', 'https://luckyroll13.com/en/');
+
+  if (!new RegExp(`<html\\b[^>]*lang=["']${expectedLanguage}["'][^>]*dir=["']${expectedDirection}["']|<html\\b[^>]*dir=["']${expectedDirection}["'][^>]*lang=["']${expectedLanguage}["']`, 'i').test(html)) fail(`${file}: missing ${expectedLanguage}/${expectedDirection} document attributes`);
   if (!title) fail(`${file}: missing title`);
   if (title && titles.has(title)) fail(`${file}: duplicate title with ${titles.get(title)}`);
   if (title) titles.set(title, file);
@@ -106,9 +132,29 @@ for (const [file, expectedCanonical] of primaryPages) {
   if (description && descriptions.has(description)) fail(`${file}: duplicate meta description with ${descriptions.get(description)}`);
   if (description) descriptions.set(description, file);
   if (canonical(html) !== expectedCanonical) fail(`${file}: canonical mismatch`);
+  if (alternate(html, 'he') !== hebrewUrl) fail(`${file}: Hebrew hreflang mismatch`);
+  if (alternate(html, 'en') !== englishUrl) fail(`${file}: English hreflang mismatch`);
+  if (alternate(html, 'x-default') !== hebrewUrl) fail(`${file}: x-default hreflang mismatch`);
   if (!robots || !robots.includes('index') || robots.includes('noindex')) fail(`${file}: invalid robots directive`);
   if (h1Count !== 1) fail(`${file}: expected one H1, found ${h1Count}`);
-  if (!/href=["']\/events\/["'][^>]*>\s*סמינרים ואירועים\s*<\/a>/i.test(html)) fail(`${file}: missing seminars and events navigation tab`);
+  const eventsPath = isEnglish ? '/en/events/' : '/events/';
+  const eventsLabel = isEnglish ? 'Seminars and Events' : 'סמינרים ואירועים';
+  if (!new RegExp(`href=["']${eventsPath.replaceAll('/', '\\/')}["'][^>]*>\\s*${eventsLabel}\\s*<\\/a>`, 'i').test(html)) fail(`${file}: missing seminars and events navigation tab`);
+  if ((html.match(/class=["'][^"']*menu-toggle[^"']*["']/gi) || []).length !== 1) fail(`${file}: expected one hamburger toggle`);
+  if (/>\s*תפריט\s*</.test(html)) fail(`${file}: obsolete visible menu text remains`);
+  if (!/<button\b[^>]*class=["'][^"']*menu-toggle[^"']*["'][^>]*type=["']button["'][^>]*aria-expanded=["']false["'][^>]*aria-controls=["']primary-navigation["'][^>]*>[\s\S]*?<svg\b[^>]*aria-hidden=["']true["']/i.test(html)) fail(`${file}: invalid accessible hamburger button`);
+  if (!html.includes('class="menu-close"')) fail(`${file}: missing explicit menu close control`);
+  if (!html.includes('class="language-switcher"')) fail(`${file}: missing visible language switcher`);
+  if (!html.includes(`href="${new URL(hebrewUrl).pathname}"`) || !html.includes(`href="${new URL(englishUrl).pathname}"`)) fail(`${file}: language switcher does not link the translated pair`);
+  const navigationMarkup = html.match(/<nav\b[^>]*id=["']primary-navigation["'][^>]*>[\s\S]*?<\/nav>/i)?.[0] || '';
+  for (const path of ['/', '/bjj/', '/boxing/', '/women-boxing/', '/kids/', '/mma/', '/adults/', '/about/', '/collaborations/', '/events/', '/kiryat-motzkin/', '/contact/']) {
+    const expectedPath = isEnglish ? (path === '/' ? '/en/' : `/en${path}`) : path;
+    if (!navigationMarkup.includes(`href="${expectedPath}"`)) fail(`${file}: navigation is missing ${expectedPath}`);
+  }
+  if (!html.includes(`/assets/style.css?v=20260923-1`) || !html.includes(`/assets/site.js?v=20260923-1`)) fail(`${file}: missing current shared asset cache version`);
+  if (!html.includes(`/assets/tracking.js?v=20260923-1`)) fail(`${file}: missing current tracking asset cache version`);
+  if (isEnglish && html.replace('>עברית<', '><').match(/[\u0590-\u05ff]/)) fail(`${file}: untranslated Hebrew text remains`);
+  if (isEnglish && /translate\.google|googtrans|google\.translate/i.test(html)) fail(`${file}: runtime translation widget detected`);
 
   for (const property of ['og:title', 'og:description', 'og:url', 'og:image']) {
     if (!meta(html, 'property', property)) fail(`${file}: missing ${property}`);
@@ -176,7 +222,7 @@ if (eventSchema?.offers?.price !== '250' || eventSchema?.offers?.priceValidUntil
 if (!Array.isArray(eventSchema?.image) || eventSchema.image.length !== 4) fail('seminar: expected four Event schema images');
 if (!seminarHtml.includes('עד 21.9 כולל') || !seminarHtml.includes('החל מ־22.9')) fail('seminar: invalid visible pricing dates');
 if (!seminarHtml.includes('<section class="section" data-event-history hidden>')) fail('seminar: historical state must be hidden by default');
-if (!seminarHtml.includes('/assets/events.js?v=20260918-1')) fail('seminar: current event-state script version is not loaded');
+if (!seminarHtml.includes('/assets/events.js?v=20260923-1')) fail('seminar: current event-state script version is not loaded');
 if (!seminarHtml.includes('target="_blank" rel="noopener noreferrer" data-seminar-track="seminar_paybox_click"')) fail('seminar: unsafe PayBox link attributes');
 if (!seminarHtml.includes('<li><a href="/events/">סמינרים ואירועים</a></li>')) fail('seminar: missing events breadcrumb');
 if (meta(seminarHtml, 'property', 'og:image') !== 'https://luckyroll13.com/assets/images/javier-zaruski-seminar-poster-v7.jpg') fail('seminar: official poster is not the social image');
@@ -196,7 +242,7 @@ if (!seminarHtml.includes('href="https://www.youtube.com/watch?v=JFVUv_njAX8"'))
 const tracking = readFileSync(resolve(root, 'assets/tracking.js'), 'utf8');
 const events = readFileSync(resolve(root, 'assets/events.js'), 'utf8');
 
-function simulateSeminarExperience(now, search = '?utm_source=instagram&utm_medium=paid_social&utm_campaign=javier_zaruski_north_2026&utm_content=poster') {
+function simulateSeminarExperience(now, search = '?utm_source=instagram&utm_medium=paid_social&utm_campaign=javier_zaruski_north_2026&utm_content=poster', language = 'he') {
   const gaEvents = [];
   const metaEvents = [];
   const handlers = {};
@@ -213,6 +259,7 @@ function simulateSeminarExperience(now, search = '?utm_source=instagram&utm_medi
   const pageUrl = new URL(`https://luckyroll13.com/javier-zaruski-seminar/${search}`);
 
   const document = {
+    documentElement: { lang: language },
     body: {
       classList: {
         contains: (name) => bodyClasses.has(name),
@@ -258,6 +305,7 @@ function simulateSeminarExperience(now, search = '?utm_source=instagram&utm_medi
 for (const eventName of ['whatsapp_click', 'phone_click', 'maps_click', 'waze_click', 'trial_form_submit']) {
   if (!tracking.includes(eventName)) fail(`tracking: missing ${eventName}`);
 }
+if (!tracking.includes('__luckyRoll13TrackingSuppressedForQa') || !tracking.includes("qa_no_tracking") || !tracking.includes("window.location.hostname === 'localhost'")) fail('tracking: local-only QA suppression guard is missing');
 for (const eventName of ['seminar_page_view', 'seminar_paybox_click', 'seminar_whatsapp_click', 'seminar_maps_click', 'seminar_video_click']) {
   if (!events.includes(eventName)) fail(`events tracking: missing ${eventName}`);
 }
@@ -293,6 +341,11 @@ if (atEventEnd.salesNodes.some((node) => !node.hidden)) fail('events runtime: sa
 if (atEventEnd.historyNode.hidden || !atEventEnd.statusNode.innerHTML.includes('הסמינר התקיים')) fail('events runtime: historical message missing after event end');
 if (!events.includes("[data-event-card][data-event-end]")) fail('events: missing reusable event archive automation');
 if (!events.includes("[data-seminar-promo]")) fail('events: missing long-term seminar promo archive mode');
+
+const englishPreEvent = simulateSeminarExperience(eventEnd - 1, '?utm_campaign=javier_zaruski_north_2026&utm_content=story', 'en');
+if (englishPreEvent.priceNode.textContent !== '₪299' || englishPreEvent.stickyNode.textContent !== 'Registration – ₪299') fail('events runtime: English current price label failed');
+const englishAtEventEnd = simulateSeminarExperience(eventEnd, '', 'en');
+if (!englishAtEventEnd.statusNode.innerHTML.includes('Seminar completed')) fail('events runtime: English historical message failed');
 
 const eventsHubHtml = readFileSync(resolve(root, 'events/index.html'), 'utf8');
 if (!eventsHubHtml.includes('data-upcoming-list') || !eventsHubHtml.includes('data-past-list')) fail('events hub: missing upcoming/past collections');
@@ -338,12 +391,19 @@ if (!blogHtml.includes('href="/accessibility/"')) fail('blog: missing accessibil
 const thankYouHtml = readFileSync(resolve(root, 'thank-you.html'), 'utf8');
 if (!meta(thankYouHtml, 'name', 'description')) fail('thank-you: missing meta description');
 if (!thankYouHtml.includes('href="/assets/logo.png"')) fail('thank-you: missing explicit favicon');
+const englishThankYouHtml = readFileSync(resolve(root, 'en/thank-you/index.html'), 'utf8');
+if (!meta(englishThankYouHtml, 'name', 'description')) fail('English thank-you: missing meta description');
+if (!englishThankYouHtml.includes('name="robots" content="noindex,follow"')) fail('English thank-you: must remain noindex,follow');
+if (!englishThankYouHtml.includes('href="/en/"')) fail('English thank-you: return link does not stay in English');
+for (const formPage of ['en/kids/index.html', 'en/women-boxing/index.html']) {
+  if (!readFileSync(resolve(root, formPage), 'utf8').includes('action="/en/thank-you/"')) fail(`${formPage}: form does not use the English success page`);
+}
 
 const sitemap = readFileSync(resolve(root, 'sitemap.xml'), 'utf8');
-for (const [, url] of primaryPages) {
+for (const [, url] of allIndexablePages) {
   if (!sitemap.includes(`<loc>${url}</loc>`)) fail(`sitemap: missing ${url}`);
 }
-for (const [, url] of primaryPages) {
+for (const [, url] of allIndexablePages) {
   const escapedUrl = url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   if (!new RegExp(`<url><loc>${escapedUrl}<\\/loc><lastmod>\\d{4}-\\d{2}-\\d{2}<\\/lastmod><\\/url>`).test(sitemap)) {
     fail(`sitemap: ${url} is missing a valid lastmod date`);
@@ -355,7 +415,14 @@ if (!sitemap.includes('<loc>https://luckyroll13.com/women-boxing/</loc><lastmod>
 if (!sitemap.includes('<loc>https://luckyroll13.com/kiryat-motzkin/</loc><lastmod>2026-09-20</lastmod>')) fail('sitemap: Kiryat Motzkin lastmod does not reflect the local content update');
 
 const siteScript = readFileSync(resolve(root, 'assets/site.js'), 'utf8');
-if (!siteScript.includes("accessibilityLink.href = '/accessibility/'")) fail('site navigation: accessibility statement link is not added to public footers');
+const styles = readFileSync(resolve(root, 'assets/style.css'), 'utf8');
+if (!siteScript.includes("isEnglish ? '/en/accessibility/' : '/accessibility/'")) fail('site navigation: localized accessibility statement link is not added to public footers');
+if (!siteScript.includes('attributionKeys') || !siteScript.includes('utm_')) fail('site navigation: language switching does not preserve campaign attribution');
+if (!siteScript.includes("event.key === 'Escape'") || !siteScript.includes('closeButton.addEventListener')) fail('site navigation: keyboard Escape or close control support is missing');
+if (!/\.links\s*\{[^}]*display:\s*flex/i.test(styles)) fail('site navigation: no-JavaScript navigation fallback is not visible');
+if (!/\.menu-toggle,\s*\.menu-close\s*\{[^}]*display:\s*none/i.test(styles)) fail('site navigation: progressive enhancement controls are visible without JavaScript');
+if (!/html\.js-enabled\s+\.links\s*\{[^}]*display:\s*none/i.test(styles)) fail('site navigation: closed enhanced panel is not hidden');
+if (!/html\.js-enabled\s+\.links\.is-open\s*\{[^}]*display:\s*flex/i.test(styles)) fail('site navigation: enhanced panel has no open state');
 
 const robots = readFileSync(resolve(root, 'robots.txt'), 'utf8');
 if (!robots.includes('Sitemap: https://luckyroll13.com/sitemap.xml')) fail('robots.txt: missing sitemap reference');
@@ -375,8 +442,14 @@ for (const page of ['bjj/index.html', 'collaborations/index.html']) {
   if (!pageHtml.includes('25.9 | 12:00–15:00 | UFC Gym Nesher')) fail(`${page}: missing approved seminar summary`);
   if (!pageHtml.includes('href="/javier-zaruski-seminar/"')) fail(`${page}: missing seminar link`);
   if (!pageHtml.includes('data-preserve-utm') || !pageHtml.includes('data-seminar-promo')) fail(`${page}: seminar promotion does not preserve attribution or archive cleanly`);
-  if (!pageHtml.includes('/assets/events.js?v=20260918-1')) fail(`${page}: current event-state script version is not loaded`);
+  if (!pageHtml.includes('/assets/events.js?v=20260923-1')) fail(`${page}: current event-state script version is not loaded`);
 }
+
+const englishSeminarHtml = readFileSync(resolve(root, 'en/javier-zaruski-seminar/index.html'), 'utf8');
+const englishPayboxLinks = [...englishSeminarHtml.matchAll(/href=["'](https:\/\/links\.payboxapp\.com\/[^"']+)["']/g)].map((match) => match[1]);
+if (englishPayboxLinks.length !== 5 || englishPayboxLinks.some((href) => href !== payboxUrl)) fail('English seminar: PayBox CTAs were altered');
+if (!englishSeminarHtml.includes('https://wa.me/972546420206?text=Hi%2C%20I%20would%20like%20information%20about%20registering%20for%20the%20Javier%20Zaruski%20seminar.')) fail('English seminar: translated WhatsApp message is missing');
+if (!englishSeminarHtml.includes('IBJJF Adult Black Belt World Champion') || !englishSeminarHtml.includes('7× ADCC Open Champion')) fail('English seminar: approved achievements are missing');
 
 if (failures.length) {
   console.error(`QA failed with ${failures.length} issue(s):`);
@@ -384,4 +457,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log(`QA passed: ${primaryPages.length} primary pages, metadata, JSON-LD, links, PayBox, analytics, sitemap and robots.txt.`);
+console.log(`QA passed: ${allIndexablePages.length} indexable pages, bilingual metadata, JSON-LD, links, PayBox, analytics, sitemap and robots.txt.`);

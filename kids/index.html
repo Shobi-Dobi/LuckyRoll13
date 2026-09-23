@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 
-<html dir="rtl" lang="he">
+<html lang="he" dir="rtl">
 <head>
+  <script>document.documentElement.classList.add('js-enabled');</script>
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 
@@ -9,9 +10,13 @@
 
 <meta content="אימוני MMA וג׳יו־ג׳יטסו לילדים ונוער בקריות ובנשר. ההרשמה לשנת האימונים החדשה פתוחה – קבוצות למתחילים ולמתקדמים עם דגש על ביטחון עצמי, משמעת, כושר וטכניקה." name="description"/>
 
-<link href="https://luckyroll13.com/kids/" rel="canonical"/>
+<link rel="canonical" href="https://luckyroll13.com/kids/">
+  <link rel="alternate" hreflang="he" href="https://luckyroll13.com/kids/">
+  <link rel="alternate" hreflang="en" href="https://luckyroll13.com/en/kids/">
+  <link rel="alternate" hreflang="x-default" href="https://luckyroll13.com/kids/">
 
-<meta content="index,follow,max-image-preview:large" name="robots"/>
+
+  <meta content="index,follow,max-image-preview:large" name="robots"/>
 
 <meta content="website" property="og:type"/>
 <meta content="he_IL" property="og:locale"/>
@@ -23,8 +28,8 @@
 <meta content="אימוני אומנויות לחימה לילדים ב-Lucky Roll13" property="og:image:alt"/>
 
 <link href="/assets/logo.png" rel="icon"/>
-<link href="/assets/style.css?v=20260920-1" rel="stylesheet"/>
-<script defer src="/assets/tracking.js"></script><script defer src="/assets/site.js?v=20260920-1"></script>
+<link href="/assets/style.css?v=20260923-1" rel="stylesheet"/>
+<script defer src="/assets/tracking.js?v=20260923-1"></script><script defer src="/assets/site.js?v=20260923-1"></script>
 <link as="image" href="/assets/images/kids-hero.webp" rel="preload"/>
 
 <script type="application/ld+json">
@@ -111,24 +116,36 @@
 
 <header class="top">
   <div class="wrap nav">
-    <a href="/">
-      <img alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" class="logo" src="/assets/images/luckyroll13-header-logo.webp" width="1431" height="359"/>
+    <a class="brand-link" href="/" aria-label="Lucky Roll13 דף הבית">
+      <img class="logo" src="/assets/images/luckyroll13-header-logo.webp" alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" width="1431" height="359">
     </a>
-
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation">תפריט</button>
-<nav id="primary-navigation" class="links" aria-label="ניווט ראשי">
-  <a href="/bjj/">ג׳יו־ג׳יטסו</a>
-  <a href="/boxing/">אגרוף</a>
-  <a href="/women-boxing/">אגרוף נשים</a>
-  <a href="/kids/">ילדים</a>
-  <a href="/mma/">MMA</a>
-  <a href="/adults/">אימונים אישיים</a>
-  <a href="/about/">עלינו</a>
-  <a href="/collaborations/">שיתופי פעולה</a>
-  <a href="/events/">סמינרים ואירועים</a>
-  <a href="/contact/">צור קשר</a>
-  <a class="cta" href="https://wa.me/972546420206?text=היי%20Lucky%20Roll13,%20אשמח%20לפרטים">דברו איתי</a>
-</nav>
+    <div class="header-tools">
+      <div class="language-switcher" aria-label="בחירת שפה">
+        <a href="/kids/" hreflang="he" lang="he" aria-current="page">עברית</a>
+        <span class="language-switcher-separator" aria-hidden="true">|</span>
+        <a href="/en/kids/" hreflang="en" lang="en">English</a>
+      </div>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="פתיחת תפריט ניווט" data-open-label="פתיחת תפריט ניווט" data-close-label="סגירת תפריט ניווט">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </div>
+    <nav id="primary-navigation" class="links" aria-label="ניווט ראשי">
+      <button class="menu-close" type="button"><span>סגירה</span><span class="menu-close-icon" aria-hidden="true">×</span></button>
+        <a href="/">דף הבית</a>
+        <a href="/bjj/">ג׳יו־ג׳יטסו</a>
+        <a href="/boxing/">אגרוף</a>
+        <a href="/women-boxing/">אגרוף נשים</a>
+        <a href="/kids/" aria-current="page">ילדים ונוער</a>
+        <a href="/mma/">MMA</a>
+        <a href="/adults/">אימונים אישיים</a>
+        <a href="/about/">עלינו</a>
+        <a href="/collaborations/">שיתופי פעולה</a>
+        <a href="/events/">סמינרים ואירועים</a>
+        <a href="/kiryat-motzkin/">קריית מוצקין</a>
+        <a class="cta" href="/contact/">צור קשר</a>
+    </nav>
   </div>
 </header>
 
