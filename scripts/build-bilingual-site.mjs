@@ -134,7 +134,13 @@ function translateEnglish(html, route) {
   html = html.replace(/action=(["'])\/thank-you\.html\1/g, 'action=$1/en/thank-you/$1');
 
   const pageUrl = productionOrigin + route.en;
-  html = html.replace(new RegExp(`${productionOrigin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}${route.he.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'), pageUrl);
+
+  if (route.he === '/') {
+    html = html.replace(/("@type"\s*:\s*"WebPage"[\s\S]*?"@id"\s*:\s*)"https:\/\/luckyroll13\.com\/#webpage"/, `$1"${productionOrigin}/en/#webpage"`);
+    html = html.replace(/("@type"\s*:\s*"WebPage"[\s\S]*?"url"\s*:\s*)"https:\/\/luckyroll13\.com\/"/, `$1"${pageUrl}"`);
+  } else {
+    html = html.replace(new RegExp(`${productionOrigin.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}${route.he.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'g'), pageUrl);
+  }
   for (const linkedRoute of routes.filter((candidate) => candidate.he !== '/')) {
     html = html.split(productionOrigin + linkedRoute.he).join(productionOrigin + linkedRoute.en);
   }

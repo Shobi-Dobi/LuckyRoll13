@@ -155,6 +155,7 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   if (!html.includes(`/assets/tracking.js?v=20260923-1`)) fail(`${file}: missing current tracking asset cache version`);
   if (isEnglish && html.replace('>עברית<', '><').match(/[\u0590-\u05ff]/)) fail(`${file}: untranslated Hebrew text remains`);
   if (isEnglish && /translate\.google|googtrans|google\.translate/i.test(html)) fail(`${file}: runtime translation widget detected`);
+  if (html.includes('https://luckyroll13.com/en/assets/')) fail(`${file}: production asset URL was incorrectly localized under /en/`);
 
   for (const property of ['og:title', 'og:description', 'og:url', 'og:image']) {
     if (!meta(html, 'property', property)) fail(`${file}: missing ${property}`);
@@ -204,6 +205,38 @@ if (business?.address?.streetAddress !== 'מנחם בגין 26') fail('index.htm
 if (website?.publisher?.['@id'] !== 'https://luckyroll13.com/#business') fail('index.html: WebSite publisher does not reference business');
 if (!homeHtml.includes('data-home-event-promo')) fail('index.html: missing temporary seminar promotion');
 if (!homeHtml.includes('href="/kiryat-motzkin/"')) fail('index.html: missing Kiryat Motzkin link');
+
+const englishHomeHtml = readFileSync(resolve(root, 'en/index.html'), 'utf8');
+const englishHomeSchemas = flattenSchemas(jsonLd(englishHomeHtml, 'en/index.html'));
+const englishBusiness = englishHomeSchemas.find((schema) => schema['@type'] === 'SportsActivityLocation');
+const englishWebsite = englishHomeSchemas.find((schema) => schema['@type'] === 'WebSite');
+const englishWebPage = englishHomeSchemas.find((schema) => schema['@type'] === 'WebPage');
+if (englishBusiness?.['@id'] !== 'https://luckyroll13.com/#business') fail('en/index.html: English page changed the stable business identity');
+if (englishWebsite?.['@id'] !== 'https://luckyroll13.com/#website') fail('en/index.html: English page changed the stable website identity');
+if (englishWebPage?.['@id'] !== 'https://luckyroll13.com/en/#webpage' || englishWebPage?.url !== 'https://luckyroll13.com/en/') fail('en/index.html: English WebPage identity is not localized');
+if (englishWebPage?.isPartOf?.['@id'] !== 'https://luckyroll13.com/#website' || englishWebPage?.about?.['@id'] !== 'https://luckyroll13.com/#business') fail('en/index.html: English WebPage does not reference the stable site and business identities');
+if (meta(englishHomeHtml, 'property', 'og:image') !== 'https://luckyroll13.com/assets/images/hero.webp') fail('en/index.html: English social image URL is invalid');
+
+const localSearchChecks = [
+  ['index.html', ['אומנויות לחימה בקריות ובנשר', 'אגרוף', 'ג׳יו־ג׳יטסו', 'MMA', 'קריית מוצקין', 'נשר']],
+  ['boxing/index.html', ['אימוני אגרוף בקריות ובנשר']],
+  ['bjj/index.html', ['ג׳יו־ג׳יטסו בקריות ובנשר']],
+  ['kids/index.html', ['אומנויות לחימה לילדים בקריות ובנשר']],
+  ['women-boxing/index.html', ['אגרוף לנשים בקריות', 'קריית מוצקין']],
+  ['kiryat-motzkin/index.html', ['אומנויות לחימה בקריית מוצקין', 'קריית ביאליק', 'קריית ים', 'קריית אתא', 'קריית חיים']],
+  ['en/index.html', ['Martial Arts in Krayot and Nesher', 'Boxing', 'Brazilian Jiu-Jitsu', 'MMA', 'Kiryat Motzkin', 'Nesher']],
+  ['en/boxing/index.html', ['Boxing Training in Krayot and Nesher']],
+  ['en/bjj/index.html', ['Brazilian Jiu-Jitsu in Krayot and Nesher']],
+  ['en/kids/index.html', ['Martial Arts for Kids in Krayot and Nesher']],
+  ['en/women-boxing/index.html', ["Women's Boxing in Krayot", 'Kiryat Motzkin']],
+  ['en/kiryat-motzkin/index.html', ['Martial Arts in Kiryat Motzkin', 'Kiryat Bialik', 'Kiryat Yam', 'Kiryat Ata', 'Kiryat Haim']]
+];
+for (const [file, phrases] of localSearchChecks) {
+  const pageHtml = readFileSync(resolve(root, file), 'utf8');
+  for (const phrase of phrases) {
+    if (!pageHtml.includes(phrase)) fail(`${file}: missing approved local-search phrase: ${phrase}`);
+  }
+}
 
 const seminarHtml = readFileSync(resolve(root, 'javier-zaruski-seminar/index.html'), 'utf8');
 const seminarSchemas = flattenSchemas(jsonLd(seminarHtml, 'javier-zaruski-seminar/index.html'));
