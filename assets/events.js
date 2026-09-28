@@ -4,28 +4,20 @@
   var isEnglish = document.documentElement.lang.toLowerCase().indexOf('en') === 0;
   var copy = isEnglish
     ? {
-        currentPrice: 'Current price',
-        earlyRegistration: 'Early registration – ₪250',
-        registration: 'Registration – ₪299',
-        regularPrice: 'Regular price',
         seminarCompleted: 'Seminar completed',
         pastSeminar: 'Past seminar · 25.9.2026',
-        archivedSeminar: 'View archived seminar',
+        archivedSeminar: 'View recap and photos',
         eventCompleted: 'Event completed',
         archive: 'Archive',
-        eventDetails: 'Event details <span aria-hidden="true">→</span>'
+        eventDetails: 'View recap and photos <span aria-hidden="true">→</span>'
       }
     : {
-        currentPrice: 'המחיר הנוכחי',
-        earlyRegistration: 'הרשמה מוקדמת – ₪250',
-        registration: 'הרשמה – ₪299',
-        regularPrice: 'מחיר רגיל',
         seminarCompleted: 'הסמינר התקיים',
         pastSeminar: 'סמינר עבר · 25.9.2026',
-        archivedSeminar: 'לפרטי הסמינר מהארכיון',
+        archivedSeminar: 'לסיכום ולתמונות',
         eventCompleted: 'האירוע התקיים',
         archive: 'מהארכיון',
-        eventDetails: 'לפרטי האירוע <span aria-hidden="true">←</span>'
+        eventDetails: 'לסיכום ולתמונות <span aria-hidden="true">←</span>'
       };
 
   var campaignKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
@@ -88,9 +80,7 @@
     }
 
     var metaEventMap = {
-      seminar_page_view: 'ViewContent',
-      seminar_paybox_click: 'InitiateCheckout',
-      seminar_whatsapp_click: 'Lead'
+      seminar_page_view: 'ViewContent'
     };
 
     if (typeof window.fbq === 'function' && metaEventMap[eventName]) {
@@ -114,33 +104,13 @@
     if (!link) return;
 
     var eventName = link.getAttribute('data-seminar-track');
-    var supportedEvents = ['seminar_paybox_click', 'seminar_whatsapp_click', 'seminar_maps_click', 'seminar_video_click'];
+    var supportedEvents = ['seminar_maps_click', 'seminar_video_click'];
     if (supportedEvents.indexOf(eventName) !== -1) trackSeminarEvent(eventName, link);
   });
 
   var now = Date.now();
-  var priceCutoff = Date.parse('2026-09-22T00:00:00+03:00');
   var eventEnd = Date.parse('2026-09-25T15:00:00+03:00');
   var eventIsPast = Number.isFinite(eventEnd) && now >= eventEnd;
-  var currentTier = now < priceCutoff ? 'early' : 'regular';
-
-  document.querySelectorAll('[data-pricing]').forEach(function (pricing) {
-    pricing.querySelectorAll('[data-price-tier]').forEach(function (card) {
-      var current = card.getAttribute('data-price-tier') === currentTier;
-      card.classList.toggle('is-current', current && !eventIsPast);
-
-      var label = card.querySelector('[data-current-label]');
-      if (label) label.textContent = current && !eventIsPast ? copy.currentPrice : '';
-    });
-  });
-
-  document.querySelectorAll('[data-current-price]').forEach(function (node) {
-    node.textContent = currentTier === 'early' ? '₪250' : '₪299';
-  });
-
-  document.querySelectorAll('[data-sticky-label]').forEach(function (node) {
-    node.textContent = currentTier === 'early' ? copy.earlyRegistration : copy.registration;
-  });
 
   var eventSchema = document.getElementById('seminar-event-schema');
 
@@ -148,21 +118,7 @@
     try {
       var schema = JSON.parse(eventSchema.textContent);
 
-      if (eventIsPast) {
-        schema.eventStatus = 'https://schema.org/EventCompleted';
-        delete schema.offers;
-      } else if (currentTier === 'regular') {
-        schema.offers = {
-          '@type': 'Offer',
-          name: copy.regularPrice,
-          price: '299',
-          priceCurrency: 'ILS',
-          url: isEnglish
-            ? 'https://luckyroll13.com/en/javier-zaruski-seminar/'
-            : 'https://luckyroll13.com/javier-zaruski-seminar/',
-          availability: 'https://schema.org/InStock'
-        };
-      }
+      if (eventIsPast) delete schema.offers;
 
       eventSchema.textContent = JSON.stringify(schema);
     } catch (error) {
@@ -172,9 +128,6 @@
 
   if (eventIsPast) {
     document.body.classList.add('event-is-past');
-    document.querySelectorAll('[data-event-sales]').forEach(function (node) {
-      node.hidden = true;
-    });
     document.querySelectorAll('[data-event-status]').forEach(function (status) {
       status.classList.add('is-past');
       status.innerHTML = '<span aria-hidden="true"></span>' + copy.seminarCompleted;
