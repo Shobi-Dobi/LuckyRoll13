@@ -7,6 +7,7 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDirectory, '..');
 const productionOrigin = 'https://luckyroll13.com';
 const assetVersion = '20260923-1';
+const eventAssetVersion = '20260928-1';
 
 const routes = [
   { key: 'home', he: '/', en: '/en/', file: 'index.html' },
@@ -116,7 +117,8 @@ function addLanguageSeo(html, route, language) {
 
   html = html.replace(/\/assets\/style\.css(?:\?v=[^"']*)?/g, `/assets/style.css?v=${assetVersion}`);
   html = html.replace(/\/assets\/site\.js(?:\?v=[^"']*)?/g, `/assets/site.js?v=${assetVersion}`);
-  html = html.replace(/\/assets\/events\.js(?:\?v=[^"']*)?/g, `/assets/events.js?v=${assetVersion}`);
+  html = html.replace(/\/assets\/events\.css(?:\?v=[^"']*)?/g, `/assets/events.css?v=${eventAssetVersion}`);
+  html = html.replace(/\/assets\/events\.js(?:\?v=[^"']*)?/g, `/assets/events.js?v=${eventAssetVersion}`);
   html = html.replace(/\/assets\/tracking\.js(?:\?v=[^"']*)?/g, `/assets/tracking.js?v=${assetVersion}`);
   html = html.replace(/^[ \t]+$/gm, '');
 
@@ -128,6 +130,7 @@ function translateEnglish(html, route) {
     .sort(([left], [right]) => right.length - left.length);
 
   for (const [hebrew, english] of translations) html = html.split(hebrew).join(english);
+  html = html.replace(/<span aria-hidden="true">←<\/span>/g, '<span aria-hidden="true">→</span>');
 
   html = html.replace(/href=(["'])\/(boxing|women-boxing|bjj|kids|mma|adults|about|collaborations|events|javier-zaruski-seminar|kiryat-motzkin|contact|accessibility)\//g, 'href=$1/en/$2/');
   html = html.replace(/href=(["'])\/\1/g, 'href=$1/en/$1');
