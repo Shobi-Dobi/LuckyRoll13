@@ -153,6 +153,11 @@ function translateEnglish(html, route) {
   const whatsappMessage = encodeURIComponent(pageTranslations.whatsapp[route.key] || 'Hi Lucky Roll13, I would like more information.').replace(/'/g, '%27');
   html = html.replace(/href="https:\/\/wa\.me\/972546420206\?text=[^"]*"/g, `href="https://wa.me/972546420206?text=${whatsappMessage}"`);
 
+  html = html.replace(
+    /(<script\b[^>]*type=["']application\/ld\+json["'][^>]*>)([\s\S]*?)(<\/script>)/gi,
+    (_, openingTag, json, closingTag) => `${openingTag}${json.replace(/&amp;/g, '&')}${closingTag}`
+  );
+
   return html;
 }
 
