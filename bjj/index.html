@@ -44,17 +44,26 @@
   <link href="/assets/logo.png" rel="icon" />
   <link href="/assets/style.css?v=20260923-1" rel="stylesheet" />
   <script defer src="/assets/tracking.js?v=20260923-1"></script><script defer src="/assets/site.js?v=20260923-1"></script><script defer src="/assets/events.js?v=20260928-1"></script>
-  <link rel="preload" as="image" href="/assets/images/bjj-hero.webp" />
+  <link rel="preload" as="image" href="/assets/images/bjj-hero-960.webp" media="(max-width: 720px)" />
+  <link rel="preload" as="image" href="/assets/images/bjj-hero-1600.webp" media="(min-width: 721px)" />
 
   <style>
     .page-hero {
       position: relative;
       background-image:
         linear-gradient(rgba(10,13,17,.62), rgba(10,13,17,.72)),
-        url("/assets/images/bjj-hero.webp");
+        url("/assets/images/bjj-hero-1600.webp");
       background-size: cover;
       background-position: center 48%;
       background-repeat: no-repeat;
+    }
+
+    @media (max-width: 720px) {
+      .page-hero {
+        background-image:
+          linear-gradient(rgba(10,13,17,.62), rgba(10,13,17,.72)),
+          url("/assets/images/bjj-hero-960.webp");
+      }
     }
 
     .page-hero > .wrap {
@@ -282,6 +291,10 @@
             האימונים משלבים ג׳יו־ג׳יטסו עם חליפה (GI)
             לצד אימוני גרפלינג ללא חליפה (No-Gi),
             כדי לפתח משחק קרקע מגוון, טכניקה, שליטה ותנועה.
+          </p>
+
+          <p>
+            בעברית אפשר לראות את שם הענף נכתב בכמה צורות — ג׳יו־ג׳יטסו, ג'יו ג'יטסו או ג'יוג'יטסו. כולן מתייחסות לאותה אומנות לחימה ברזילאית, המוכרת גם בראשי התיבות BJJ.
           </p>
 
           <h2>

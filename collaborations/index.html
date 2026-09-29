@@ -123,7 +123,15 @@
   <link
     rel="preload"
     as="image"
-    href="/assets/images/collaborations-hero.webp"
+    href="/assets/images/collaborations-hero-960.webp"
+    media="(max-width: 720px)"
+  >
+
+  <link
+    rel="preload"
+    as="image"
+    href="/assets/images/collaborations-hero-1600.webp"
+    media="(min-width: 721px)"
   >
 
 
@@ -139,7 +147,7 @@
           rgba(8, 11, 14, 0.66),
           rgba(8, 11, 14, 0.84)
         ),
-        url("/assets/images/collaborations-hero.webp")
+        url("/assets/images/collaborations-hero-1600.webp")
         center center / cover no-repeat;
     }
 
@@ -242,6 +250,15 @@
 
 
     @media (max-width: 720px) {
+
+      .page-hero {
+        background-image:
+          linear-gradient(
+            rgba(8, 11, 14, 0.66),
+            rgba(8, 11, 14, 0.84)
+          ),
+          url("/assets/images/collaborations-hero-960.webp");
+      }
 
       .partner-grid {
         grid-template-columns: 1fr;
@@ -613,10 +630,12 @@
           <figure>
 
             <img
-              src="/assets/images/shabi-ido-pariente-collaboration.webp"
+              src="/assets/images/shabi-ido-pariente-collaboration-720.webp"
+              srcset="/assets/images/shabi-ido-pariente-collaboration-720.webp 720w, /assets/images/shabi-ido-pariente-collaboration-1200.webp 1200w"
+              sizes="(max-width: 720px) calc(100vw - 40px), (max-width: 900px) 50vw, 33vw"
               alt="שבי שילון עם עידו פריינטה במפגש מקצועי בג׳יו־ג׳יטסו"
               loading="lazy"
-              decoding="async" width="1800" height="2400">
+              decoding="async" width="720" height="960">
 
           </figure>
 
@@ -624,10 +643,12 @@
           <figure>
 
             <img
-              src="/assets/images/collab-fighttlv.jpeg"
+              src="/assets/images/collab-fighttlv-720.webp"
+              srcset="/assets/images/collab-fighttlv-720.webp 720w, /assets/images/collab-fighttlv-1200.webp 1200w"
+              sizes="(max-width: 720px) calc(100vw - 40px), (max-width: 900px) 50vw, 33vw"
               alt="מפגש ושיתוף פעולה עם קהילת Fight TLV"
               loading="lazy"
-              decoding="async" width="1536" height="2048">
+              decoding="async" width="720" height="960">
 
           </figure>
 
@@ -636,10 +657,12 @@
           <figure>
 
             <img
-              src="/assets/images/collab-japan-poster.jpeg"
+              src="/assets/images/collab-japan-poster-720.webp"
+              srcset="/assets/images/collab-japan-poster-720.webp 720w, /assets/images/collab-japan-poster-1200.webp 1200w"
+              sizes="(max-width: 720px) calc(100vw - 40px), (max-width: 900px) 50vw, 33vw"
               alt="ביקור מקצועי במועדון אומנויות לחימה"
               loading="lazy"
-              decoding="async" width="1536" height="2048">
+              decoding="async" width="720" height="960">
 
           </figure>
 
@@ -718,10 +741,12 @@
           <figure>
 
             <img
-              src="/assets/images/collab-06.jpeg"
+              src="/assets/images/collab-06-720.webp"
+              srcset="/assets/images/collab-06-720.webp 720w, /assets/images/collab-06-1200.webp 1200w"
+              sizes="(max-width: 720px) calc(100vw - 40px), (max-width: 900px) 50vw, 33vw"
               alt="מפגש עם מאמנים ושותפים מקצועיים"
               loading="lazy"
-              decoding="async" width="2048" height="1536">
+              decoding="async" width="720" height="540">
 
           </figure>
 

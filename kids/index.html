@@ -30,7 +30,27 @@
 <link href="/assets/logo.png" rel="icon"/>
 <link href="/assets/style.css?v=20260923-1" rel="stylesheet"/>
 <script defer src="/assets/tracking.js?v=20260923-1"></script><script defer src="/assets/site.js?v=20260923-1"></script>
-<link as="image" href="/assets/images/kids-hero.webp" rel="preload"/>
+<link as="image" href="/assets/images/kids-hero-960.webp" media="(max-width: 720px)" rel="preload"/>
+<link as="image" href="/assets/images/kids-hero-1600.webp" media="(min-width: 721px)" rel="preload"/>
+
+<style>
+  .kids-hero {
+    background-image:
+      linear-gradient(rgba(11,14,18,.72),rgba(11,14,18,.78)),
+      url('/assets/images/kids-hero-1600.webp');
+    background-size: cover;
+    background-position: center 52%;
+    background-repeat: no-repeat;
+  }
+
+  @media (max-width: 720px) {
+    .kids-hero {
+      background-image:
+        linear-gradient(rgba(11,14,18,.72),rgba(11,14,18,.78)),
+        url('/assets/images/kids-hero-960.webp');
+    }
+  }
+</style>
 
 <script type="application/ld+json">
 {
@@ -152,8 +172,7 @@
 <main id="main">
 
 <section
-  class="page-hero"
-  style="background-image:linear-gradient(rgba(11,14,18,.72),rgba(11,14,18,.78)),url('/assets/images/kids-hero.webp');background-size:cover;background-position:center 52%;background-repeat:no-repeat;"
+  class="page-hero kids-hero"
 >
   <div class="wrap">
     <div class="eyebrow">LUCKY ROLL13 • קריות ונשר</div>
