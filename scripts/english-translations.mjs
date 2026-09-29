@@ -148,6 +148,7 @@ export const pageTranslations = {
     'מייסד Lucky Roll13 ומאמן אגרוף קלאסי וג׳יו־ג׳יטסו ברזילאי': 'Founder of Lucky Roll13 and Boxing and Brazilian Jiu-Jitsu coach',
     'אימון אומנויות לחימה': 'Martial arts coaching',
     'אומנויות לחימה בקריות ובנשר | Lucky Roll13': 'Martial Arts in Krayot and Nesher | Lucky Roll13',
+    'Lucky Roll13 – אומנויות לחימה בקריות ובנשר: אגרוף, ג׳יו־ג׳יטסו BJJ, MMA, אגרוף לנשים ואימונים לילדים ונוער. למתחילים ולמתקדמים, קבוצות ואימונים אישיים.': "Boxing, Brazilian Jiu-Jitsu (BJJ), MMA, women's boxing, kids' classes and personal training in Krayot and Nesher for all levels.",
     'אומנויות לחימה בקריות ובנשר: אגרוף, ג׳יו־ג׳יטסו BJJ, MMA, אגרוף לנשים ואימונים לילדים ונוער. למתחילים ולמתקדמים, קבוצות ואימונים אישיים.': "Martial arts in Krayot and Nesher: Boxing, Brazilian Jiu-Jitsu (BJJ), MMA, Women's Boxing, and Kids and Youth classes. Beginner and advanced group classes and personal training.",
     'אומנויות לחימה בקריות ובנשר: אגרוף, ג׳יו־ג׳יטסו BJJ, MMA, אגרוף לנשים ואימונים לילדים ונוער בקריות ובנשר.': "Martial arts in Krayot and Nesher: Boxing, Brazilian Jiu-Jitsu (BJJ), MMA, Women's Boxing, and Kids and Youth classes.",
     'לכל מסלולי האימון': 'Explore all training programs',
@@ -251,7 +252,7 @@ export const pageTranslations = {
 
   boxing: {
     'אימוני אגרוף בקריות ובנשר | Lucky Roll13': 'Boxing Training in Krayot and Nesher | Lucky Roll13',
-    'אימוני אגרוף בקריות ובנשר למתחילים ולמתקדמים ב-Lucky Roll13. קבוצות ואימונים אישיים עם דגש על טכניקה, עבודת רגליים, דיוק, כושר והתקדמות.': 'Boxing training in Krayot and Nesher for beginners and advanced students at Lucky Roll13. Group classes and personal training focused on technique, footwork, accuracy, fitness, and progress.',
+    'אימוני אגרוף בקריות ובנשר למתחילים ולמתקדמים ב-Lucky Roll13. קבוצות ואימונים אישיים עם דגש על טכניקה, עבודת רגליים, דיוק, כושר והתקדמות.': 'Boxing training in Krayot and Nesher for beginners and advanced students. Group classes and personal training focused on technique and fitness.',
     'אימוני אגרוף בקריות ובנשר': 'Boxing Training in Krayot and Nesher',
     'לימוד אגרוף למתחילים ולמתקדמים,': 'Boxing instruction for beginners and advanced students,',
     'בקבוצות ובאימונים אישיים,': 'in group classes and personal training,',
@@ -376,6 +377,7 @@ export const pageTranslations = {
     'טכניקה, תנועה, עבודת רגליים וכושר כחלק מאימון מקצועי ומסודר.': 'Technique, movement, footwork, and fitness as part of professional, structured training.',
     'קבוצה לנשים': 'A group for women',
     'מסגרת קבוצתית שמאפשרת ללמוד, להתאמן ולהתקדם יחד.': 'A group setting where you can learn, train, and progress together.',
+    'מידע נוסף על הטכניקה והמסלולים נמצא בעמוד <a href="/boxing/">אימוני האגרוף</a>. אפשר גם <a href="/about/">להכיר את המועדון וצוות המאמנים</a> ולבדוק את <a href="/kiryat-motzkin/">פרטי המיקום בקריית מוצקין</a> לפני שמגיעים.': 'More information about technique and training options is available on our <a href="/boxing/">Boxing training page</a>. You can also <a href="/about/">get to know the academy and coaching team</a> and check <a href="/kiryat-motzkin/">the Kiryat Motzkin location details</a> before you visit.',
     'בדיקת מקום בקבוצה': 'Check group availability',
     'האימון שלנו': 'Our training',
     'אגרוף נשים בתמונות': "Women's Boxing in photos",
@@ -394,7 +396,7 @@ export const pageTranslations = {
   },
 
   bjj: {
-    'ג׳יו־ג׳יטסו בקריות ובנשר | BJJ | Lucky Roll13': 'Brazilian Jiu-Jitsu in Krayot and Nesher | BJJ | Lucky Roll13',
+    'ג׳יו־ג׳יטסו בקריות ובנשר | BJJ | Lucky Roll13': 'Brazilian Jiu-Jitsu in Krayot &amp; Nesher | Lucky Roll13',
     'אימוני ג׳יו־ג׳יטסו ברזילאי BJJ בקריות ובנשר: GI, No-Gi וגרפלינג למתחילים ולמתקדמים ב-Lucky Roll13.': 'Brazilian Jiu-Jitsu (BJJ) in Krayot and Nesher: Gi, No-Gi, and grappling for beginners and advanced students at Lucky Roll13.',
     'ג׳יו־ג׳יטסו בקריות ובנשר': 'Brazilian Jiu-Jitsu in Krayot and Nesher',
     'אימוני ג׳יו־ג׳יטסו ברזילאי (BJJ) הכוללים GI עם חליפה': 'Brazilian Jiu-Jitsu (BJJ) training with Gi',
@@ -407,6 +409,7 @@ export const pageTranslations = {
     'האימונים משלבים ג׳יו־ג׳יטסו עם חליפה (GI)': 'Training combines Jiu-Jitsu with the Gi',
     'לצד אימוני גרפלינג ללא חליפה (No-Gi),': 'with No-Gi grappling,',
     'כדי לפתח משחק קרקע מגוון, טכניקה, שליטה ותנועה.': 'to develop a versatile ground game, technique, control, and movement.',
+    "בעברית אפשר לראות את שם הענף נכתב בכמה צורות — ג׳יו־ג׳יטסו, ג'יו ג'יטסו או ג'יוג'יטסו. כולן מתייחסות לאותה אומנות לחימה ברזילאית, המוכרת גם בראשי התיבות BJJ.": 'The name is also commonly written as Jiu-Jitsu, Jiu Jitsu, or Jiujitsu. All three refer to the same Brazilian martial art, also known by the initials BJJ.',
     'למתחילים שרוצים בסיס טוב,': 'For beginners who want a strong foundation,',
     'למתאמנים שרוצים להשתפר': 'for students who want to improve,',
     'ולמי שמחפש מסגרת מקצועית באזור הקריות ונשר.': 'and anyone seeking a professional setting in Krayot and Nesher.',
@@ -451,7 +454,7 @@ export const pageTranslations = {
 
   kids: {
     'אומנויות לחימה לילדים בקריות ובנשר | Lucky Roll13': 'Martial Arts for Kids in Krayot and Nesher | Lucky Roll13',
-    'אימוני MMA וג׳יו־ג׳יטסו לילדים ונוער בקריות ובנשר. ההרשמה לשנת האימונים החדשה פתוחה – קבוצות למתחילים ולמתקדמים עם דגש על ביטחון עצמי, משמעת, כושר וטכניקה.': 'MMA and Brazilian Jiu-Jitsu for Kids and Youth in Krayot and Nesher. Registration for the new training year is open, with beginner and advanced groups focused on confidence, discipline, fitness, and technique.',
+    'אימוני MMA וג׳יו־ג׳יטסו לילדים ונוער בקריות ובנשר. ההרשמה לשנת האימונים החדשה פתוחה – קבוצות למתחילים ולמתקדמים עם דגש על ביטחון עצמי, משמעת, כושר וטכניקה.': 'MMA and Brazilian Jiu-Jitsu for kids and youth in Krayot and Nesher, with beginner and advanced groups focused on confidence, discipline and technique.',
     'אומנויות לחימה לילדים בקריות ובנשר': 'Martial Arts for Kids in Krayot and Nesher',
     'ההרשמה לשנת האימונים החדשה פתוחה. קבוצות MMA וג׳יו־ג׳יטסו לילדים ונוער,': 'Registration for the new training year is open. MMA and BJJ groups for Kids and Youth,',
     'למתחילים ולמתקדמים, עם דגש על ביטחון עצמי, משמעת, כבוד, כושר והתקדמות נכונה.': 'for beginners and advanced students, focused on confidence, discipline, respect, fitness, and sound progress.',
@@ -549,7 +552,7 @@ export const pageTranslations = {
     'אימוני הילדים והנוער': 'Kids and Youth training',
     'שלחו הודעה עם גיל הילד או הילדה,': 'Send a message with your child’s age,',
     'ונעדכן אתכם לגבי הקבוצה המתאימה ואימון ניסיון.': 'and we will update you about the right group and a trial class.',
-    'אימוני MMA לילדים ונוער בקריות, קריית מוצקין ונשר. אימון מקצועי והדרגתי המשלב עמידה וקרקע. לפרטים על אימון ניסיון ב-Lucky Roll13.': 'MMA for Kids and Youth in Krayot, Kiryat Motzkin, and Nesher. Professional, progressive training that combines stand-up and ground work. Contact Lucky Roll13 about a trial class.',
+    'אימוני MMA לילדים ונוער בקריות, קריית מוצקין ונשר. אימון מקצועי והדרגתי המשלב עמידה וקרקע. לפרטים על אימון ניסיון ב-Lucky Roll13.': 'MMA for kids and youth in Krayot, Kiryat Motzkin and Nesher, combining stand-up and ground training. Contact Lucky Roll13 for a trial class.',
     'אימוני MMA לילדים ונוער ב-Lucky Roll13': 'MMA for Kids and Youth at Lucky Roll13',
     'אימוני MMA לילדים ונוער בקריות ובנשר, כולל קריית מוצקין, קריית ביאליק וקריית ים.': 'MMA for Kids and Youth in Krayot and Nesher, including Kiryat Motzkin, Kiryat Bialik, and Kiryat Yam.',
     'MMA לילדים ונוער': 'MMA for Kids and Youth',
@@ -557,8 +560,8 @@ export const pageTranslations = {
   },
 
   adults: {
-    'אימונים אישיים באגרוף וג׳יו־ג׳יטסו בקריות ובנשר | Lucky Roll13': 'Personal Boxing and BJJ Training in Krayot and Nesher | Lucky Roll13',
-    'אימונים אישיים באגרוף וג׳יו־ג׳יטסו בקריות ובנשר, בהתאמה לרמה ולקצב האישי עם דגש על טכניקה, כושר והתקדמות.': 'Personal Boxing and Brazilian Jiu-Jitsu training in Krayot and Nesher, tailored to your level and pace, with an emphasis on technique, fitness, and progress.',
+    'אימונים אישיים באגרוף וג׳יו־ג׳יטסו בקריות ובנשר | Lucky Roll13': 'Personal Boxing &amp; BJJ in Krayot &amp; Nesher | Lucky Roll13',
+    'אימונים אישיים באגרוף וג׳יו־ג׳יטסו בקריות ובנשר, בהתאמה לרמה ולקצב האישי עם דגש על טכניקה, כושר והתקדמות.': 'Personal Boxing and BJJ training in Krayot and Nesher, tailored to your level and pace, with a focus on technique, fitness and progress.',
     'אימונים אישיים באגרוף וג׳יו־ג׳יטסו': 'Personal Boxing and BJJ Training',
     'אימון אחד על אחד שמותאם לרמה, לקצב ולמטרות שלכם — מהבסיס ועד מתקדמים, עם תשומת לב מלאה לטכניקה, כושר וביטחון עצמי.': 'One-on-one training tailored to your level, pace, and goals, from fundamentals to advanced work, with full attention to technique, fitness, and confidence.',
     'לקביעת אימון אישי': 'Book personal training',
@@ -568,6 +571,7 @@ export const pageTranslations = {
     'האימונים מתאימים גם למי שעושה את הצעדים הראשונים וגם למתאמנים מנוסים שרוצים לדייק ולהתקדם.': 'Training suits complete beginners as well as experienced students who want greater precision and progress.',
     'מה מקבלים באימון?': 'What do you get from a session?',
     'יחס אישי, התאמה לרמה ולמטרות, עבודה מסודרת והתקדמות הדרגתית — באגרוף או בג׳יו־ג׳יטסו.': 'Personal attention, training tailored to your level and goals, structured work, and gradual progress in Boxing or Brazilian Jiu-Jitsu.',
+    'למידע נוסף על התחומים, קראו על <a href="/boxing/">אימוני אגרוף</a> ועל <a href="/bjj/">אימוני ג׳יו־ג׳יטסו</a>. אפשר גם <a href="/about/">להכיר את המועדון וצוות המאמנים</a> ולבדוק את <a href="/kiryat-motzkin/">פרטי המיקום בקריית מוצקין</a> לפני שקובעים אימון.': 'For more about the disciplines, read about <a href="/boxing/">Boxing training</a> and <a href="/bjj/">Brazilian Jiu-Jitsu training</a>. You can also <a href="/about/">get to know the academy and coaching team</a> and check <a href="/kiryat-motzkin/">the Kiryat Motzkin location details</a> before booking a session.',
     'לפרטים ב‑WhatsApp': 'Details on WhatsApp',
     'הכירו את המאמן': 'Meet the coach',
     'בר סרוסי — מאמן אגרוף ואגרוף תאילנדי': 'Bar Sarusi — Boxing and Muay Thai coach',
@@ -686,7 +690,7 @@ export const pageTranslations = {
 
   collaborations: {
     'שיתופי פעולה וסמינרים באומנויות לחימה | Lucky Roll13': 'Martial Arts Collaborations and Seminars | Lucky Roll13',
-    'סמינרים, מחנות אימון ושיתופי פעולה מקצועיים באגרוף, ג׳יו־ג׳יטסו BJJ ו-MMA מבית Lucky Roll13 בקריות ובנשר.': 'Seminars, training camps, and professional collaborations in Boxing, Brazilian Jiu-Jitsu (BJJ), and MMA from Lucky Roll13 in Krayot and Nesher.',
+    'סמינרים, מחנות אימון ושיתופי פעולה מקצועיים באגרוף, ג׳יו־ג׳יטסו BJJ ו-MMA מבית Lucky Roll13 בקריות ובנשר.': 'Lucky Roll13 collaborations, seminars, training camps and events in Boxing, Brazilian Jiu-Jitsu (BJJ) and MMA across Krayot and Nesher.',
     'שיתופי פעולה וסמינרים באומנויות לחימה': 'Martial Arts Collaborations and Seminars',
     'סמינרים, מחנות אימון, אירועים ומפגשים מקצועיים': 'Seminars, training camps, events, and professional sessions',
     'בתחומי האגרוף, הג׳יו־ג׳יטסו BJJ וה-MMA.': 'in Boxing, Brazilian Jiu-Jitsu (BJJ), and MMA.',
@@ -718,7 +722,7 @@ export const pageTranslations = {
     'שמחברות בין אנשים וקהילות': 'that connect people and communities',
     'בעולם אומנויות הלחימה.': 'in the martial arts world.',
     'דברו איתנו ב-WhatsApp': 'Contact us on WhatsApp',
-    'שיתופי פעולה, סמינרים, מחנות אימון ואירועים מקצועיים של Lucky Roll13 בתחומי האגרוף, ג׳יו־ג׳יטסו BJJ, MMA ואומנויות הלחימה בקריות ובנשר.': 'Collaborations, seminars, training camps, and professional events from Lucky Roll13 in Boxing, Brazilian Jiu-Jitsu (BJJ), MMA, and martial arts in Krayot and Nesher.',
+    'שיתופי פעולה, סמינרים, מחנות אימון ואירועים מקצועיים של Lucky Roll13 בתחומי האגרוף, ג׳יו־ג׳יטסו BJJ, MMA ואומנויות הלחימה בקריות ובנשר.': 'Lucky Roll13 collaborations, seminars, training camps and events in Boxing, Brazilian Jiu-Jitsu (BJJ) and MMA across Krayot and Nesher.',
     'סמינרים, מחנות אימון ושיתופי פעולה מקצועיים של Lucky Roll13 באגרוף, ג׳יו־ג׳יטסו BJJ, MMA ואומנויות הלחימה.': 'Seminars, training camps, and professional collaborations from Lucky Roll13 in Boxing, Brazilian Jiu-Jitsu (BJJ), MMA, and martial arts.',
     'סמינרים, מחנות אימון ושיתופי פעולה מקצועיים של Lucky Roll13 באגרוף, ג׳יו־ג׳יטסו BJJ, MMA ואומנויות לחימה.': 'Seminars, training camps, and professional collaborations from Lucky Roll13 in Boxing, Brazilian Jiu-Jitsu (BJJ), MMA, and martial arts.',
     'שיתופי פעולה וסמינרים של Lucky Roll13': 'Lucky Roll13 collaborations and seminars',
@@ -771,7 +775,7 @@ export const pageTranslations = {
   },
 
   'javier-zaruski-seminar': {
-    'סמינר Javier Zaruski בישראל – סיכום ותמונות | Lucky Roll13': 'Javier Zaruski Israel Seminar – Recap &amp; Photos | Lucky Roll13',
+    'סמינר Javier Zaruski בישראל – סיכום ותמונות | Lucky Roll13': 'Javier Zaruski BJJ Seminar Recap | Lucky Roll13',
     'סיכום סמינר BJJ ו-No-Gi עם Javier Zaruski שהתקיים ב-25.9.2026 ב-UFC Gym נשר, כולל תמונות ורגעים מהאימון עם קהילת הג׳יו־ג׳יטסו בישראל.': 'Recap and photos from the BJJ and No-Gi seminar with Javier Zaruski, held on September 25, 2026, at UFC Gym Nesher with Israel’s Jiu-Jitsu community.',
     'סמינר Javier Zaruski בישראל – סיכום ותמונות': 'Javier Zaruski Israel Seminar – Recap &amp; Photos',
     'רגעים ותמונות מסמינר ה-BJJ וה-No-Gi שהתקיים ב-UFC Gym נשר בהשתתפות קהילת הג׳יו־ג׳יטסו בישראל.': 'Photos and moments from the BJJ and No-Gi seminar held at UFC Gym Nesher with Israel’s Jiu-Jitsu community.',
@@ -872,8 +876,8 @@ export const pageTranslations = {
   },
 
   'kiryat-motzkin': {
-    'אומנויות לחימה בקריית מוצקין | אגרוף ו-BJJ | Lucky Roll13': 'Martial Arts in Kiryat Motzkin | Boxing and BJJ | Lucky Roll13',
-    'Lucky Roll13 הוא מועדון לאומנויות לחימה בקריית מוצקין – אימוני אגרוף, ג׳יו־ג׳יטסו BJJ, MMA, אגרוף לנשים, אימונים אישיים ואומנויות לחימה לילדים ונוער במנחם בגין 26.': "Lucky Roll13 is a martial arts academy in Kiryat Motzkin offering Boxing, Brazilian Jiu-Jitsu (BJJ), MMA, Women's Boxing, personal training, and martial arts for Kids and Youth at 26 Menachem Begin St.",
+    'אומנויות לחימה בקריית מוצקין | אגרוף ו-BJJ | Lucky Roll13': 'Martial Arts in Kiryat Motzkin | Lucky Roll13',
+    'Lucky Roll13 הוא מועדון לאומנויות לחימה בקריית מוצקין – אימוני אגרוף, ג׳יו־ג׳יטסו BJJ, MMA, אגרוף לנשים, אימונים אישיים ואומנויות לחימה לילדים ונוער במנחם בגין 26.': "Lucky Roll13 in Kiryat Motzkin offers Boxing, BJJ, MMA, women's boxing, personal training and kids' martial arts at 26 Menachem Begin St.",
     'אומנויות לחימה בקריית מוצקין – Lucky Roll13': 'Martial Arts in Kiryat Motzkin — Lucky Roll13',
     'Lucky Roll13 הוא בית לאימוני אגרוף, ג׳יו־ג׳יטסו ואומנויות לחימה בקריית מוצקין, המשרת מתאמנים מקריית מוצקין ומכל אזור הקריות.': 'Lucky Roll13 is a home for Boxing, Brazilian Jiu-Jitsu, and martial arts in Kiryat Motzkin, serving students from Kiryat Motzkin and across Krayot.',
     'האימונים במועדון': 'Training at the academy',
@@ -909,7 +913,7 @@ export const pageTranslations = {
     'כן. ניתן להתחיל גם ללא ניסיון קודם, והמסגרת מותאמת לגיל, לרמה ולתחום האימון.': 'Yes. You can start with no previous experience, and the program is adapted to age, level, and discipline.',
     'איפה נמצא המועדון בקריית מוצקין?': 'Where is the Kiryat Motzkin academy?',
     'המועדון נמצא ברחוב מנחם בגין 26, קריית מוצקין. אפשר לפתוח ניווט ישיר ב־Google Maps או ב־Waze מהקישורים שבעמוד.': 'The academy is at 26 Menachem Begin St., Kiryat Motzkin. Use the links on this page for direct Google Maps or Waze directions.',
-    'Lucky Roll13 בקריית מוצקין – אימוני אגרוף, ג׳יו־ג׳יטסו BJJ, MMA, אגרוף לנשים, אימונים אישיים ואומנויות לחימה לילדים ונוער במנחם בגין 26.': "Lucky Roll13 in Kiryat Motzkin — Boxing, Brazilian Jiu-Jitsu (BJJ), MMA, Women's Boxing, personal training, and martial arts for Kids and Youth at 26 Menachem Begin St.",
+    'Lucky Roll13 בקריית מוצקין – אימוני אגרוף, ג׳יו־ג׳יטסו BJJ, MMA, אגרוף לנשים, אימונים אישיים ואומנויות לחימה לילדים ונוער במנחם בגין 26.': "Lucky Roll13 in Kiryat Motzkin offers Boxing, BJJ, MMA, women's boxing, personal training and kids' martial arts at 26 Menachem Begin St.",
     'אגרוף, ג׳יו־ג׳יטסו BJJ, MMA, אגרוף לנשים, אימונים אישיים ואומנויות לחימה לילדים ונוער במנחם בגין 26, קריית מוצקין.': "Boxing, Brazilian Jiu-Jitsu (BJJ), MMA, Women's Boxing, personal training, and martial arts for Kids and Youth at 26 Menachem Begin St., Kiryat Motzkin.",
     'אימון אומנויות לחימה ב-Lucky Roll13': 'Martial arts training at Lucky Roll13',
     'אגרוף, BJJ, No-Gi, MMA ואימונים אישיים במנחם בגין 26, קריית מוצקין.': 'Boxing, BJJ, No-Gi, MMA, and personal training at 26 Menachem Begin St., Kiryat Motzkin.',

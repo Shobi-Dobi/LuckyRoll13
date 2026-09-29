@@ -123,7 +123,15 @@
   <link
     rel="preload"
     as="image"
-    href="/assets/images/boxing-hero.webp"
+    href="/assets/images/boxing-hero-720.webp"
+    media="(max-width: 720px)"
+  >
+
+  <link
+    rel="preload"
+    as="image"
+    href="/assets/images/boxing-hero-1200.webp"
+    media="(min-width: 721px)"
   >
 
 
@@ -143,7 +151,7 @@
           rgba(11,14,18,.55),
           rgba(11,14,18,.78)
         ),
-        url("/assets/images/boxing-hero.webp")
+        url("/assets/images/boxing-hero-1200.webp")
         center center / cover no-repeat;
     }
 
@@ -160,6 +168,19 @@
 
     .boxing-hero .lead {
       max-width: 760px;
+    }
+
+
+    @media (max-width: 720px) {
+      .boxing-hero {
+        background:
+          linear-gradient(
+            rgba(11,14,18,.55),
+            rgba(11,14,18,.78)
+          ),
+          url("/assets/images/boxing-hero-720.webp")
+          center center / cover no-repeat;
+      }
     }
 
 
@@ -600,10 +621,12 @@
 
 
         <img
-          src="/assets/images/boxing-optimized.webp"
+          src="/assets/images/boxing-optimized-720.webp"
+          srcset="/assets/images/boxing-optimized-720.webp 720w, /assets/images/boxing-optimized-1200.webp 1200w"
+          sizes="(max-width: 820px) calc(100vw - 40px), 50vw"
           alt="אימון אגרוף בקריות ב-Lucky Roll13"
           loading="lazy"
-          decoding="async" width="1686" height="2108">
+          decoding="async" width="720" height="900">
 
 
         <div class="content">
