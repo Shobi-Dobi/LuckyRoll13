@@ -52,6 +52,10 @@ function tags(html, name) {
   return html.match(new RegExp(`<${name}\\b[^>]*>`, 'gi')) || [];
 }
 
+function imageTagsWithSource(html, source) {
+  return tags(html, 'img').filter((tag) => parseAttributes(tag).src === source);
+}
+
 function meta(html, key, value) {
   return tags(html, 'meta')
     .map(parseAttributes)
@@ -100,6 +104,34 @@ function localTarget(href) {
 const titles = new Map();
 const descriptions = new Map();
 const googleMapsBusinessUrl = 'https://maps.google.com/?cid=8832126799717426719';
+const expectedBusinessAreas = {
+  he: [
+    ['City', 'קריית מוצקין'],
+    ['City', 'קריית ביאליק'],
+    ['City', 'קריית ים'],
+    ['City', 'קריית אתא'],
+    ['Place', 'קריית חיים'],
+    ['Place', 'הקריות'],
+    ['City', 'נשר']
+  ],
+  en: [
+    ['City', 'Kiryat Motzkin'],
+    ['City', 'Kiryat Bialik'],
+    ['City', 'Kiryat Yam'],
+    ['City', 'Kiryat Ata'],
+    ['Place', 'Kiryat Haim'],
+    ['Place', 'Krayot'],
+    ['City', 'Nesher']
+  ]
+};
+const contextualLocationLinks = new Map([
+  ['boxing/index.html', '/kiryat-motzkin/'],
+  ['kids/index.html', '/kiryat-motzkin/'],
+  ['mma/index.html', '/kiryat-motzkin/'],
+  ['en/boxing/index.html', '/en/kiryat-motzkin/'],
+  ['en/kids/index.html', '/en/kiryat-motzkin/'],
+  ['en/mma/index.html', '/en/kiryat-motzkin/']
+]);
 
 for (const [file, expectedCanonical] of allIndexablePages) {
   const fullPath = resolve(root, file);
@@ -175,6 +207,17 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   if (localBusiness) {
     if (!Array.isArray(localBusiness.sameAs) || !localBusiness.sameAs.includes(googleMapsBusinessUrl)) fail(`${file}: LocalBusiness does not reference the Google Business Profile`);
     if (localBusiness.hasMap !== googleMapsBusinessUrl) fail(`${file}: LocalBusiness hasMap is not the exact Google Business Profile`);
+    const actualAreas = Array.isArray(localBusiness.areaServed)
+      ? localBusiness.areaServed.map((area) => [area['@type'], area.name])
+      : [];
+    const expectedAreas = expectedBusinessAreas[isEnglish ? 'en' : 'he'];
+    if (JSON.stringify(actualAreas) !== JSON.stringify(expectedAreas)) fail(`${file}: LocalBusiness areaServed is inconsistent`);
+  }
+
+  const expectedContextualLocation = contextualLocationLinks.get(file);
+  if (expectedContextualLocation) {
+    const mainMarkup = html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
+    if (!mainMarkup.includes(`href="${expectedContextualLocation}"`)) fail(`${file}: main content is missing a contextual Kiryat Motzkin link`);
   }
 
   if (html.includes('https://www.google.com/maps/search/')) fail(`${file}: still uses a generic Google Maps address search`);
@@ -422,6 +465,17 @@ if (!englishEventsHubHtml.includes('featured-event-card is-past-event') || !engl
 if (!englishEventsHubHtml.includes('data-upcoming-empty><') || !englishEventsHubHtml.includes('data-past-empty hidden')) fail('English events hub: static empty states are incorrect');
 
 const notFoundHtml = readFileSync(resolve(root, '404.html'), 'utf8');
+if (!notFoundHtml.includes('<meta name="robots" content="noindex,follow">')) fail('404.html: must remain noindex,follow');
+if (/rel=["']canonical["']/i.test(notFoundHtml)) fail('404.html: must not declare a canonical URL');
+if (!notFoundHtml.includes("document.documentElement.classList.add('js-enabled')")) fail('404.html: missing progressive-enhancement initializer');
+if (!notFoundHtml.includes('/assets/style.css?v=20260923-1') || !notFoundHtml.includes('/assets/site.js?v=20260923-1')) fail('404.html: shared asset versions are stale');
+if (!notFoundHtml.includes('/assets/images/luckyroll13-header-logo.webp') || !notFoundHtml.includes('width="1431" height="359"')) fail('404.html: current header logo is missing');
+if (!notFoundHtml.includes('data-open-label="פתיחת תפריט ניווט"') || !notFoundHtml.includes('data-close-label="סגירת תפריט ניווט"')) fail('404.html: accessible menu labels are missing');
+if (!notFoundHtml.includes('class="menu-close"')) fail('404.html: explicit menu close control is missing');
+if (/>\s*תפריט\s*</.test(notFoundHtml)) fail('404.html: obsolete visible menu text remains');
+for (const href of ['/', '/kiryat-motzkin/', '/events/', '/contact/']) {
+  if (!notFoundHtml.includes(`href="${href}"`)) fail(`404.html: missing navigation link ${href}`);
+}
 if (!/href=["']\/events\/["'][^>]*>\s*סמינרים ואירועים\s*<\/a>/i.test(notFoundHtml)) fail('404.html: missing seminars and events navigation tab');
 if (!notFoundHtml.includes(googleMapsBusinessUrl)) fail('404.html: Google Maps link does not use the verified business profile');
 if (!notFoundHtml.includes('www.waze.com/ul?q=') || !notFoundHtml.includes('navigate=yes')) fail('404.html: Waze link does not use the verified address query');
@@ -442,6 +496,48 @@ for (let number = 13; number <= 21; number += 1) {
   const filename = `bjj-gallery-${number}.webp`;
   if (!bjjGallery.includes(filename)) fail(`bjj: missing new gallery image ${filename}`);
   if (!existsSync(resolve(root, 'assets/images', filename))) fail(`bjj: missing gallery asset ${filename}`);
+}
+for (const page of ['bjj/index.html', 'en/bjj/index.html']) {
+  const html = readFileSync(resolve(root, page), 'utf8');
+  for (let number = 1; number <= 21; number += 1) {
+    if (number === 15) continue;
+    const id = String(number).padStart(2, '0');
+    const source = `/assets/images/bjj-gallery-${id}.webp`;
+    const image = imageTagsWithSource(html, source)[0];
+    if (!image || !parseAttributes(image).srcset?.includes(`bjj-gallery-${id}-720.webp 720w`)) {
+      fail(`${page}: ${source} is missing its responsive 720px candidate`);
+    }
+  }
+}
+
+const responsiveCollaborationSources = [
+  'collab-blacklotus-bw.jpeg',
+  'collab-blacklotus-dojo.jpeg',
+  'collab-group-certificate.jpeg',
+  'collab-01.jpeg',
+  'collab-03.jpeg',
+  'collab-05.jpeg',
+  'collab-07.jpeg'
+];
+for (const page of ['collaborations/index.html', 'en/collaborations/index.html']) {
+  const html = readFileSync(resolve(root, page), 'utf8');
+  for (const filename of responsiveCollaborationSources) {
+    const images = imageTagsWithSource(html, `/assets/images/${filename}`);
+    if (!images.length || images.some((image) => !parseAttributes(image).srcset?.includes(`${filename.replace(/\.jpeg$/, '')}-720.webp 720w`))) {
+      fail(`${page}: ${filename} is missing a responsive WebP candidate`);
+    }
+  }
+}
+
+for (const page of ['kids/index.html', 'en/kids/index.html']) {
+  const html = readFileSync(resolve(root, page), 'utf8');
+  for (const filename of ['kids.webp', 'kids2-optimized.webp', 'community.webp']) {
+    const images = imageTagsWithSource(html, `/assets/images/${filename}`);
+    const variant = `${filename.replace(/\.webp$/, '')}-720.webp 720w`;
+    if (!images.length || images.some((image) => !parseAttributes(image).srcset?.includes(variant))) {
+      fail(`${page}: ${filename} is missing a responsive 720px candidate`);
+    }
+  }
 }
 
 const womenBoxingHtml = readFileSync(resolve(root, 'women-boxing/index.html'), 'utf8');
@@ -469,6 +565,14 @@ for (const formPage of ['en/kids/index.html', 'en/women-boxing/index.html']) {
 }
 
 const sitemap = readFileSync(resolve(root, 'sitemap.xml'), 'utf8');
+const sitemapEntries = [...sitemap.matchAll(/<url><loc>([^<]+)<\/loc><lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod><\/url>/g)];
+const sitemapUrls = sitemapEntries.map((entry) => entry[1]);
+const today = new Date().toISOString().slice(0, 10);
+if (sitemapEntries.length !== allIndexablePages.length) fail(`sitemap: expected ${allIndexablePages.length} complete entries, found ${sitemapEntries.length}`);
+if (new Set(sitemapUrls).size !== sitemapUrls.length) fail('sitemap: duplicate URLs detected');
+for (const [, url, lastmod] of sitemapEntries) {
+  if (lastmod > today) fail(`sitemap: ${url} has a future lastmod date ${lastmod}`);
+}
 for (const [, url] of allIndexablePages) {
   if (!sitemap.includes(`<loc>${url}</loc>`)) fail(`sitemap: missing ${url}`);
 }
@@ -479,22 +583,6 @@ for (const [, url] of allIndexablePages) {
   }
 }
 if (sitemap.includes('/events/javier-zaruski/')) fail('sitemap: contains redirected seminar URL');
-for (const url of [
-  'https://luckyroll13.com/',
-  'https://luckyroll13.com/bjj/',
-  'https://luckyroll13.com/collaborations/',
-  'https://luckyroll13.com/events/',
-  'https://luckyroll13.com/javier-zaruski-seminar/',
-  'https://luckyroll13.com/en/',
-  'https://luckyroll13.com/en/bjj/',
-  'https://luckyroll13.com/en/collaborations/',
-  'https://luckyroll13.com/en/events/',
-  'https://luckyroll13.com/en/javier-zaruski-seminar/'
-]) {
-  if (!sitemap.includes(`<loc>${url}</loc><lastmod>2026-09-28</lastmod>`)) fail(`sitemap: recap update date is missing for ${url}`);
-}
-if (!sitemap.includes('<loc>https://luckyroll13.com/women-boxing/</loc><lastmod>2026-09-20</lastmod>')) fail('sitemap: women boxing lastmod does not reflect the gallery update');
-if (!sitemap.includes('<loc>https://luckyroll13.com/kiryat-motzkin/</loc><lastmod>2026-09-20</lastmod>')) fail('sitemap: Kiryat Motzkin lastmod does not reflect the local content update');
 
 const siteScript = readFileSync(resolve(root, 'assets/site.js'), 'utf8');
 const styles = readFileSync(resolve(root, 'assets/style.css'), 'utf8');
