@@ -46,6 +46,10 @@ html.js-enabled .links a, html.js-enabled .links a:not(.cta) { width: 100%; padd
 .cta, .btn { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; border-radius: 999px; padding: 12px 20px; font-weight: 800; background: var(--blue); color: #001018; border: 0; }
 .btn.alt { background: transparent; color: #fff; border: 1px solid #55606b; }
 .hero { min-height: 76vh; display: grid; place-items: center; position: relative; background: linear-gradient(90deg, rgba(0, 0, 0, .86), rgba(0, 0, 0, .35)), url('images/hero.webp') center 35%/cover; }
+.hero--responsive-media { isolation: isolate; overflow: hidden; background: #0b0d10; }
+.hero--responsive-media .hero-media { position: absolute; inset: 0; z-index: -2; display: block; }
+.hero--responsive-media .hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; display: block; }
+.hero--responsive-media::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(0, 0, 0, .86), rgba(0, 0, 0, .35)); pointer-events: none; }
 .hero-inner { padding: 90px 0; max-width: 760px; margin-left: auto; }
 .eyebrow { color: var(--gold); font-weight: 900; letter-spacing: .04em; }
 .hero h1 { font-size: clamp(42px, 7vw, 78px); line-height: 1.02; margin: 12px 0 20px; }
@@ -90,6 +94,7 @@ html.js-enabled .links a, html.js-enabled .links a:not(.cta) { width: 100%; padd
 @media (max-width: 820px) {
   .logo { width: 155px; }
   .hero { min-height: 72vh; background-position: 58% center; }
+  .hero--responsive-media .hero-media img { object-position: 58% center; }
   .hero-inner { padding: 70px 0; }
   .grid { grid-template-columns: 1fr; }
   .split { grid-template-columns: 1fr; }

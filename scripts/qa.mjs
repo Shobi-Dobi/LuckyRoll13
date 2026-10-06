@@ -56,6 +56,21 @@ function imageTagsWithSource(html, source) {
   return tags(html, 'img').filter((tag) => parseAttributes(tag).src === source);
 }
 
+function picturesWithClass(html, className) {
+  const pictures = [];
+  const pattern = /<picture\b([^>]*)>([\s\S]*?)<\/picture>/gi;
+  let match;
+
+  while ((match = pattern.exec(html))) {
+    const attributes = parseAttributes(`<picture${match[1]}>`);
+    if ((attributes.class || '').split(/\s+/).includes(className)) {
+      pictures.push({ attributes, inner: match[2] });
+    }
+  }
+
+  return pictures;
+}
+
 function meta(html, key, value) {
   return tags(html, 'meta')
     .map(parseAttributes)
@@ -99,6 +114,23 @@ function localTarget(href) {
   if (!path || path === '/') return resolve(root, 'index.html');
   if (path.endsWith('/')) return resolve(root, path.slice(1), 'index.html');
   return resolve(root, path.slice(1));
+}
+
+function plainText(fragment) {
+  return fragment
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function visibleFaqPairs(html) {
+  return [...html.matchAll(/<details\b[^>]*>[\s\S]*?<summary>([\s\S]*?)<\/summary>[\s\S]*?<p>([\s\S]*?)<\/p>[\s\S]*?<\/details>/gi)]
+    .map((match) => [plainText(match[1]), plainText(match[2])]);
 }
 
 const titles = new Map();
@@ -147,6 +179,8 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   const robots = meta(html, 'name', 'robots');
   const ids = [...html.matchAll(/\bid=["']([^"']+)["']/gi)].map((match) => match[1]);
   const duplicateIds = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
+  const headerLogo = imageTagsWithSource(html, '/assets/images/luckyroll13-header-logo-480.webp')[0];
+  const headerLogoAttributes = headerLogo ? parseAttributes(headerLogo) : {};
 
   const isEnglish = file.startsWith('en/');
   const expectedLanguage = isEnglish ? 'en' : 'he';
@@ -172,6 +206,8 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   if (!robots || !robots.includes('index') || robots.includes('noindex')) fail(`${file}: invalid robots directive`);
   if (h1Count !== 1) fail(`${file}: expected one H1, found ${h1Count}`);
   if (duplicateIds.length) fail(`${file}: duplicate IDs: ${duplicateIds.join(', ')}`);
+  if (!headerLogo || headerLogoAttributes.width !== '480' || headerLogoAttributes.height !== '120') fail(`${file}: optimized 480x120 header logo is missing`);
+  if (html.includes('src="/assets/images/luckyroll13-header-logo.webp"')) fail(`${file}: oversized 1431px header logo remains`);
   const eventsPath = isEnglish ? '/en/events/' : '/events/';
   const eventsLabel = isEnglish ? 'Seminars and Events' : 'סמינרים ואירועים';
   if (!new RegExp(`href=["']${eventsPath.replaceAll('/', '\\/')}["'][^>]*>\\s*${eventsLabel}\\s*<\\/a>`, 'i').test(html)) fail(`${file}: missing seminars and events navigation tab`);
@@ -186,7 +222,7 @@ for (const [file, expectedCanonical] of allIndexablePages) {
     const expectedPath = isEnglish ? (path === '/' ? '/en/' : `/en${path}`) : path;
     if (!navigationMarkup.includes(`href="${expectedPath}"`)) fail(`${file}: navigation is missing ${expectedPath}`);
   }
-  if (!html.includes(`/assets/style.css?v=20260923-1`) || !html.includes(`/assets/site.js?v=20260923-1`)) fail(`${file}: missing current shared asset cache version`);
+  if (!html.includes(`/assets/style.css?v=20261006-1`) || !html.includes(`/assets/site.js?v=20260923-1`)) fail(`${file}: missing current shared asset cache version`);
   if (!html.includes(`/assets/tracking.js?v=20260923-1`)) fail(`${file}: missing current tracking asset cache version`);
   if (isEnglish && html.replace('>עברית<', '><').match(/[\u0590-\u05ff]/)) fail(`${file}: untranslated Hebrew text remains`);
   if (isEnglish && /translate\.google|googtrans|google\.translate/i.test(html)) fail(`${file}: runtime translation widget detected`);
@@ -293,7 +329,7 @@ const localSearchChecks = [
   ['kiryat-motzkin/index.html', ['אומנויות לחימה בקריית מוצקין', 'קריית ביאליק', 'קריית ים', 'קריית אתא', 'קריית חיים']],
   ['en/index.html', ['Martial Arts in Krayot and Nesher', 'Boxing', 'Brazilian Jiu-Jitsu', 'MMA', 'Kiryat Motzkin', 'Nesher']],
   ['en/boxing/index.html', ['Boxing Training in Krayot and Nesher']],
-  ['en/bjj/index.html', ['Brazilian Jiu-Jitsu in Krayot and Nesher']],
+  ['en/bjj/index.html', ['Brazilian Jiu-Jitsu (BJJ) in Kiryat Motzkin, Krayot and Nesher']],
   ['en/kids/index.html', ['Martial Arts for Kids in Krayot and Nesher']],
   ['en/women-boxing/index.html', ["Women's Boxing in Krayot", 'Kiryat Motzkin']],
   ['en/kiryat-motzkin/index.html', ['Martial Arts in Kiryat Motzkin', 'Kiryat Bialik', 'Kiryat Yam', 'Kiryat Ata', 'Kiryat Haim']]
@@ -468,8 +504,9 @@ const notFoundHtml = readFileSync(resolve(root, '404.html'), 'utf8');
 if (!notFoundHtml.includes('<meta name="robots" content="noindex,follow">')) fail('404.html: must remain noindex,follow');
 if (/rel=["']canonical["']/i.test(notFoundHtml)) fail('404.html: must not declare a canonical URL');
 if (!notFoundHtml.includes("document.documentElement.classList.add('js-enabled')")) fail('404.html: missing progressive-enhancement initializer');
-if (!notFoundHtml.includes('/assets/style.css?v=20260923-1') || !notFoundHtml.includes('/assets/site.js?v=20260923-1')) fail('404.html: shared asset versions are stale');
-if (!notFoundHtml.includes('/assets/images/luckyroll13-header-logo.webp') || !notFoundHtml.includes('width="1431" height="359"')) fail('404.html: current header logo is missing');
+if (!notFoundHtml.includes('/assets/style.css?v=20261006-1') || !notFoundHtml.includes('/assets/site.js?v=20260923-1')) fail('404.html: shared asset versions are stale');
+if (!notFoundHtml.includes('/assets/images/luckyroll13-header-logo-480.webp') || !notFoundHtml.includes('width="480" height="120"')) fail('404.html: optimized header logo is missing');
+if (notFoundHtml.includes('src="/assets/images/luckyroll13-header-logo.webp"')) fail('404.html: oversized 1431px header logo remains');
 if (!notFoundHtml.includes('data-open-label="פתיחת תפריט ניווט"') || !notFoundHtml.includes('data-close-label="סגירת תפריט ניווט"')) fail('404.html: accessible menu labels are missing');
 if (!notFoundHtml.includes('class="menu-close"')) fail('404.html: explicit menu close control is missing');
 if (/>\s*תפריט\s*</.test(notFoundHtml)) fail('404.html: obsolete visible menu text remains');
@@ -483,11 +520,22 @@ if (!notFoundHtml.includes('www.waze.com/ul?q=') || !notFoundHtml.includes('navi
 const localPageHtml = readFileSync(resolve(root, 'kiryat-motzkin/index.html'), 'utf8');
 const localPageSchemas = flattenSchemas(jsonLd(localPageHtml, 'kiryat-motzkin/index.html'));
 const localFaq = localPageSchemas.find((schema) => schema['@type'] === 'FAQPage');
-if (!localFaq || !Array.isArray(localFaq.mainEntity) || localFaq.mainEntity.length !== 3) fail('kiryat-motzkin: missing matching local FAQ schema');
+if (!localFaq || !Array.isArray(localFaq.mainEntity) || localFaq.mainEntity.length !== 4) fail('kiryat-motzkin: missing matching local FAQ schema');
+const localSchemaFaqPairs = localFaq?.mainEntity?.map((item) => [item.name, item.acceptedAnswer?.text]) || [];
+if (JSON.stringify(visibleFaqPairs(localPageHtml)) !== JSON.stringify(localSchemaFaqPairs)) fail('kiryat-motzkin: visible FAQ and FAQ schema do not match exactly');
 for (const phrase of ['אגרוף בקריית מוצקין', 'ג׳יו־ג׳יטסו BJJ בקריית מוצקין', 'אגרוף לנשים בקריית מוצקין', 'MMA לילדים ונוער']) {
   if (!localPageHtml.includes(phrase)) fail(`kiryat-motzkin: missing useful local service content: ${phrase}`);
 }
 if (!localPageHtml.includes('href="/women-boxing/"')) fail('kiryat-motzkin: missing women boxing service link');
+if (!localPageHtml.includes('הגנה עצמית')) fail('kiryat-motzkin: missing factual self-defence guidance');
+
+const englishLocalPageHtml = readFileSync(resolve(root, 'en/kiryat-motzkin/index.html'), 'utf8');
+const englishLocalPageSchemas = flattenSchemas(jsonLd(englishLocalPageHtml, 'en/kiryat-motzkin/index.html'));
+const englishLocalFaq = englishLocalPageSchemas.find((schema) => schema['@type'] === 'FAQPage');
+const englishLocalSchemaFaqPairs = englishLocalFaq?.mainEntity?.map((item) => [item.name, item.acceptedAnswer?.text]) || [];
+if (englishLocalSchemaFaqPairs.length !== 4 || JSON.stringify(visibleFaqPairs(englishLocalPageHtml)) !== JSON.stringify(englishLocalSchemaFaqPairs)) {
+  fail('en/kiryat-motzkin: visible FAQ and FAQ schema do not match exactly');
+}
 
 const bjjHtml = readFileSync(resolve(root, 'bjj/index.html'), 'utf8');
 const bjjGallery = bjjHtml.match(/<div class="bjj-gallery">([\s\S]*?)<\/div>/i)?.[1] || '';
@@ -504,28 +552,36 @@ for (const page of ['bjj/index.html', 'en/bjj/index.html']) {
     const id = String(number).padStart(2, '0');
     const source = `/assets/images/bjj-gallery-${id}.webp`;
     const image = imageTagsWithSource(html, source)[0];
-    if (!image || !parseAttributes(image).srcset?.includes(`bjj-gallery-${id}-720.webp 720w`)) {
-      fail(`${page}: ${source} is missing its responsive 720px candidate`);
+    const imageAttributes = image ? parseAttributes(image) : {};
+    const srcset = imageAttributes.srcset || '';
+    if (!image || !srcset.includes(`bjj-gallery-${id}-480.webp 480w`) || !srcset.includes(`bjj-gallery-${id}-720.webp 720w`)) {
+      fail(`${page}: ${source} is missing its responsive 480px/720px candidates`);
     }
+    if (!imageAttributes.sizes?.includes('(max-width: 800px)')) fail(`${page}: ${source} sizes do not match the 800px single-column breakpoint`);
+    if (!existsSync(resolve(root, 'assets/images', `bjj-gallery-${id}-480.webp`))) fail(`${page}: missing BJJ 480px asset ${id}`);
   }
 }
 
-const responsiveCollaborationSources = [
-  'collab-blacklotus-bw.jpeg',
-  'collab-blacklotus-dojo.jpeg',
-  'collab-group-certificate.jpeg',
-  'collab-01.jpeg',
-  'collab-03.jpeg',
-  'collab-05.jpeg',
-  'collab-07.jpeg'
+const responsiveCollaborationStems = [
+  'shabi-ido-pariente-collaboration',
+  'collab-fighttlv',
+  'collab-japan-poster',
+  'collab-blacklotus-bw',
+  'collab-blacklotus-dojo',
+  'collab-group-certificate',
+  'collab-01',
+  'collab-03',
+  'collab-05',
+  'collab-06',
+  'collab-07'
 ];
 for (const page of ['collaborations/index.html', 'en/collaborations/index.html']) {
   const html = readFileSync(resolve(root, page), 'utf8');
-  for (const filename of responsiveCollaborationSources) {
-    const images = imageTagsWithSource(html, `/assets/images/${filename}`);
-    if (!images.length || images.some((image) => !parseAttributes(image).srcset?.includes(`${filename.replace(/\.jpeg$/, '')}-720.webp 720w`))) {
-      fail(`${page}: ${filename} is missing a responsive WebP candidate`);
+  for (const stem of responsiveCollaborationStems) {
+    if (!html.includes(`/assets/images/${stem}-480.webp 480w`) || !html.includes(`/assets/images/${stem}-720.webp 720w`)) {
+      fail(`${page}: ${stem} is missing responsive 480px/720px WebP candidates`);
     }
+    if (!existsSync(resolve(root, 'assets/images', `${stem}-480.webp`))) fail(`${page}: missing collaboration 480px asset ${stem}`);
   }
 }
 
@@ -539,6 +595,76 @@ for (const page of ['kids/index.html', 'en/kids/index.html']) {
     }
   }
 }
+
+const responsiveHomepageImages = [
+  ['bjj-480.webp', 'bjj-720.webp 720w'],
+  ['boxing-optimized-480.webp', 'boxing-optimized-720.webp 720w'],
+  ['women-boxing-hero-480.webp', 'women-boxing-hero-720.webp 720w'],
+  ['kids-480.webp', 'kids-720.webp 720w'],
+  ['mma-hero-480.webp', 'mma-hero-720.webp 720w']
+];
+for (const page of ['index.html', 'en/index.html']) {
+  const html = readFileSync(resolve(root, page), 'utf8');
+  if (!html.includes('class="hero hero--responsive-media"') || !html.includes('hero-720.webp 720w') || !html.includes('fetchpriority="high"')) {
+    fail(`${page}: responsive priority hero is missing`);
+  }
+  if (!html.includes('/assets/images/luckyroll13-header-logo-480.webp')) fail(`${page}: responsive header logo is missing`);
+  if (html.includes('src="/assets/images/mma-hero.jpeg"')) fail(`${page}: oversized MMA JPEG remains on the homepage`);
+  for (const [source, candidate] of responsiveHomepageImages) {
+    const image = imageTagsWithSource(html, `/assets/images/${source}`)[0];
+    if (!image || !parseAttributes(image).srcset?.includes(candidate)) fail(`${page}: ${source} is missing responsive candidates`);
+  }
+}
+for (const filename of [
+  'hero-720.webp',
+  'hero-960.webp',
+  'luckyroll13-header-logo-480.webp',
+  ...responsiveHomepageImages.map(([source]) => source)
+]) {
+  if (!existsSync(resolve(root, 'assets/images', filename))) fail(`homepage: missing optimized asset ${filename}`);
+}
+
+const sharedCss = readFileSync(resolve(root, 'assets/style.css'), 'utf8');
+function checkResponsiveHero(page, stem) {
+  const html = readFileSync(resolve(root, page), 'utf8');
+  const fallback = `/assets/images/${stem}.webp`;
+  const expectedSrcset = `/assets/images/${stem}-480.webp 480w, /assets/images/${stem}-720.webp 720w, ${fallback} 941w`;
+  const pictures = picturesWithClass(html, 'hero-media');
+  if (pictures.length !== 1) {
+    fail(`${page}: expected exactly one responsive hero picture`);
+    return;
+  }
+
+  const picture = pictures[0];
+  const sources = tags(picture.inner, 'source').map(parseAttributes);
+  const images = tags(picture.inner, 'img').map(parseAttributes);
+  const preloads = tags(html, 'link').map(parseAttributes)
+    .filter((attributes) => attributes.rel === 'preload' && attributes.as === 'image' && attributes.href === fallback);
+  const source = sources[0] || {};
+  const image = images[0] || {};
+  const preload = preloads[0] || {};
+
+  if (picture.attributes['aria-hidden'] !== 'true' || sources.length !== 1 || images.length !== 1) {
+    fail(`${page}: responsive hero picture semantics or child count is invalid`);
+  }
+  if (source.type !== 'image/webp' || source.srcset !== expectedSrcset || source.sizes !== '100vw') {
+    fail(`${page}: responsive hero source candidates or sizes are invalid`);
+  }
+  if (image.src !== fallback || image.alt !== '' || image.width !== '941' || image.height !== '2048' || image.fetchpriority !== 'high' || image.loading === 'lazy') {
+    fail(`${page}: responsive hero fallback, priority, dimensions or decorative text are invalid`);
+  }
+  if (preloads.length !== 1 || preload.imagesrcset !== source.srcset || preload.imagesizes !== source.sizes || preload.fetchpriority !== 'high') {
+    fail(`${page}: responsive hero preload does not exactly match the picture source`);
+  }
+
+  const escapedStem = stem.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  if (new RegExp(`url\\(\\s*['"]?\\/assets\\/images\\/${escapedStem}(?:-[^)'"\\s]+)?`, 'i').test(`${html}\n${sharedCss}`)) {
+    fail(`${page}: CSS background duplicates the responsive hero request`);
+  }
+}
+
+for (const page of ['mma/index.html', 'en/mma/index.html']) checkResponsiveHero(page, 'mma-hero');
+for (const page of ['women-boxing/index.html', 'en/women-boxing/index.html']) checkResponsiveHero(page, 'women-boxing-hero');
 
 const womenBoxingHtml = readFileSync(resolve(root, 'women-boxing/index.html'), 'utf8');
 const womenBoxingGallery = womenBoxingHtml.match(/<div class="women-gallery">([\s\S]*?)<\/div>/i)?.[1] || '';
@@ -567,7 +693,12 @@ for (const formPage of ['en/kids/index.html', 'en/women-boxing/index.html']) {
 const sitemap = readFileSync(resolve(root, 'sitemap.xml'), 'utf8');
 const sitemapEntries = [...sitemap.matchAll(/<url><loc>([^<]+)<\/loc><lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod><\/url>/g)];
 const sitemapUrls = sitemapEntries.map((entry) => entry[1]);
-const today = new Date().toISOString().slice(0, 10);
+const today = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Asia/Jerusalem',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit'
+}).format(new Date());
 if (sitemapEntries.length !== allIndexablePages.length) fail(`sitemap: expected ${allIndexablePages.length} complete entries, found ${sitemapEntries.length}`);
 if (new Set(sitemapUrls).size !== sitemapUrls.length) fail('sitemap: duplicate URLs detected');
 for (const [, url, lastmod] of sitemapEntries) {
@@ -586,6 +717,7 @@ if (sitemap.includes('/events/javier-zaruski/')) fail('sitemap: contains redirec
 
 const siteScript = readFileSync(resolve(root, 'assets/site.js'), 'utf8');
 const styles = readFileSync(resolve(root, 'assets/style.css'), 'utf8');
+const bilingualBuildScript = readFileSync(resolve(root, 'scripts/build-bilingual-site.mjs'), 'utf8');
 if (!siteScript.includes("isEnglish ? '/en/accessibility/' : '/accessibility/'")) fail('site navigation: localized accessibility statement link is not added to public footers');
 if (!siteScript.includes('attributionKeys') || !siteScript.includes('utm_')) fail('site navigation: language switching does not preserve campaign attribution');
 if (!siteScript.includes("event.key === 'Escape'") || !siteScript.includes('closeButton.addEventListener')) fail('site navigation: keyboard Escape or close control support is missing');
@@ -593,6 +725,12 @@ if (!/\.links\s*\{[^}]*display:\s*flex/i.test(styles)) fail('site navigation: no
 if (!/\.menu-toggle,\s*\.menu-close\s*\{[^}]*display:\s*none/i.test(styles)) fail('site navigation: progressive enhancement controls are visible without JavaScript');
 if (!/html\.js-enabled\s+\.links\s*\{[^}]*display:\s*none/i.test(styles)) fail('site navigation: closed enhanced panel is not hidden');
 if (!/html\.js-enabled\s+\.links\.is-open\s*\{[^}]*display:\s*flex/i.test(styles)) fail('site navigation: enhanced panel has no open state');
+if (!bilingualBuildScript.includes('/assets/images/luckyroll13-header-logo-480.webp') || bilingualBuildScript.includes('class="logo" src="/assets/images/luckyroll13-header-logo.webp"')) {
+  fail('bilingual build: optimized header logo is not preserved');
+}
+if (!bilingualBuildScript.includes("const styleAssetVersion = '20261006-1'") || !bilingualBuildScript.includes("const scriptAssetVersion = '20260923-1'")) {
+  fail('bilingual build: current style and script cache versions are not preserved');
+}
 
 const robots = readFileSync(resolve(root, 'robots.txt'), 'utf8');
 if (!robots.includes('Sitemap: https://luckyroll13.com/sitemap.xml')) fail('robots.txt: missing sitemap reference');

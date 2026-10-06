@@ -6,7 +6,8 @@ import { commonTranslations, pageTranslations } from './english-translations.mjs
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDirectory, '..');
 const productionOrigin = 'https://luckyroll13.com';
-const assetVersion = '20260923-1';
+const styleAssetVersion = '20261006-1';
+const scriptAssetVersion = '20260923-1';
 const eventAssetVersion = '20260928-1';
 
 const routes = [
@@ -64,7 +65,7 @@ function languageHeader(route, language) {
   return `<header class="top">
   <div class="wrap nav">
     <a class="brand-link" href="${logoHome}" aria-label="Lucky Roll13${english ? ' English home' : ' דף הבית'}">
-      <img class="logo" src="/assets/images/luckyroll13-header-logo.webp" alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" width="1431" height="359">
+      <img class="logo" src="/assets/images/luckyroll13-header-logo-480.webp" alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" width="480" height="120">
     </a>
     <div class="header-tools">
       <div class="language-switcher" aria-label="${languageLabel}">
@@ -115,11 +116,11 @@ function addLanguageSeo(html, route, language) {
     html = html.replace(/<head([^>]*)>/i, `<head$1>\n  <script>document.documentElement.classList.add('js-enabled');</script>`);
   }
 
-  html = html.replace(/\/assets\/style\.css(?:\?v=[^"']*)?/g, `/assets/style.css?v=${assetVersion}`);
-  html = html.replace(/\/assets\/site\.js(?:\?v=[^"']*)?/g, `/assets/site.js?v=${assetVersion}`);
+  html = html.replace(/\/assets\/style\.css(?:\?v=[^"']*)?/g, `/assets/style.css?v=${styleAssetVersion}`);
+  html = html.replace(/\/assets\/site\.js(?:\?v=[^"']*)?/g, `/assets/site.js?v=${scriptAssetVersion}`);
   html = html.replace(/\/assets\/events\.css(?:\?v=[^"']*)?/g, `/assets/events.css?v=${eventAssetVersion}`);
   html = html.replace(/\/assets\/events\.js(?:\?v=[^"']*)?/g, `/assets/events.js?v=${eventAssetVersion}`);
-  html = html.replace(/\/assets\/tracking\.js(?:\?v=[^"']*)?/g, `/assets/tracking.js?v=${assetVersion}`);
+  html = html.replace(/\/assets\/tracking\.js(?:\?v=[^"']*)?/g, `/assets/tracking.js?v=${scriptAssetVersion}`);
   html = html.replace(/^[ \t]+$/gm, '');
 
   return html;
@@ -178,4 +179,4 @@ for (const route of routes) {
   await writeFile(destination, english);
 }
 
-console.log(`Built ${routes.length} Hebrew/English route pairs with asset version ${assetVersion}.`);
+console.log(`Built ${routes.length} Hebrew/English route pairs with style version ${styleAssetVersion} and script version ${scriptAssetVersion}.`);
