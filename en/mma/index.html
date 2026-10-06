@@ -42,19 +42,40 @@
   <meta name="twitter:image" content="https://luckyroll13.com/assets/images/mma-hero.jpeg" />
 
   <link href="/assets/logo.png" rel="icon" />
-  <link href="/assets/style.css?v=20260923-1" rel="stylesheet" />
+  <link href="/assets/style.css?v=20261006-1" rel="stylesheet" />
   <script defer src="/assets/tracking.js?v=20260923-1"></script><script defer src="/assets/site.js?v=20260923-1"></script>
-  <link rel="preload" as="image" href="/assets/images/mma-hero.webp" />
+  <link rel="preload" as="image" href="/assets/images/mma-hero.webp" imagesrcset="/assets/images/mma-hero-480.webp 480w, /assets/images/mma-hero-720.webp 720w, /assets/images/mma-hero.webp 941w" imagesizes="100vw" fetchpriority="high" />
 
   <style>
     .page-hero {
       position: relative;
-      background-image:
-        linear-gradient(rgba(10,13,17,.62), rgba(10,13,17,.72)),
-        url('/assets/images/mma-hero.webp');
-      background-size: cover;
-      background-position: center 45%;
-      background-repeat: no-repeat;
+      isolation: isolate;
+      overflow: hidden;
+      background: #0a0d11;
+    }
+
+    .page-hero .hero-media {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      display: block;
+    }
+
+    .page-hero .hero-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 45%;
+      display: block;
+    }
+
+    .page-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(rgba(10,13,17,.62), rgba(10,13,17,.72));
+      pointer-events: none;
     }
 
     .page-hero .wrap {
@@ -102,11 +123,13 @@
       "addressCountry":"IL"
     },
     "areaServed":[
-      {"@type":"Place","name":"Kiryat Motzkin"},
-      {"@type":"Place","name":"Kiryat Bialik"},
-      {"@type":"Place","name":"Kiryat Yam"},
+      {"@type":"City","name":"Kiryat Motzkin"},
+      {"@type":"City","name":"Kiryat Bialik"},
+      {"@type":"City","name":"Kiryat Yam"},
+      {"@type":"City","name":"Kiryat Ata"},
+      {"@type":"Place","name":"Kiryat Haim"},
       {"@type":"Place","name":"Krayot"},
-      {"@type":"Place","name":"Nesher"}
+      {"@type":"City","name":"Nesher"}
     ],
     "sameAs":[
       "https://www.instagram.com/luckyroll13_boxing_jiujitsu/",
@@ -171,7 +194,7 @@
   <header class="top">
   <div class="wrap nav">
     <a class="brand-link" href="/en/" aria-label="Lucky Roll13 English home">
-      <img class="logo" src="/assets/images/luckyroll13-header-logo.webp" alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" width="1431" height="359">
+      <img class="logo" src="/assets/images/luckyroll13-header-logo-480.webp" alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" width="480" height="120">
     </a>
     <div class="header-tools">
       <div class="language-switcher" aria-label="Choose language">
@@ -206,6 +229,10 @@
   <main id="main">
 
     <section class="page-hero">
+      <picture class="hero-media" aria-hidden="true">
+        <source type="image/webp" srcset="/assets/images/mma-hero-480.webp 480w, /assets/images/mma-hero-720.webp 720w, /assets/images/mma-hero.webp 941w" sizes="100vw">
+        <img src="/assets/images/mma-hero.webp" alt="" width="941" height="2048" fetchpriority="high" decoding="async">
+      </picture>
       <div class="wrap">
 
         <div class="eyebrow">
@@ -302,7 +329,7 @@
 
         <p>
           The groups suit families looking for MMA classes for kids
-          in Kiryat Motzkin, Kiryat Bialik, Kiryat Yam, and across Krayot.
+          in <a href="/en/kiryat-motzkin/">Kiryat Motzkin</a>, Kiryat Bialik, Kiryat Yam, and across Krayot.
           You can start with no previous experience.
         </p>
 
