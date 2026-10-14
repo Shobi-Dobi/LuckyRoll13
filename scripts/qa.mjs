@@ -109,6 +109,12 @@ function flattenSchemas(blocks) {
   return blocks.flatMap((block) => Array.isArray(block['@graph']) ? block['@graph'] : [block]);
 }
 
+function schemaNodes(value) {
+  if (Array.isArray(value)) return value.flatMap(schemaNodes);
+  if (!value || typeof value !== 'object') return [];
+  return [value, ...Object.values(value).flatMap(schemaNodes)];
+}
+
 function localTarget(href) {
   const path = href.split(/[?#]/)[0];
   if (!path || path === '/') return resolve(root, 'index.html');
@@ -239,6 +245,15 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   const schemas = jsonLd(html, file);
   if (!schemas.length) fail(`${file}: missing JSON-LD`);
 
+  for (const video of schemaNodes(schemas).filter((schema) => schema['@type'] === 'VideoObject')) {
+    if (!video.name) fail(`${file}: VideoObject is missing name`);
+    if (!video.description) fail(`${file}: VideoObject is missing description`);
+    if (!video.thumbnailUrl || (Array.isArray(video.thumbnailUrl) && !video.thumbnailUrl.length)) fail(`${file}: VideoObject is missing thumbnailUrl`);
+    if (!video.contentUrl && !video.embedUrl) fail(`${file}: VideoObject is missing contentUrl/embedUrl`);
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(video.uploadDate || '') || Number.isNaN(Date.parse(video.uploadDate))) fail(`${file}: VideoObject has an invalid uploadDate or no timezone`);
+    if (/youtube\.com\/watch/i.test(video.contentUrl || '')) fail(`${file}: VideoObject contentUrl points to a watch page instead of video bytes`);
+  }
+
   const localBusiness = flattenSchemas(schemas).find((schema) => schema['@type'] === 'SportsActivityLocation');
   if (localBusiness) {
     if (!Array.isArray(localBusiness.sameAs) || !localBusiness.sameAs.includes(googleMapsBusinessUrl)) fail(`${file}: LocalBusiness does not reference the Google Business Profile`);
@@ -344,6 +359,7 @@ for (const [file, phrases] of localSearchChecks) {
 const seminarHtml = readFileSync(resolve(root, 'javier-zaruski-seminar/index.html'), 'utf8');
 const seminarSchemas = flattenSchemas(jsonLd(seminarHtml, 'javier-zaruski-seminar/index.html'));
 const eventSchema = seminarSchemas.find((schema) => schema['@type'] === 'Event');
+const seminarVideo = schemaNodes(seminarSchemas).find((schema) => schema['@type'] === 'VideoObject');
 const payboxLinks = [...seminarHtml.matchAll(/href=["'](https:\/\/links\.payboxapp\.com\/[^"']+)["']/g)].map((match) => match[1]);
 
 if (payboxLinks.length !== 0) fail(`seminar: completed event still exposes ${payboxLinks.length} PayBox CTA(s)`);
@@ -397,6 +413,9 @@ for (const staleAchievement of ['Double Gold Champion', '2024 &amp; 2026 Competi
 }
 if (!seminarHtml.includes('https://www.youtube-nocookie.com/embed/JFVUv_njAX8?rel=0')) fail('seminar: missing privacy-enhanced YouTube embed');
 if (!seminarHtml.includes('href="https://www.youtube.com/watch?v=JFVUv_njAX8"')) fail('seminar: missing original YouTube link');
+if (seminarVideo?.uploadDate !== '2024-01-08T16:54:49-08:00') fail('seminar: VideoObject uploadDate does not match YouTube metadata');
+if (seminarVideo?.embedUrl !== 'https://www.youtube-nocookie.com/embed/JFVUv_njAX8') fail('seminar: VideoObject embedUrl is invalid');
+if (Object.hasOwn(seminarVideo || {}, 'contentUrl')) fail('seminar: VideoObject contentUrl must not point to a YouTube watch page');
 
 const tracking = readFileSync(resolve(root, 'assets/tracking.js'), 'utf8');
 const events = readFileSync(resolve(root, 'assets/events.js'), 'utf8');
