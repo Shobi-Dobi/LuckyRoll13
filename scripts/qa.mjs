@@ -19,7 +19,8 @@ const primaryPages = [
   ['events/index.html', 'https://luckyroll13.com/events/'],
   ['kiryat-motzkin/index.html', 'https://luckyroll13.com/kiryat-motzkin/'],
   ['javier-zaruski-seminar/index.html', 'https://luckyroll13.com/javier-zaruski-seminar/'],
-  ['accessibility/index.html', 'https://luckyroll13.com/accessibility/']
+  ['accessibility/index.html', 'https://luckyroll13.com/accessibility/'],
+  ['guide/index.html', 'https://luckyroll13.com/guide/']
 ];
 
 const englishPages = primaryPages.map(([file, url]) => {
@@ -170,6 +171,12 @@ const contextualLocationLinks = new Map([
   ['en/kids/index.html', '/en/kiryat-motzkin/'],
   ['en/mma/index.html', '/en/kiryat-motzkin/']
 ]);
+const contextualGuideLinks = new Map([
+  ['index.html', '/guide/'],
+  ['kiryat-motzkin/index.html', '/guide/'],
+  ['en/index.html', '/en/guide/'],
+  ['en/kiryat-motzkin/index.html', '/en/guide/']
+]);
 
 for (const [file, expectedCanonical] of allIndexablePages) {
   const fullPath = resolve(root, file);
@@ -271,6 +278,12 @@ for (const [file, expectedCanonical] of allIndexablePages) {
     if (!mainMarkup.includes(`href="${expectedContextualLocation}"`)) fail(`${file}: main content is missing a contextual Kiryat Motzkin link`);
   }
 
+  const expectedContextualGuide = contextualGuideLinks.get(file);
+  if (expectedContextualGuide) {
+    const mainMarkup = html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
+    if (!mainMarkup.includes(`href="${expectedContextualGuide}"`)) fail(`${file}: main content is missing a contextual training-guide link`);
+  }
+
   if (html.includes('https://www.google.com/maps/search/')) fail(`${file}: still uses a generic Google Maps address search`);
 
   const internalLinks = [...html.matchAll(/\bhref=["']([^"']+)["']/gi)].map((match) => match[1]);
@@ -329,25 +342,29 @@ const aboutSchemas = flattenSchemas(jsonLd(aboutHtml, 'about/index.html'));
 const aboutFounder = aboutSchemas.find((schema) => schema['@type'] === 'Person' && schema['@id'] === 'https://luckyroll13.com/#shabi-shilon');
 if (!aboutFounder || aboutFounder.subjectOf?.length !== 2) fail('about/index.html: founder entity is missing verified competition references');
 if (!aboutHtml.includes('ADCC Amateur World Championship') || !aboutHtml.includes('smoothcomp.com/en/event/29650')) fail('about/index.html: verified international competition record is missing');
+if (/"@type"\s*:\s*"VideoObject"/.test(aboutHtml)) fail('about/index.html: incomplete VideoObject schema remains');
 
 const englishAboutHtml = readFileSync(resolve(root, 'en/about/index.html'), 'utf8');
 const englishAboutSchemas = flattenSchemas(jsonLd(englishAboutHtml, 'en/about/index.html'));
 const englishAboutFounder = englishAboutSchemas.find((schema) => schema['@type'] === 'Person' && schema['@id'] === 'https://luckyroll13.com/#shabi-shilon');
 if (!englishAboutFounder || englishAboutFounder.name !== 'Shabi Shilon') fail('en/about/index.html: English founder entity is incomplete');
+if (/"@type"\s*:\s*"VideoObject"/.test(englishAboutHtml)) fail('en/about/index.html: incomplete VideoObject schema remains');
 
 const localSearchChecks = [
   ['index.html', ['אומנויות לחימה בקריות ובנשר', 'אגרוף', 'ג׳יו־ג׳יטסו', 'MMA', 'קריית מוצקין', 'נשר']],
-  ['boxing/index.html', ['אימוני אגרוף בקריות ובנשר']],
+  ['boxing/index.html', ['אימוני אגרוף בקריית מוצקין, הקריות ונשר', 'אגרוף קלאסי']],
   ['bjj/index.html', ['ג׳יו־ג׳יטסו בקריות ובנשר']],
   ['kids/index.html', ['אומנויות לחימה לילדים בקריות ובנשר']],
   ['women-boxing/index.html', ['אגרוף לנשים בקריות', 'קריית מוצקין']],
   ['kiryat-motzkin/index.html', ['אומנויות לחימה בקריית מוצקין', 'קריית ביאליק', 'קריית ים', 'קריית אתא', 'קריית חיים']],
+  ['guide/index.html', ['איך לבחור אומנות לחימה בקריות', 'אגרוף', 'ג׳יו־ג׳יטסו ברזילאי', 'MMA לילדים ונוער', 'אגרוף לנשים', 'אימון אישי']],
   ['en/index.html', ['Martial Arts in Krayot and Nesher', 'Boxing', 'Brazilian Jiu-Jitsu', 'MMA', 'Kiryat Motzkin', 'Nesher']],
-  ['en/boxing/index.html', ['Boxing Training in Krayot and Nesher']],
+  ['en/boxing/index.html', ['Boxing Training in Kiryat Motzkin, Krayot and Nesher', 'Classic Boxing']],
   ['en/bjj/index.html', ['Brazilian Jiu-Jitsu (BJJ) in Kiryat Motzkin, Krayot and Nesher']],
   ['en/kids/index.html', ['Martial Arts for Kids in Krayot and Nesher']],
   ['en/women-boxing/index.html', ["Women's Boxing in Krayot", 'Kiryat Motzkin']],
-  ['en/kiryat-motzkin/index.html', ['Martial Arts in Kiryat Motzkin', 'Kiryat Bialik', 'Kiryat Yam', 'Kiryat Ata', 'Kiryat Haim']]
+  ['en/kiryat-motzkin/index.html', ['Martial Arts in Kiryat Motzkin', 'Kiryat Bialik', 'Kiryat Yam', 'Kiryat Ata', 'Kiryat Haim']],
+  ['en/guide/index.html', ['How Do I Choose a Martial Art in Krayot', 'Boxing', 'Brazilian Jiu-Jitsu', 'MMA for kids and youth', "Women's Boxing", 'Personal Training']]
 ];
 for (const [file, phrases] of localSearchChecks) {
   const pageHtml = readFileSync(resolve(root, file), 'utf8');
@@ -356,21 +373,55 @@ for (const [file, phrases] of localSearchChecks) {
   }
 }
 
+const guidePages = [
+  {
+    file: 'guide/index.html',
+    canonicalUrl: 'https://luckyroll13.com/guide/',
+    language: 'he-IL',
+    serviceLinks: ['/boxing/', '/bjj/', '/mma/', '/women-boxing/', '/kids/', '/adults/', '/kiryat-motzkin/', '/contact/']
+  },
+  {
+    file: 'en/guide/index.html',
+    canonicalUrl: 'https://luckyroll13.com/en/guide/',
+    language: 'en-US',
+    serviceLinks: ['/en/boxing/', '/en/bjj/', '/en/mma/', '/en/women-boxing/', '/en/kids/', '/en/adults/', '/en/kiryat-motzkin/', '/en/contact/']
+  }
+];
+
+for (const { file, canonicalUrl, language, serviceLinks } of guidePages) {
+  const html = readFileSync(resolve(root, file), 'utf8');
+  const schemas = flattenSchemas(jsonLd(html, file));
+  const webpage = schemas.find((schema) => schema['@type'] === 'WebPage');
+  const article = schemas.find((schema) => schema['@type'] === 'Article');
+  const breadcrumbs = schemas.find((schema) => schema['@type'] === 'BreadcrumbList');
+  const mainMarkup = html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
+
+  if (!webpage || webpage.url !== canonicalUrl || webpage.inLanguage !== language) fail(`${file}: missing localized WebPage schema`);
+  if (!article || article.inLanguage !== language || article.mainEntityOfPage?.['@id'] !== `${canonicalUrl}#webpage`) fail(`${file}: missing linked Article schema`);
+  if (article?.datePublished !== '2026-10-18' || article?.dateModified !== '2026-10-18') fail(`${file}: Article dates are not current`);
+  if (article?.author?.['@id'] !== 'https://luckyroll13.com/#business' || article?.publisher?.['@id'] !== 'https://luckyroll13.com/#business') fail(`${file}: Article does not reference the business as author and publisher`);
+  if (!breadcrumbs || breadcrumbs.itemListElement?.length !== 2) fail(`${file}: missing two-level BreadcrumbList schema`);
+  if (schemas.some((schema) => schema['@type'] === 'FAQPage')) fail(`${file}: deprecated FAQPage schema must not be used`);
+  if (visibleFaqPairs(html).length !== 8) fail(`${file}: expected eight visible questions and answers`);
+  for (const href of serviceLinks) {
+    if (!mainMarkup.includes(`href="${href}"`)) fail(`${file}: guide is missing contextual link ${href}`);
+  }
+}
+
 const seminarHtml = readFileSync(resolve(root, 'javier-zaruski-seminar/index.html'), 'utf8');
 const seminarSchemas = flattenSchemas(jsonLd(seminarHtml, 'javier-zaruski-seminar/index.html'));
-const eventSchema = seminarSchemas.find((schema) => schema['@type'] === 'Event');
 const seminarVideo = schemaNodes(seminarSchemas).find((schema) => schema['@type'] === 'VideoObject');
+const seminarRecapSchema = seminarSchemas.find((schema) => schema['@id'] === 'https://luckyroll13.com/javier-zaruski-seminar/#webpage');
 const payboxLinks = [...seminarHtml.matchAll(/href=["'](https:\/\/links\.payboxapp\.com\/[^"']+)["']/g)].map((match) => match[1]);
 
 if (payboxLinks.length !== 0) fail(`seminar: completed event still exposes ${payboxLinks.length} PayBox CTA(s)`);
-if (eventSchema?.['@id'] !== 'https://luckyroll13.com/javier-zaruski-seminar/#event') fail('seminar: invalid Event @id');
-if (!Array.isArray(eventSchema?.performer?.award) || eventSchema.performer.award.length !== 5) fail('seminar: Event performer is missing Javier awards');
-if (eventSchema?.startDate !== '2026-09-25T12:00:00+03:00') fail('seminar: invalid startDate');
-if (eventSchema?.endDate !== '2026-09-25T15:00:00+03:00') fail('seminar: invalid endDate');
-if (eventSchema?.organizer?.['@id'] !== 'https://luckyroll13.com/#business') fail('seminar: organizer does not reference business');
-if (eventSchema?.eventStatus !== 'https://schema.org/EventScheduled') fail('seminar: completed-as-scheduled event must retain EventScheduled status');
-if (Object.hasOwn(eventSchema || {}, 'offers')) fail('seminar: completed event must not expose an expired Offer');
-if (!Array.isArray(eventSchema?.image) || eventSchema.image.length !== 4) fail('seminar: expected four Event schema images');
+if (!seminarRecapSchema || seminarRecapSchema['@type'] !== 'WebPage') fail('seminar: completed event archive must use WebPage recap schema');
+if (seminarSchemas.some((schema) => schema['@type'] === 'Event')) fail('seminar: archived recap must not expose active Event schema');
+if (!Array.isArray(seminarRecapSchema?.about?.award) || seminarRecapSchema.about.award.length !== 5) fail('seminar: recap schema is missing Javier awards');
+if (seminarRecapSchema?.publisher?.['@id'] !== 'https://luckyroll13.com/#business') fail('seminar: recap publisher does not reference business');
+if (seminarRecapSchema?.contentLocation?.address?.addressLocality !== 'נשר') fail('seminar: recap location is incomplete');
+if (seminarRecapSchema?.primaryImageOfPage?.url !== 'https://luckyroll13.com/assets/images/javier-zaruski-jiu-jitsu-seminar-group-1280.webp') fail('seminar: recap schema has no primary image');
+if (seminarHtml.includes('"offers"')) fail('seminar: completed event archive still exposes an Offer');
 if (seminarHtml.includes('data-event-sales') || seminarHtml.includes('data-pricing')) fail('seminar: stale registration or pricing markup remains');
 if (!seminarHtml.includes('<section class="section" data-event-history>')) fail('seminar: visible historical message is missing from server-rendered HTML');
 if (!seminarHtml.includes('/assets/events.js?v=20260928-1') || !seminarHtml.includes('/assets/events.css?v=20260928-1')) fail('seminar: current event archive assets are not loaded');
@@ -733,10 +784,14 @@ for (const [, url] of allIndexablePages) {
   }
 }
 if (sitemap.includes('/events/javier-zaruski/')) fail('sitemap: contains redirected seminar URL');
+for (const guideUrl of ['https://luckyroll13.com/guide/', 'https://luckyroll13.com/en/guide/']) {
+  if (!sitemap.includes(`<loc>${guideUrl}</loc><lastmod>2026-10-18</lastmod>`)) fail(`sitemap: guide lastmod is not 2026-10-18 for ${guideUrl}`);
+}
 
 const siteScript = readFileSync(resolve(root, 'assets/site.js'), 'utf8');
 const styles = readFileSync(resolve(root, 'assets/style.css'), 'utf8');
 const bilingualBuildScript = readFileSync(resolve(root, 'scripts/build-bilingual-site.mjs'), 'utf8');
+const bilingualTranslations = readFileSync(resolve(root, 'scripts/english-translations.mjs'), 'utf8');
 if (!siteScript.includes("isEnglish ? '/en/accessibility/' : '/accessibility/'")) fail('site navigation: localized accessibility statement link is not added to public footers');
 if (!siteScript.includes('attributionKeys') || !siteScript.includes('utm_')) fail('site navigation: language switching does not preserve campaign attribution');
 if (!siteScript.includes("event.key === 'Escape'") || !siteScript.includes('closeButton.addEventListener')) fail('site navigation: keyboard Escape or close control support is missing');
@@ -749,6 +804,9 @@ if (!bilingualBuildScript.includes('/assets/images/luckyroll13-header-logo-480.w
 }
 if (!bilingualBuildScript.includes("const styleAssetVersion = '20261006-1'") || !bilingualBuildScript.includes("const scriptAssetVersion = '20260923-1'")) {
   fail('bilingual build: current style and script cache versions are not preserved');
+}
+if (!bilingualBuildScript.includes('accessibility|guide') || !bilingualTranslations.includes("'למדריך לבחירת אומנות לחימה': 'Read the martial arts selection guide'")) {
+  fail('bilingual build: contextual guide links are not preserved in English regeneration');
 }
 
 const robots = readFileSync(resolve(root, 'robots.txt'), 'utf8');
@@ -765,8 +823,13 @@ for (const page of ['bjj/index.html', 'collaborations/index.html']) {
 }
 
 const englishSeminarHtml = readFileSync(resolve(root, 'en/javier-zaruski-seminar/index.html'), 'utf8');
+const englishSeminarSchemas = flattenSchemas(jsonLd(englishSeminarHtml, 'en/javier-zaruski-seminar/index.html'));
+const englishSeminarRecapSchema = englishSeminarSchemas.find((schema) => schema['@id'] === 'https://luckyroll13.com/en/javier-zaruski-seminar/#webpage');
 const englishPayboxLinks = [...englishSeminarHtml.matchAll(/href=["'](https:\/\/links\.payboxapp\.com\/[^"']+)["']/g)].map((match) => match[1]);
 if (englishPayboxLinks.length !== 0) fail('English seminar: completed event still exposes PayBox');
+if (!englishSeminarRecapSchema || englishSeminarRecapSchema['@type'] !== 'WebPage' || englishSeminarRecapSchema.inLanguage !== 'en-US') fail('English seminar: completed event archive must use localized WebPage recap schema');
+if (englishSeminarSchemas.some((schema) => schema['@type'] === 'Event')) fail('English seminar: archived recap must not expose active Event schema');
+if (englishSeminarHtml.includes('"offers"')) fail('English seminar: stale offer schema remains');
 const englishEventGallery = englishSeminarHtml.match(/<div class="event-recap-gallery"[\s\S]*?<\/div>\s*<article class="event-video-card"/i)?.[0] || '';
 if ((englishEventGallery.match(/<figure\b/gi) || []).length !== 7) fail('English seminar: expected seven-image recap gallery');
 if (!englishSeminarHtml.includes('<section class="section" data-event-history>') || !englishSeminarHtml.includes('Registration and payment details were removed')) fail('English seminar: visible archive state is missing');

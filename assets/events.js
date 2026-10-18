@@ -112,20 +112,6 @@
   var eventEnd = Date.parse('2026-09-25T15:00:00+03:00');
   var eventIsPast = Number.isFinite(eventEnd) && now >= eventEnd;
 
-  var eventSchema = document.getElementById('seminar-event-schema');
-
-  if (eventSchema) {
-    try {
-      var schema = JSON.parse(eventSchema.textContent);
-
-      if (eventIsPast) delete schema.offers;
-
-      eventSchema.textContent = JSON.stringify(schema);
-    } catch (error) {
-      // Keep the valid server-rendered JSON-LD if a future edit is malformed.
-    }
-  }
-
   if (eventIsPast) {
     document.body.classList.add('event-is-past');
     document.querySelectorAll('[data-event-status]').forEach(function (status) {

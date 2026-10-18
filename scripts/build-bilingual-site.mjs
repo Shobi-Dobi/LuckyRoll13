@@ -133,7 +133,7 @@ function translateEnglish(html, route) {
   for (const [hebrew, english] of translations) html = html.split(hebrew).join(english);
   html = html.replace(/<span aria-hidden="true">←<\/span>/g, '<span aria-hidden="true">→</span>');
 
-  html = html.replace(/href=(["'])\/(boxing|women-boxing|bjj|kids|mma|adults|about|collaborations|events|javier-zaruski-seminar|kiryat-motzkin|contact|accessibility)\//g, 'href=$1/en/$2/');
+  html = html.replace(/href=(["'])\/(boxing|women-boxing|bjj|kids|mma|adults|about|collaborations|events|javier-zaruski-seminar|kiryat-motzkin|contact|accessibility|guide)\//g, 'href=$1/en/$2/');
   html = html.replace(/href=(["'])\/\1/g, 'href=$1/en/$1');
   html = html.replace(/action=(["'])\/thank-you\.html\1/g, 'action=$1/en/thank-you/$1');
 
