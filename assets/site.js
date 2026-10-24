@@ -59,6 +59,66 @@
     link.href = target.pathname + target.search + target.hash;
   });
 
+  var kidsLeadForm = document.querySelector('form[data-kids-lead-form]');
+
+  if (kidsLeadForm) {
+    var kidsLocation = kidsLeadForm.querySelector('[data-kids-location]');
+    var kidsInterest = kidsLeadForm.querySelector('[data-kids-interest]');
+
+    function availableLocations(option) {
+      return (option.getAttribute('data-available-locations') || '')
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function syncKidsInterests() {
+      if (!kidsLocation || !kidsInterest) return;
+
+      var selectedLocation = kidsLocation.value;
+
+      Array.prototype.forEach.call(kidsInterest.options, function updateInterest(option) {
+        var locations = availableLocations(option);
+        option.disabled = Boolean(
+          selectedLocation &&
+          selectedLocation !== 'not-sure' &&
+          locations.length &&
+          locations.indexOf(selectedLocation) === -1
+        );
+      });
+
+      if (kidsInterest.selectedOptions[0] && kidsInterest.selectedOptions[0].disabled) {
+        kidsInterest.value = '';
+      }
+    }
+
+    function syncKidsLocations() {
+      if (!kidsLocation || !kidsInterest) return;
+
+      var selectedInterest = kidsInterest.selectedOptions[0];
+      var locations = selectedInterest ? availableLocations(selectedInterest) : [];
+
+      Array.prototype.forEach.call(kidsLocation.options, function updateLocation(option) {
+        option.disabled = Boolean(
+          option.value &&
+          option.value !== 'not-sure' &&
+          locations.length &&
+          locations.indexOf(option.value) === -1
+        );
+      });
+
+      if (kidsLocation.selectedOptions[0] && kidsLocation.selectedOptions[0].disabled) {
+        kidsLocation.value = '';
+      }
+    }
+
+    if (kidsLocation && kidsInterest) {
+      kidsLocation.addEventListener('change', syncKidsInterests);
+      kidsInterest.addEventListener('change', syncKidsLocations);
+      syncKidsInterests();
+      syncKidsLocations();
+    }
+  }
+
   var menuButton = document.querySelector('.menu-toggle');
   var navigation = document.getElementById('primary-navigation');
   var closeButton = navigation && navigation.querySelector('.menu-close');
