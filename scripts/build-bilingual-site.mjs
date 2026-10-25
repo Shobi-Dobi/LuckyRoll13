@@ -2,13 +2,17 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { commonTranslations, pageTranslations } from './english-translations.mjs';
+import { businessSchema } from './locations-schedule-data.mjs';
+import { renderGeneratedPage, renderSharedFooter } from './location-pages.mjs';
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDirectory, '..');
 const productionOrigin = 'https://luckyroll13.com';
-const styleAssetVersion = '20261006-1';
-const scriptAssetVersion = '20260923-1';
+const styleAssetVersion = '20261024-2';
+const scriptAssetVersion = '20261021-2';
 const eventAssetVersion = '20260928-1';
+
+const serviceGuideRoutes = new Set(['boxing', 'women-boxing', 'bjj', 'kids', 'mma', 'adults']);
 
 const routes = [
   { key: 'home', he: '/', en: '/en/', file: 'index.html' },
@@ -23,8 +27,11 @@ const routes = [
   { key: 'events', he: '/events/', en: '/en/events/', file: 'events/index.html' },
   { key: 'javier-zaruski-seminar', he: '/javier-zaruski-seminar/', en: '/en/javier-zaruski-seminar/', file: 'javier-zaruski-seminar/index.html' },
   { key: 'kiryat-motzkin', he: '/kiryat-motzkin/', en: '/en/kiryat-motzkin/', file: 'kiryat-motzkin/index.html' },
+  { key: 'goshen', he: '/goshen-kiryat-motzkin/', en: '/en/goshen-kiryat-motzkin/', file: 'goshen-kiryat-motzkin/index.html', generated: true },
+  { key: 'schedule', he: '/schedule/', en: '/en/schedule/', file: 'schedule/index.html', generated: true },
   { key: 'contact', he: '/contact/', en: '/en/contact/', file: 'contact/index.html' },
-  { key: 'accessibility', he: '/accessibility/', en: '/en/accessibility/', file: 'accessibility/index.html' }
+  { key: 'accessibility', he: '/accessibility/', en: '/en/accessibility/', file: 'accessibility/index.html' },
+  { key: 'guide', he: '/guide/', en: '/en/guide/', file: 'guide/index.html', staticBilingual: true }
 ];
 
 const navItems = [
@@ -39,6 +46,8 @@ const navItems = [
   ['/collaborations/', 'שיתופי פעולה', 'Collaborations'],
   ['/events/', 'סמינרים ואירועים', 'Seminars and Events'],
   ['/kiryat-motzkin/', 'קריית מוצקין', 'Kiryat Motzkin'],
+  ['/goshen-kiryat-motzkin/', 'סניף גושן', 'Goshen Location'],
+  ['/schedule/', 'מערכת שעות', 'Schedule'],
   ['/contact/', 'צור קשר', 'Contact']
 ];
 
@@ -65,7 +74,7 @@ function languageHeader(route, language) {
   return `<header class="top">
   <div class="wrap nav">
     <a class="brand-link" href="${logoHome}" aria-label="Lucky Roll13${english ? ' English home' : ' דף הבית'}">
-      <img class="logo" src="/assets/images/luckyroll13-header-logo-480.webp" alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" width="480" height="120">
+      <img class="logo" src="/assets/images/luckyroll13-header-logo-1200.webp" alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" width="1200" height="292">
     </a>
     <div class="header-tools">
       <div class="language-switcher" aria-label="${languageLabel}">
@@ -91,6 +100,59 @@ function replaceHeader(html, route, language) {
   const headerPattern = /<header\b[^>]*class=["'][^"']*\btop\b[^"']*["'][^>]*>[\s\S]*?<\/header>/i;
   if (!headerPattern.test(html)) throw new Error(`Missing shared header in ${route.file}`);
   return html.replace(headerPattern, languageHeader(route, language));
+}
+
+function replaceFooter(html, route, language) {
+  const footerPattern = /<footer\b[^>]*class=["'][^"']*\bfooter\b[^"']*["'][^>]*>[\s\S]*?<\/footer>/i;
+  if (!footerPattern.test(html)) throw new Error(`Missing shared footer in ${route.file}`);
+  return html.replace(footerPattern, renderSharedFooter(language));
+}
+
+function normalizeBusinessStructuredData(html, language, route) {
+  return html.replace(
+    /(<script\b[^>]*type=["']application\/ld\+json["'][^>]*>)([\s\S]*?)(<\/script>)/gi,
+    (fullMatch, openingTag, rawJson, closingTag) => {
+      let data;
+      try {
+        data = JSON.parse(rawJson.replace(/&amp;/g, '&'));
+      } catch (error) {
+        throw new Error(`Invalid JSON-LD in ${route.file}: ${error.message}`);
+      }
+
+      const normalizedBusiness = businessSchema(language);
+      let changed = false;
+      const visit = (value) => {
+        if (!value || typeof value !== 'object') return;
+        if (Array.isArray(value)) {
+          value.forEach(visit);
+          return;
+        }
+
+        const types = Array.isArray(value['@type']) ? value['@type'] : [value['@type']];
+        if (value['@id'] === normalizedBusiness['@id'] && types.includes('SportsActivityLocation')) {
+          value.name = normalizedBusiness.name;
+          value.alternateName = normalizedBusiness.alternateName;
+          value.url = normalizedBusiness.url;
+          value.telephone = normalizedBusiness.telephone;
+          value.logo = normalizedBusiness.logo;
+          value.image = normalizedBusiness.image;
+          value.address = normalizedBusiness.address;
+          value.containedInPlace = normalizedBusiness.containedInPlace;
+          value.areaServed = normalizedBusiness.areaServed;
+          value.sameAs = normalizedBusiness.sameAs;
+          value.hasMap = normalizedBusiness.hasMap;
+          changed = true;
+        }
+
+        Object.values(value).forEach(visit);
+      };
+      visit(data);
+
+      return changed
+        ? `${openingTag}\n${JSON.stringify(data, null, 2)}\n${closingTag}`
+        : fullMatch;
+    }
+  );
 }
 
 function addLanguageSeo(html, route, language) {
@@ -121,9 +183,34 @@ function addLanguageSeo(html, route, language) {
   html = html.replace(/\/assets\/events\.css(?:\?v=[^"']*)?/g, `/assets/events.css?v=${eventAssetVersion}`);
   html = html.replace(/\/assets\/events\.js(?:\?v=[^"']*)?/g, `/assets/events.js?v=${eventAssetVersion}`);
   html = html.replace(/\/assets\/tracking\.js(?:\?v=[^"']*)?/g, `/assets/tracking.js?v=${scriptAssetVersion}`);
+  html = html.replace(
+    /<a\b(?![^>]*\bdata-trial-cta\b)([^>]*)>(\s*[^<]*(?:אימון ניסיון|trial class)[^<]*\s*)<\/a>/gi,
+    '<a data-trial-cta$1>$2</a>'
+  );
+  html = html.replace(
+    /<a\b(?![^>]*\bdata-trial-cta\b)([^>]*\bhref=["']#lead-form["'][^>]*)>/gi,
+    '<a data-trial-cta$1>'
+  );
   html = html.replace(/^[ \t]+$/gm, '');
 
   return html;
+}
+
+function addServiceGuideLink(html, route, language) {
+  if (!serviceGuideRoutes.has(route.key)) return html;
+
+  const existingBlock = /\s*<section\b[^>]*\bdata-contextual-guide(?:=["'][^"']*["'])?[^>]*>[\s\S]*?<\/section>\s*/gi;
+  html = html.replace(existingBlock, '\n');
+
+  const english = language === 'en';
+  const href = english ? '/en/guide/' : '/guide/';
+  const copy = english
+    ? `Not sure which class is right for you? <a href="${href}">Read our martial arts selection guide</a> and compare the programs by age, goal, and training style.`
+    : `לא בטוחים איזה אימון מתאים לכם? <a href="${href}">קראו את המדריך לבחירת אומנות לחימה</a> והשוו בין המסלולים לפי גיל, מטרה וסגנון האימון.`;
+  const block = `<section class="section" data-contextual-guide><div class="wrap content"><p>${copy}</p></div></section>`;
+
+  if (!/<\/main>/i.test(html)) throw new Error(`Missing main element in ${route.file}`);
+  return html.replace(/<\/main>/i, `${block}\n</main>`);
 }
 
 function translateEnglish(html, route) {
@@ -133,9 +220,10 @@ function translateEnglish(html, route) {
   for (const [hebrew, english] of translations) html = html.split(hebrew).join(english);
   html = html.replace(/<span aria-hidden="true">←<\/span>/g, '<span aria-hidden="true">→</span>');
 
-  html = html.replace(/href=(["'])\/(boxing|women-boxing|bjj|kids|mma|adults|about|collaborations|events|javier-zaruski-seminar|kiryat-motzkin|contact|accessibility)\//g, 'href=$1/en/$2/');
+  html = html.replace(/href=(["'])\/(boxing|women-boxing|bjj|kids|mma|adults|about|collaborations|events|javier-zaruski-seminar|kiryat-motzkin|goshen-kiryat-motzkin|schedule|contact|accessibility|guide)\//g, 'href=$1/en/$2/');
   html = html.replace(/href=(["'])\/\1/g, 'href=$1/en/$1');
   html = html.replace(/action=(["'])\/thank-you\.html\1/g, 'action=$1/en/thank-you/$1');
+  html = html.replace(/name=(["'])language\1\s+value=(["'])he\2/g, 'name=$1language$1 value=$2en$2');
 
   const pageUrl = productionOrigin + route.en;
 
@@ -164,17 +252,71 @@ function translateEnglish(html, route) {
 
 for (const route of routes) {
   const sourcePath = path.join(root, route.file);
+  const destination = path.join(root, route.en.replace(/^\//, ''), 'index.html');
+
+  if (route.generated) {
+    const pageOptions = {
+      assetVersions: {
+        style: styleAssetVersion,
+        script: scriptAssetVersion
+      }
+    };
+    let hebrew = renderGeneratedPage(route.key, 'he', {
+      ...pageOptions,
+      header: languageHeader(route, 'he'),
+      footer: renderSharedFooter('he')
+    });
+    hebrew = addLanguageSeo(hebrew, route, 'he');
+    hebrew = normalizeBusinessStructuredData(hebrew, 'he', route);
+
+    let english = renderGeneratedPage(route.key, 'en', {
+      ...pageOptions,
+      header: languageHeader(route, 'en'),
+      footer: renderSharedFooter('en')
+    });
+    english = addLanguageSeo(english, route, 'en');
+    english = normalizeBusinessStructuredData(english, 'en', route);
+
+    await mkdir(path.dirname(sourcePath), { recursive: true });
+    await mkdir(path.dirname(destination), { recursive: true });
+    await writeFile(sourcePath, hebrew);
+    await writeFile(destination, english);
+    continue;
+  }
+
+  if (route.staticBilingual) {
+    const hebrewOriginal = await readFile(sourcePath, 'utf8');
+    let hebrew = replaceHeader(hebrewOriginal, route, 'he');
+    hebrew = replaceFooter(hebrew, route, 'he');
+    hebrew = addLanguageSeo(hebrew, route, 'he');
+    hebrew = normalizeBusinessStructuredData(hebrew, 'he', route);
+    await writeFile(sourcePath, hebrew);
+
+    const englishOriginal = await readFile(destination, 'utf8');
+    let english = replaceHeader(englishOriginal, route, 'en');
+    english = replaceFooter(english, route, 'en');
+    english = addLanguageSeo(english, route, 'en');
+    english = normalizeBusinessStructuredData(english, 'en', route);
+    await writeFile(destination, english);
+    continue;
+  }
+
   const original = await readFile(sourcePath, 'utf8');
 
   let hebrew = replaceHeader(original, route, 'he');
+  hebrew = replaceFooter(hebrew, route, 'he');
+  hebrew = addServiceGuideLink(hebrew, route, 'he');
   hebrew = addLanguageSeo(hebrew, route, 'he');
+  hebrew = normalizeBusinessStructuredData(hebrew, 'he', route);
   await writeFile(sourcePath, hebrew);
 
   let english = translateEnglish(original, route);
   english = replaceHeader(english, route, 'en');
+  english = replaceFooter(english, route, 'en');
+  english = addServiceGuideLink(english, route, 'en');
   english = addLanguageSeo(english, route, 'en');
+  english = normalizeBusinessStructuredData(english, 'en', route);
 
-  const destination = path.join(root, route.en.replace(/^\//, ''), 'index.html');
   await mkdir(path.dirname(destination), { recursive: true });
   await writeFile(destination, english);
 }

@@ -27,7 +27,17 @@
 /events/index.html /events/ 301!
 /javier-zaruski-seminar/index.html /javier-zaruski-seminar/ 301!
 /kiryat-motzkin/index.html /kiryat-motzkin/ 301!
+/goshen-kiryat-motzkin/index.html /goshen-kiryat-motzkin/ 301!
+/en/goshen-kiryat-motzkin/index.html /en/goshen-kiryat-motzkin/ 301!
 /accessibility/index.html /accessibility/ 301!
+
+# Retired Nesher location — preserve old links and move their authority to Goshen
+/nesher /goshen-kiryat-motzkin/ 301!
+/nesher/ /goshen-kiryat-motzkin/ 301!
+/nesher/index.html /goshen-kiryat-motzkin/ 301!
+/en/nesher /en/goshen-kiryat-motzkin/ 301!
+/en/nesher/ /en/goshen-kiryat-motzkin/ 301!
+/en/nesher/index.html /en/goshen-kiryat-motzkin/ 301!
 
 # Consolidate the unfinished seminar URL on the final canonical landing page
 /events/javier-zaruski /javier-zaruski-seminar/ 301!

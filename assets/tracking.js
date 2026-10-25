@@ -17,6 +17,47 @@
 
   var gaMeasurementId = 'G-P90EZYYDSS';
   var pixelId = '1404519714948556';
+  var pendingLeadStorageKey = 'luckyroll13:pending-form-lead';
+  var trackedLeadStoragePrefix = 'luckyroll13:tracked-form-lead:';
+
+  function getSessionStorage() {
+    try {
+      return window.sessionStorage;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function readSessionItem(storage, key) {
+    try {
+      return storage ? storage.getItem(key) : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function writeSessionItem(storage, key, value) {
+    try {
+      if (!storage) return false;
+      storage.setItem(key, value);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function removeSessionItem(storage, key) {
+    try {
+      if (storage) storage.removeItem(key);
+    } catch (error) {
+      // Storage restrictions must never break navigation or form submission.
+    }
+  }
+
+  function readFormValue(form, fieldName) {
+    var field = form.elements && form.elements.namedItem(fieldName);
+    return field && typeof field.value === 'string' ? field.value : '';
+  }
 
   window.dataLayer = window.dataLayer || [];
 
@@ -75,6 +116,87 @@
     window.__luckyRoll13PageViewTracked = true;
   }
 
+  function trackConfirmedFormLead() {
+    var normalizedPath = window.location.pathname.replace(/\/+$/, '');
+    var isThankYouPage =
+      normalizedPath === '/thank-you.html' ||
+      normalizedPath === '/thank-you' ||
+      normalizedPath === '/en/thank-you';
+
+    if (!isThankYouPage) return;
+
+    var storage = getSessionStorage();
+
+    if (!storage) return;
+
+    var pendingLead;
+
+    try {
+      pendingLead = JSON.parse(readSessionItem(storage, pendingLeadStorageKey) || 'null');
+    } catch (error) {
+      removeSessionItem(storage, pendingLeadStorageKey);
+      return;
+    }
+
+    if (
+      !pendingLead ||
+      typeof pendingLead.id !== 'string' ||
+      typeof pendingLead.formName !== 'string' ||
+      typeof pendingLead.createdAt !== 'number' ||
+      Date.now() - pendingLead.createdAt > 2 * 60 * 60 * 1000
+    ) {
+      removeSessionItem(storage, pendingLeadStorageKey);
+      return;
+    }
+
+    var trackedLeadStorageKey = trackedLeadStoragePrefix + pendingLead.id;
+
+    if (readSessionItem(storage, trackedLeadStorageKey)) {
+      removeSessionItem(storage, pendingLeadStorageKey);
+      return;
+    }
+
+    if (!writeSessionItem(storage, trackedLeadStorageKey, '1')) return;
+    removeSessionItem(storage, pendingLeadStorageKey);
+
+    var ga4LeadParameters = {
+      send_to: gaMeasurementId,
+      form_name: pendingLead.formName,
+      form_language: pendingLead.language || '',
+      interest: pendingLead.interest || '',
+      preferred_location: pendingLead.preferredLocation || '',
+      lead_source: 'website_form',
+      source_page: pendingLead.sourcePage || '',
+      page_location: window.location.href,
+      transport_type: 'beacon'
+    };
+
+    window.gtag('event', 'generate_lead', ga4LeadParameters);
+    window.gtag('event', 'trial_form_success', ga4LeadParameters);
+
+    var metaLeadParameters = {
+      content_name: pendingLead.formName,
+      content_category: 'website_form',
+      form_language: pendingLead.language || '',
+      interest: pendingLead.interest || '',
+      preferred_location: pendingLead.preferredLocation || '',
+      page_url: pendingLead.sourcePage || window.location.href
+    };
+
+    window.fbq('track', 'Lead', metaLeadParameters, {
+      eventID: pendingLead.id
+    });
+    window.fbq('track', 'Contact', {
+      contact_method: 'website_form',
+      form_name: pendingLead.formName,
+      page_url: pendingLead.sourcePage || window.location.href
+    }, {
+      eventID: pendingLead.id + '-contact'
+    });
+  }
+
+  trackConfirmedFormLead();
+
   if (window.__luckyRoll13ContactTrackingBound) {
     return;
   }
@@ -105,6 +227,7 @@
     var hostname = url.hostname.toLowerCase();
     var contactMethod = null;
     var clickEventName = null;
+    var isTrialCta = link.hasAttribute('data-trial-cta');
 
     if (
       hostname === 'wa.me' ||
@@ -118,6 +241,7 @@
       clickEventName = 'phone_click';
     } else if (
       hostname === 'maps.app.goo.gl' ||
+      hostname === 'maps.google.com' ||
       (hostname.endsWith('google.com') && url.pathname.indexOf('/maps') !== -1)
     ) {
       clickEventName = 'maps_click';
@@ -125,16 +249,27 @@
       clickEventName = 'waze_click';
     }
 
-    if (!clickEventName) {
+    if (!clickEventName && !isTrialCta) {
       return;
     }
 
-    window.gtag('event', clickEventName, {
-      send_to: gaMeasurementId,
-      link_url: link.href,
-      page_location: window.location.href,
-      transport_type: 'beacon'
-    });
+    if (clickEventName) {
+      window.gtag('event', clickEventName, {
+        send_to: gaMeasurementId,
+        link_url: link.href,
+        page_location: window.location.href,
+        transport_type: 'beacon'
+      });
+    }
+
+    if (isTrialCta) {
+      window.gtag('event', 'trial_booking_click', {
+        send_to: gaMeasurementId,
+        link_url: link.href,
+        page_location: window.location.href,
+        transport_type: 'beacon'
+      });
+    }
 
     if (contactMethod === 'whatsapp') {
       var shouldWaitForGa4 =
@@ -200,9 +335,33 @@
 
     if (formName.indexOf('lead') === -1) return;
 
+    var language = readFormValue(form, 'language') || document.documentElement.lang || '';
+    var interest = readFormValue(form, 'interest');
+    var preferredLocation = readFormValue(form, 'preferred-location');
+    var storage = getSessionStorage();
+
+    if (storage) {
+      writeSessionItem(
+        storage,
+        pendingLeadStorageKey,
+        JSON.stringify({
+          id: formName + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10),
+          formName: formName,
+          language: language,
+          interest: interest,
+          preferredLocation: preferredLocation,
+          sourcePage: window.location.pathname + window.location.search,
+          createdAt: Date.now()
+        })
+      );
+    }
+
     window.gtag('event', 'trial_form_submit', {
       send_to: gaMeasurementId,
       form_name: formName,
+      form_language: language,
+      interest: interest,
+      preferred_location: preferredLocation,
       page_location: window.location.href,
       transport_type: 'beacon'
     });
