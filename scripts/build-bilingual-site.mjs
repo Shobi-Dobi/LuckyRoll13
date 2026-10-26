@@ -4,12 +4,13 @@ import { fileURLToPath } from 'node:url';
 import { commonTranslations, pageTranslations } from './english-translations.mjs';
 import { businessSchema } from './locations-schedule-data.mjs';
 import { renderGeneratedPage, renderSharedFooter } from './location-pages.mjs';
+import { pageMetadataOverrides, socialImageByRoute } from './seo-metadata.mjs';
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDirectory, '..');
 const productionOrigin = 'https://luckyroll13.com';
 const styleAssetVersion = '20261024-2';
-const scriptAssetVersion = '20261021-2';
+const scriptAssetVersion = '20261026-1';
 const eventAssetVersion = '20260928-1';
 
 const serviceGuideRoutes = new Set(['boxing', 'women-boxing', 'bjj', 'kids', 'mma', 'adults']);
@@ -77,11 +78,11 @@ function languageHeader(route, language) {
       <img class="logo" src="/assets/images/luckyroll13-header-logo-1200.webp" alt="Lucky Roll13 - Boxing &amp; Jiu-Jitsu" width="1200" height="292">
     </a>
     <div class="header-tools">
-      <div class="language-switcher" aria-label="${languageLabel}">
+      <nav class="language-switcher" aria-label="${languageLabel}">
         <a href="${route.he}" hreflang="he" lang="he"${heCurrent}>עברית</a>
         <span class="language-switcher-separator" aria-hidden="true">|</span>
         <a href="${route.en}" hreflang="en" lang="en"${enCurrent}>English</a>
-      </div>
+      </nav>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" aria-label="${menuLabel}" data-open-label="${menuLabel}" data-close-label="${menuCloseLabel}">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
           <path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
@@ -106,6 +107,98 @@ function replaceFooter(html, route, language) {
   const footerPattern = /<footer\b[^>]*class=["'][^"']*\bfooter\b[^"']*["'][^>]*>[\s\S]*?<\/footer>/i;
   if (!footerPattern.test(html)) throw new Error(`Missing shared footer in ${route.file}`);
   return html.replace(footerPattern, renderSharedFooter(language));
+}
+
+function escapeRegularExpression(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function metaTagPattern(attribute, key) {
+  return new RegExp(`<meta\\b(?=[^>]*\\b${attribute}=["']${escapeRegularExpression(key)}["'])[^>]*>`, 'i');
+}
+
+function upsertMeta(html, attribute, key, content, anchorAttribute = attribute, anchorKey = key) {
+  const pattern = metaTagPattern(attribute, key);
+  const tag = `<meta ${attribute}="${key}" content="${escapeHtml(content)}">`;
+  if (pattern.test(html)) return html.replace(pattern, tag);
+
+  const anchorPattern = metaTagPattern(anchorAttribute, anchorKey);
+  if (!anchorPattern.test(html)) throw new Error(`Missing ${anchorKey} metadata anchor`);
+  return html.replace(anchorPattern, (anchor) => `${anchor}\n  ${tag}`);
+}
+
+function applyPageMetadata(html, route, language) {
+  const metadata = pageMetadataOverrides[route.key]?.[language];
+  if (!metadata) return html;
+
+  if (metadata.title) {
+    if (!/<title>[\s\S]*?<\/title>/i.test(html)) throw new Error(`Missing title in ${route.file}`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(metadata.title)}</title>`);
+    html = upsertMeta(html, 'property', 'og:title', metadata.title);
+    html = upsertMeta(html, 'name', 'twitter:title', metadata.title);
+  }
+
+  if (metadata.description) {
+    html = upsertMeta(html, 'name', 'description', metadata.description);
+    html = upsertMeta(html, 'property', 'og:description', metadata.description);
+    html = upsertMeta(html, 'name', 'twitter:description', metadata.description);
+  }
+
+  return html.replace(
+    /(<script\b[^>]*type=["']application\/ld\+json["'][^>]*>)([\s\S]*?)(<\/script>)/gi,
+    (fullMatch, openingTag, rawJson, closingTag) => {
+      let data;
+      try {
+        data = JSON.parse(rawJson.replace(/&amp;/g, '&'));
+      } catch (error) {
+        throw new Error(`Invalid JSON-LD in ${route.file}: ${error.message}`);
+      }
+
+      let changed = false;
+      const visit = (value) => {
+        if (!value || typeof value !== 'object') return;
+        if (Array.isArray(value)) {
+          value.forEach(visit);
+          return;
+        }
+
+        const types = Array.isArray(value['@type']) ? value['@type'] : [value['@type']];
+        if (types.includes('WebPage')) {
+          if (metadata.title) value.name = metadata.title;
+          if (metadata.description) value.description = metadata.description;
+          changed = true;
+        }
+        Object.values(value).forEach(visit);
+      };
+      visit(data);
+
+      return changed
+        ? `${openingTag}\n${JSON.stringify(data, null, 2)}\n${closingTag}`
+        : fullMatch;
+    }
+  );
+}
+
+function applySocialImageMetadata(html, route, language) {
+  const socialImage = socialImageByRoute[route.key];
+  if (!socialImage) throw new Error(`Missing social image configuration for ${route.key}`);
+
+  html = upsertMeta(html, 'property', 'og:image', socialImage.url);
+  html = upsertMeta(html, 'property', 'og:image:type', socialImage.type, 'property', 'og:image');
+  html = upsertMeta(html, 'property', 'og:image:width', String(socialImage.width), 'property', 'og:image');
+  html = upsertMeta(html, 'property', 'og:image:height', String(socialImage.height), 'property', 'og:image');
+  html = upsertMeta(html, 'property', 'og:image:alt', socialImage.alt[language], 'property', 'og:image');
+  html = upsertMeta(html, 'name', 'twitter:image', socialImage.url);
+  html = upsertMeta(html, 'name', 'twitter:image:alt', socialImage.alt[language], 'name', 'twitter:image');
+  return html;
 }
 
 function normalizeBusinessStructuredData(html, language, route) {
@@ -191,6 +284,8 @@ function addLanguageSeo(html, route, language) {
     /<a\b(?![^>]*\bdata-trial-cta\b)([^>]*\bhref=["']#lead-form["'][^>]*)>/gi,
     '<a data-trial-cta$1>'
   );
+  html = applyPageMetadata(html, route, language);
+  html = applySocialImageMetadata(html, route, language);
   html = html.replace(/^[ \t]+$/gm, '');
 
   return html;
