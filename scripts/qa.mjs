@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
 import { runInNewContext } from 'node:vm';
 import { business as businessData, locations, scheduleLastUpdated } from './locations-schedule-data.mjs';
+import { pageMetadataOverrides, socialImageByRoute } from './seo-metadata.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const failures = [];
@@ -35,6 +36,13 @@ const englishPages = primaryPages.map(([file, url]) => {
 });
 
 const allIndexablePages = [...primaryPages, ...englishPages];
+
+function routeKeyFromUrl(url) {
+  const localizedPath = new URL(url).pathname.replace(/^\/en(?=\/)/, '');
+  if (localizedPath === '/') return 'home';
+  const segment = localizedPath.split('/').filter(Boolean)[0];
+  return segment === 'goshen-kiryat-motzkin' ? 'goshen' : segment;
+}
 
 function fail(message) {
   failures.push(message);
@@ -319,9 +327,11 @@ for (const [file, expectedCanonical] of allIndexablePages) {
 
   if (!new RegExp(`<html\\b[^>]*lang=["']${expectedLanguage}["'][^>]*dir=["']${expectedDirection}["']|<html\\b[^>]*dir=["']${expectedDirection}["'][^>]*lang=["']${expectedLanguage}["']`, 'i').test(html)) fail(`${file}: missing ${expectedLanguage}/${expectedDirection} document attributes`);
   if (!title) fail(`${file}: missing title`);
+  if (title && plainText(title).length > 60) fail(`${file}: title exceeds 60 characters`);
   if (title && titles.has(title)) fail(`${file}: duplicate title with ${titles.get(title)}`);
   if (title) titles.set(title, file);
   if (!description) fail(`${file}: missing meta description`);
+  if (description && plainText(description).length > 155) fail(`${file}: meta description exceeds 155 characters`);
   if (description && descriptions.has(description)) fail(`${file}: duplicate meta description with ${descriptions.get(description)}`);
   if (description) descriptions.set(description, file);
   if (canonical(html) !== expectedCanonical) fail(`${file}: canonical mismatch`);
@@ -341,15 +351,19 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   if (/>\s*תפריט\s*</.test(html)) fail(`${file}: obsolete visible menu text remains`);
   if (!/<button\b[^>]*class=["'][^"']*menu-toggle[^"']*["'][^>]*type=["']button["'][^>]*aria-expanded=["']false["'][^>]*aria-controls=["']primary-navigation["'][^>]*>[\s\S]*?<svg\b[^>]*aria-hidden=["']true["']/i.test(html)) fail(`${file}: invalid accessible hamburger button`);
   if (!html.includes('class="menu-close"')) fail(`${file}: missing explicit menu close control`);
-  if (!html.includes('class="language-switcher"')) fail(`${file}: missing visible language switcher`);
-  if (!html.includes(`href="${new URL(hebrewUrl).pathname}"`) || !html.includes(`href="${new URL(englishUrl).pathname}"`)) fail(`${file}: language switcher does not link the translated pair`);
+  const languageSwitcherMarkup = html.match(/<nav\b[^>]*class=["'][^"']*\blanguage-switcher\b[^"']*["'][^>]*>[\s\S]*?<\/nav>/i)?.[0] || '';
+  const languageSwitcherAttributes = parseAttributes(tags(languageSwitcherMarkup, 'nav')[0] || '');
+  const expectedLanguageLabel = isEnglish ? 'Choose language' : 'בחירת שפה';
+  if (!languageSwitcherMarkup) fail(`${file}: language switcher must use a complete nav landmark`);
+  if (languageSwitcherAttributes['aria-label'] !== expectedLanguageLabel) fail(`${file}: language switcher is missing its localized aria-label`);
+  if (!languageSwitcherMarkup.includes(`href="${new URL(hebrewUrl).pathname}"`) || !languageSwitcherMarkup.includes(`href="${new URL(englishUrl).pathname}"`)) fail(`${file}: language switcher does not link the translated pair`);
   const navigationMarkup = html.match(/<nav\b[^>]*id=["']primary-navigation["'][^>]*>[\s\S]*?<\/nav>/i)?.[0] || '';
   for (const path of ['/', '/bjj/', '/boxing/', '/women-boxing/', '/kids/', '/mma/', '/adults/', '/about/', '/collaborations/', '/events/', '/kiryat-motzkin/', '/goshen-kiryat-motzkin/', '/schedule/', '/contact/']) {
     const expectedPath = isEnglish ? (path === '/' ? '/en/' : `/en${path}`) : path;
     if (!navigationMarkup.includes(`href="${expectedPath}"`)) fail(`${file}: navigation is missing ${expectedPath}`);
   }
-  if (!html.includes(`/assets/style.css?v=20261024-2`) || !html.includes(`/assets/site.js?v=20261021-2`)) fail(`${file}: missing current shared asset cache version`);
-  if (!html.includes(`/assets/tracking.js?v=20261021-2`)) fail(`${file}: missing current tracking asset cache version`);
+  if (!html.includes(`/assets/style.css?v=20261024-2`) || !html.includes(`/assets/site.js?v=20261026-1`)) fail(`${file}: missing current shared asset cache version`);
+  if (!html.includes(`/assets/tracking.js?v=20261026-1`)) fail(`${file}: missing current tracking asset cache version`);
   if (!html.includes(businessData.displayPhone)) fail(`${file}: shared footer does not show the normalized phone number`);
   const telephoneLinks = [...html.matchAll(/href=["'](tel:[^"']+)["']/gi)].map((match) => match[1]);
   if (!telephoneLinks.length || telephoneLinks.some((href) => href !== `tel:${businessData.schemaPhone}`)) fail(`${file}: telephone links must use tel:${businessData.schemaPhone}`);
@@ -358,13 +372,30 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   if (isEnglish && /translate\.google|googtrans|google\.translate/i.test(html)) fail(`${file}: runtime translation widget detected`);
   if (html.includes('https://luckyroll13.com/en/assets/')) fail(`${file}: production asset URL was incorrectly localized under /en/`);
 
-  for (const property of ['og:title', 'og:description', 'og:url', 'og:image']) {
+  for (const property of ['og:title', 'og:description', 'og:url', 'og:image', 'og:image:type', 'og:image:width', 'og:image:height', 'og:image:alt']) {
     if (!meta(html, 'property', property)) fail(`${file}: missing ${property}`);
   }
 
-  for (const name of ['twitter:card', 'twitter:title', 'twitter:description', 'twitter:image']) {
+  for (const name of ['twitter:card', 'twitter:title', 'twitter:description', 'twitter:image', 'twitter:image:alt']) {
     if (!meta(html, 'name', name)) fail(`${file}: missing ${name}`);
   }
+
+  const routeKey = routeKeyFromUrl(expectedCanonical);
+  const expectedSocialImage = socialImageByRoute[routeKey];
+  const expectedMetadata = pageMetadataOverrides[routeKey]?.[expectedLanguage];
+  if (!expectedSocialImage) {
+    fail(`${file}: missing social-image source configuration`);
+  } else {
+    if (meta(html, 'property', 'og:image') !== expectedSocialImage.url || meta(html, 'name', 'twitter:image') !== expectedSocialImage.url) fail(`${file}: social image URL does not match its source configuration`);
+    if (meta(html, 'property', 'og:image:type') !== expectedSocialImage.type) fail(`${file}: social image type does not match its source configuration`);
+    if (meta(html, 'property', 'og:image:width') !== String(expectedSocialImage.width) || meta(html, 'property', 'og:image:height') !== String(expectedSocialImage.height)) fail(`${file}: social image dimensions do not match their source configuration`);
+    if (meta(html, 'property', 'og:image:alt') !== expectedSocialImage.alt[expectedLanguage] || meta(html, 'name', 'twitter:image:alt') !== expectedSocialImage.alt[expectedLanguage]) fail(`${file}: social image alternative text is missing or inconsistent`);
+
+    const socialImagePath = resolve(root, new URL(expectedSocialImage.url).pathname.slice(1));
+    if (!existsSync(socialImagePath)) fail(`${file}: configured social image does not exist`);
+  }
+  if (expectedMetadata?.title && plainText(title || '') !== expectedMetadata.title) fail(`${file}: title does not match its build-source override`);
+  if (expectedMetadata?.description && plainText(description || '') !== expectedMetadata.description) fail(`${file}: meta description does not match its build-source override`);
 
   const schemas = jsonLd(html, file);
   if (!schemas.length) fail(`${file}: missing JSON-LD`);
@@ -487,7 +518,7 @@ if (englishBusiness?.['@id'] !== 'https://luckyroll13.com/#business') fail('en/i
 if (englishWebsite?.['@id'] !== 'https://luckyroll13.com/#website') fail('en/index.html: English page changed the stable website identity');
 if (englishWebPage?.['@id'] !== 'https://luckyroll13.com/en/#webpage' || englishWebPage?.url !== 'https://luckyroll13.com/en/') fail('en/index.html: English WebPage identity is not localized');
 if (englishWebPage?.isPartOf?.['@id'] !== 'https://luckyroll13.com/#website' || englishWebPage?.about?.['@id'] !== 'https://luckyroll13.com/#business') fail('en/index.html: English WebPage does not reference the stable site and business identities');
-if (meta(englishHomeHtml, 'property', 'og:image') !== 'https://luckyroll13.com/assets/images/hero.webp') fail('en/index.html: English social image URL is invalid');
+if (meta(englishHomeHtml, 'property', 'og:image') !== socialImageByRoute.home.url) fail('en/index.html: English social image URL is invalid');
 const englishFounder = englishHomeSchemas.find((schema) => schema['@type'] === 'Person' && schema['@id'] === 'https://luckyroll13.com/#shabi-shilon');
 if (englishFounder?.name !== 'Shabi Shilon' || englishBusiness?.founder?.['@id'] !== 'https://luckyroll13.com/#shabi-shilon') fail('en/index.html: English founder entity is incomplete');
 if (!englishHomeHtml.includes('href="/en/schedule/#schedule-neve-ganim"')) fail('en/index.html: missing direct Neve Ganim schedule link');
@@ -536,6 +567,15 @@ const englishAboutSchemas = flattenSchemas(jsonLd(englishAboutHtml, 'en/about/in
 const englishAboutFounder = englishAboutSchemas.find((schema) => schema['@type'] === 'Person' && schema['@id'] === 'https://luckyroll13.com/#shabi-shilon');
 if (!englishAboutFounder || englishAboutFounder.name !== 'Shabi Shilon') fail('en/about/index.html: English founder entity is incomplete');
 if (/"@type"\s*:\s*"VideoObject"/.test(englishAboutHtml)) fail('en/about/index.html: incomplete VideoObject schema remains');
+
+for (const file of ['javier-zaruski-seminar/index.html', 'en/javier-zaruski-seminar/index.html']) {
+  const html = readFileSync(resolve(root, file), 'utf8');
+  const eventHeading = html.match(/<h1\b[^>]*id=["']event-title["'][^>]*>([\s\S]*?)<\/h1>/i)?.[1] || '';
+  const eventPoster = html.match(/<figure\b[^>]*class=["'][^"']*\bevent-poster\b[^"']*["'][^>]*>[\s\S]*?<\/figure>/i)?.[0] || '';
+
+  if (inlineText(eventHeading) !== 'Javier Zaruski Israel Seminar 🇮🇱') fail(`${file}: event H1 must preserve a text separator between its two lines`);
+  if (!/<figcaption\b[^>]*>[\s\S]*?<\/figcaption>\s*<\/figure>$/i.test(eventPoster)) fail(`${file}: event poster figcaption must be the final child of its figure`);
+}
 
 const localSearchChecks = [
   ['index.html', ['אומנויות לחימה בקריית מוצקין והקריות', 'אגרוף', 'ג׳יו־ג׳יטסו', 'MMA', 'נווה גנים', 'מתנ״ס גושן']],
@@ -868,23 +908,33 @@ function simulateContactTracking() {
   return { click, gaEvents, metaEvents };
 }
 
-function simulateConfirmedFormLead(storage, seedPendingLead = false) {
+function simulateFormSubmission({
+  formName = 'kids-lead',
+  hiddenFormName = '',
+  includeTrackingAttribute = true,
+  includeNetlifyAttribute = false,
+  method = 'POST',
+  language = 'he',
+  interest = 'BJJ',
+  preferredLocation = 'kiryat-motzkin',
+  pageUrl = 'https://luckyroll13.com/kids/'
+} = {}) {
   const gaEvents = [];
   const metaEvents = [];
   const handlers = {};
-  const pendingLeadStorageKey = 'luckyroll13:pending-form-lead';
-  const now = Date.now();
+  const storage = new Map();
+  const fields = new Map([
+    ['language', { value: language }],
+    ['interest', { value: interest }],
+    ['preferred-location', { value: preferredLocation }]
+  ]);
 
-  if (seedPendingLead) {
-    storage.set(pendingLeadStorageKey, JSON.stringify({
-      id: 'kids-lead-qa-confirmed',
-      formName: 'kids-lead',
-      language: 'he',
-      interest: 'BJJ',
-      preferredLocation: 'kiryat-motzkin',
-      sourcePage: '/kids/',
-      createdAt: now
-    }));
+  if (hiddenFormName !== null) {
+    fields.set('form-name', {
+      tagName: 'INPUT',
+      type: 'hidden',
+      value: hiddenFormName === undefined ? formName : hiddenFormName
+    });
   }
 
   const document = {
@@ -895,7 +945,56 @@ function simulateConfirmedFormLead(storage, seedPendingLead = false) {
     addEventListener: (type, handler) => { handlers[type] = handler; }
   };
   const window = {
-    location: new URL('https://luckyroll13.com/thank-you.html'),
+    location: new URL(pageUrl),
+    dataLayer: [],
+    sessionStorage: {
+      getItem: (key) => storage.get(key) || null,
+      setItem: (key, value) => storage.set(key, value),
+      removeItem: (key) => storage.delete(key)
+    },
+    gtag: (...args) => gaEvents.push(args),
+    fbq: (...args) => metaEvents.push(args),
+    setTimeout: () => {}
+  };
+
+  runInNewContext(tracking, { window, document, URL, URLSearchParams, Date, Math, JSON, encodeURIComponent });
+
+  const attributes = {
+    name: formName,
+    method,
+    ...(includeTrackingAttribute ? { 'data-track-lead-form': 'true' } : {}),
+    ...(includeNetlifyAttribute ? { 'data-netlify': 'true' } : {})
+  };
+  const form = {
+    method: method.toLowerCase(),
+    matches: (selector) => selector === 'form',
+    hasAttribute: (name) => Object.hasOwn(attributes, name),
+    getAttribute: (name) => attributes[name] ?? null,
+    elements: { namedItem: (name) => fields.get(name) || null }
+  };
+
+  handlers.submit({ target: form });
+
+  return { gaEvents, metaEvents, storage };
+}
+
+function simulateConfirmedFormLead(storage, {
+  pageUrl = 'https://luckyroll13.com/thank-you.html',
+  language = 'he'
+} = {}) {
+  const gaEvents = [];
+  const metaEvents = [];
+  const handlers = {};
+
+  const document = {
+    documentElement: { lang: language },
+    head: { appendChild: () => {} },
+    getElementById: () => ({}),
+    createElement: () => ({}),
+    addEventListener: (type, handler) => { handlers[type] = handler; }
+  };
+  const window = {
+    location: new URL(pageUrl),
     dataLayer: [],
     sessionStorage: {
       getItem: (key) => storage.get(key) || null,
@@ -985,18 +1084,105 @@ for (const eventName of ['whatsapp_click', 'whatsapp_lead', 'phone_click', 'maps
 if (runtimeGaNames.filter((name) => name === 'maps_click').length !== 2) fail('tracking runtime: both verified Google Maps URL patterns must emit maps_click');
 if (contactRuntime.metaEvents.filter((entry) => entry[0] === 'track' && entry[1] === 'Contact').length !== 3) fail('tracking runtime: Meta Contact must fire once for each WhatsApp/phone click and not for navigation');
 
-const confirmedLeadStorage = new Map();
-const confirmedLeadRuntime = simulateConfirmedFormLead(confirmedLeadStorage, true);
-const confirmedGaNames = confirmedLeadRuntime.gaEvents.filter((entry) => entry[0] === 'event').map((entry) => entry[1]);
-for (const eventName of ['generate_lead', 'trial_form_success']) {
-  if (confirmedGaNames.filter((name) => name === eventName).length !== 1) fail(`tracking runtime: confirmed form must emit GA4 ${eventName} exactly once`);
+const processedNetlifyLeadScenarios = [
+  {
+    label: 'Hebrew kids',
+    formName: 'kids-lead',
+    language: 'he',
+    interest: 'BJJ',
+    preferredLocation: 'kiryat-motzkin',
+    pageUrl: 'https://luckyroll13.com/kids/',
+    thankYouUrl: 'https://luckyroll13.com/thank-you.html'
+  },
+  {
+    label: 'English kids',
+    formName: 'kids-lead',
+    language: 'en',
+    interest: 'MMA',
+    preferredLocation: 'kiryat-motzkin',
+    pageUrl: 'https://luckyroll13.com/en/kids/',
+    thankYouUrl: 'https://luckyroll13.com/en/thank-you/'
+  },
+  {
+    label: 'Hebrew women boxing',
+    formName: 'women-boxing-lead',
+    language: 'he',
+    interest: 'אגרוף לנשים',
+    preferredLocation: '',
+    pageUrl: 'https://luckyroll13.com/women-boxing/',
+    thankYouUrl: 'https://luckyroll13.com/thank-you.html'
+  },
+  {
+    label: 'English women boxing',
+    formName: 'women-boxing-lead',
+    language: 'en',
+    interest: "Women's Boxing",
+    preferredLocation: '',
+    pageUrl: 'https://luckyroll13.com/en/women-boxing/',
+    thankYouUrl: 'https://luckyroll13.com/en/thank-you/'
+  }
+];
+
+for (const scenario of processedNetlifyLeadScenarios) {
+  const processedNetlifyLeadRuntime = simulateFormSubmission(scenario);
+  const processedNetlifySubmitEvents = processedNetlifyLeadRuntime.gaEvents.filter((entry) => entry[0] === 'event' && entry[1] === 'trial_form_submit');
+  const processedNetlifyPendingLead = JSON.parse(processedNetlifyLeadRuntime.storage.get('luckyroll13:pending-form-lead') || 'null');
+
+  if (processedNetlifySubmitEvents.length !== 1 || processedNetlifyPendingLead?.formName !== scenario.formName) {
+    fail(`tracking runtime: ${scenario.label} processed Netlify form with an empty hidden form-name must record its submit and pending lead`);
+    continue;
+  }
+  if (
+    processedNetlifySubmitEvents[0]?.[2]?.form_language !== scenario.language ||
+    processedNetlifySubmitEvents[0]?.[2]?.interest !== scenario.interest ||
+    processedNetlifySubmitEvents[0]?.[2]?.preferred_location !== scenario.preferredLocation
+  ) {
+    fail(`tracking runtime: ${scenario.label} processed Netlify form fields are not preserved in the submit event`);
+  }
+
+  const confirmedLeadRuntime = simulateConfirmedFormLead(processedNetlifyLeadRuntime.storage, {
+    pageUrl: scenario.thankYouUrl,
+    language: scenario.language
+  });
+  const confirmedGaNames = confirmedLeadRuntime.gaEvents.filter((entry) => entry[0] === 'event').map((entry) => entry[1]);
+  for (const eventName of ['generate_lead', 'trial_form_success']) {
+    if (confirmedGaNames.filter((name) => name === eventName).length !== 1) fail(`tracking runtime: ${scenario.label} confirmed form must emit GA4 ${eventName} exactly once`);
+  }
+  for (const eventName of ['Lead', 'Contact']) {
+    if (confirmedLeadRuntime.metaEvents.filter((entry) => entry[0] === 'track' && entry[1] === eventName).length !== 1) fail(`tracking runtime: ${scenario.label} confirmed form must emit Meta ${eventName} exactly once`);
+  }
+
+  const repeatedLeadRuntime = simulateConfirmedFormLead(processedNetlifyLeadRuntime.storage, {
+    pageUrl: scenario.thankYouUrl,
+    language: scenario.language
+  });
+  if (repeatedLeadRuntime.gaEvents.some((entry) => entry[0] === 'event' && ['generate_lead', 'trial_form_success'].includes(entry[1]))) fail(`tracking runtime: refreshing ${scenario.label} thank-you page duplicates a confirmed GA4 lead`);
+  if (repeatedLeadRuntime.metaEvents.some((entry) => entry[0] === 'track' && ['Lead', 'Contact'].includes(entry[1]))) fail(`tracking runtime: refreshing ${scenario.label} thank-you page duplicates a confirmed Meta lead`);
 }
-for (const eventName of ['Lead', 'Contact']) {
-  if (confirmedLeadRuntime.metaEvents.filter((entry) => entry[0] === 'track' && entry[1] === eventName).length !== 1) fail(`tracking runtime: confirmed form must emit Meta ${eventName} exactly once`);
+
+const sourceNetlifyLeadRuntime = simulateFormSubmission({
+  includeTrackingAttribute: false,
+  includeNetlifyAttribute: true,
+  hiddenFormName: null
+});
+if (!sourceNetlifyLeadRuntime.gaEvents.some((entry) => entry[0] === 'event' && entry[1] === 'trial_form_submit')) {
+  fail('tracking runtime: source Netlify form detection lost backward compatibility');
 }
-const repeatedLeadRuntime = simulateConfirmedFormLead(confirmedLeadStorage, false);
-if (repeatedLeadRuntime.gaEvents.some((entry) => entry[0] === 'event' && ['generate_lead', 'trial_form_success'].includes(entry[1]))) fail('tracking runtime: refreshing the thank-you page duplicates a confirmed GA4 lead');
-if (repeatedLeadRuntime.metaEvents.some((entry) => entry[0] === 'track' && ['Lead', 'Contact'].includes(entry[1]))) fail('tracking runtime: refreshing the thank-you page duplicates a confirmed Meta lead');
+
+for (const unrelatedFormRuntime of [
+  simulateFormSubmission({ formName: 'newsletter', includeNetlifyAttribute: true }),
+  simulateFormSubmission({ formName: 'newsletter-lead', hiddenFormName: null, includeTrackingAttribute: false }),
+  simulateFormSubmission({ formName: 'newsletter-lead', includeTrackingAttribute: false }),
+  simulateFormSubmission({ formName: 'kids-lead', method: 'GET' })
+]) {
+  if (unrelatedFormRuntime.gaEvents.some((entry) => entry[0] === 'event' && entry[1] === 'trial_form_submit')) {
+    fail('tracking runtime: an unrelated form emitted trial_form_submit');
+  }
+  if (unrelatedFormRuntime.storage.has('luckyroll13:pending-form-lead')) {
+    fail('tracking runtime: an unrelated form created a pending lead');
+  }
+}
+
 for (const eventName of ['seminar_page_view', 'seminar_maps_click', 'seminar_video_click']) {
   if (!events.includes(eventName)) fail(`events tracking: missing ${eventName}`);
 }
@@ -1042,7 +1228,7 @@ const notFoundHtml = readFileSync(resolve(root, '404.html'), 'utf8');
 if (!notFoundHtml.includes('<meta name="robots" content="noindex,follow">')) fail('404.html: must remain noindex,follow');
 if (/rel=["']canonical["']/i.test(notFoundHtml)) fail('404.html: must not declare a canonical URL');
 if (!notFoundHtml.includes("document.documentElement.classList.add('js-enabled')")) fail('404.html: missing progressive-enhancement initializer');
-if (!notFoundHtml.includes('/assets/style.css?v=20261024-2') || !notFoundHtml.includes('/assets/site.js?v=20261021-2')) fail('404.html: shared asset versions are stale');
+if (!notFoundHtml.includes('/assets/style.css?v=20261024-2') || !notFoundHtml.includes('/assets/site.js?v=20261026-1')) fail('404.html: shared asset versions are stale');
 if (!notFoundHtml.includes('/assets/images/luckyroll13-header-logo-1200.webp') || !notFoundHtml.includes('width="1200" height="292"')) fail('404.html: current header logo is missing');
 if (notFoundHtml.includes('/assets/images/luckyroll13-header-logo-480.webp')) fail('404.html: previous header logo remains');
 if (notFoundHtml.includes('src="/assets/images/luckyroll13-header-logo.webp"')) fail('404.html: oversized 1431px header logo remains');
@@ -1238,6 +1424,7 @@ for (const { file, name, language, action } of [
     continue;
   }
   if (form.attributes.method?.toUpperCase() !== 'POST' || form.attributes.action !== action) fail(`${file}: ${name} form method or success action is invalid`);
+  if (form.attributes['data-track-lead-form'] !== 'true') fail(`${file}: ${name} form is missing its persistent lead-tracking marker`);
   if (form.attributes['data-netlify'] !== 'true' || form.attributes['data-netlify-honeypot'] !== 'bot-field') fail(`${file}: ${name} form is missing Netlify or honeypot configuration`);
   if (!new RegExp(`<input\\b[^>]*name=["']form-name["'][^>]*value=["']${name}["']`, 'i').test(form.inner)) fail(`${file}: ${name} form-name field is missing`);
   if (!new RegExp(`<input\\b[^>]*name=["']language["'][^>]*value=["']${language}["']`, 'i').test(form.inner)) fail(`${file}: ${name} language field is missing`);
@@ -1314,7 +1501,7 @@ if (!/html\.js-enabled\s+\.links\.is-open\s*\{[^}]*display:\s*flex/i.test(styles
 if (!bilingualBuildScript.includes('/assets/images/luckyroll13-header-logo-1200.webp') || bilingualBuildScript.includes('class="logo" src="/assets/images/luckyroll13-header-logo-480.webp"')) {
   fail('bilingual build: current header logo is not preserved');
 }
-if (!bilingualBuildScript.includes("const styleAssetVersion = '20261024-2'") || !bilingualBuildScript.includes("const scriptAssetVersion = '20261021-2'")) {
+if (!bilingualBuildScript.includes("const styleAssetVersion = '20261024-2'") || !bilingualBuildScript.includes("const scriptAssetVersion = '20261026-1'")) {
   fail('bilingual build: current style and script cache versions are not preserved');
 }
 if (!bilingualBuildScript.includes('accessibility|guide') || !bilingualTranslations.includes("'למדריך לבחירת אומנות לחימה': 'Read the martial arts selection guide'")) {

@@ -59,6 +59,36 @@
     return field && typeof field.value === 'string' ? field.value : '';
   }
 
+  function trackedLeadFormName(form) {
+    if (!form || typeof form.matches !== 'function' || !form.matches('form')) {
+      return '';
+    }
+
+    var formName = (form.getAttribute('name') || '').trim();
+    var method = (form.getAttribute('method') || form.method || '').toUpperCase();
+
+    if (!/(^|-)lead$/i.test(formName) || method !== 'POST') {
+      return '';
+    }
+
+    if (form.hasAttribute('data-track-lead-form')) {
+      return formName;
+    }
+
+    if (form.getAttribute('data-netlify') === 'true') {
+      return formName;
+    }
+
+    var netlifyFormName = form.elements && form.elements.namedItem('form-name');
+    var hasProcessedNetlifyIdentity =
+      netlifyFormName &&
+      String(netlifyFormName.tagName || '').toLowerCase() === 'input' &&
+      String(netlifyFormName.type || '').toLowerCase() === 'hidden' &&
+      netlifyFormName.value === formName;
+
+    return hasProcessedNetlifyIdentity ? formName : '';
+  }
+
   window.dataLayer = window.dataLayer || [];
 
   if (!window.gtag) {
@@ -326,14 +356,9 @@
 
   document.addEventListener('submit', function trackTrialFormSubmit(event) {
     var form = event.target;
+    var formName = trackedLeadFormName(form);
 
-    if (!form || !form.matches || !form.matches('form[data-netlify="true"]')) {
-      return;
-    }
-
-    var formName = form.getAttribute('name') || '';
-
-    if (formName.indexOf('lead') === -1) return;
+    if (!formName) return;
 
     var language = readFormValue(form, 'language') || document.documentElement.lang || '';
     var interest = readFormValue(form, 'interest');
