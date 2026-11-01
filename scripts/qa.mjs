@@ -1618,9 +1618,13 @@ for (const line of [
   '/nesher/index.html /goshen-kiryat-motzkin/ 301!',
   '/en/nesher /en/goshen-kiryat-motzkin/ 301!',
   '/en/nesher/ /en/goshen-kiryat-motzkin/ 301!',
-  '/en/nesher/index.html /en/goshen-kiryat-motzkin/ 301!'
+  '/en/nesher/index.html /en/goshen-kiryat-motzkin/ 301!',
+  '/goshen /goshen-kiryat-motzkin/ 301!',
+  '/goshen/ /goshen-kiryat-motzkin/ 301!',
+  '/en/goshen /en/goshen-kiryat-motzkin/ 301!',
+  '/en/goshen/ /en/goshen-kiryat-motzkin/ 301!'
 ]) {
-  if (!redirects.includes(line)) fail(`redirects: missing retired Nesher redirect ${line}`);
+  if (!redirects.includes(line)) fail(`redirects: missing location consolidation redirect ${line}`);
 }
 
 for (const obsoletePath of [

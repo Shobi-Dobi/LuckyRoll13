@@ -39,6 +39,12 @@
 /en/nesher/ /en/goshen-kiryat-motzkin/ 301!
 /en/nesher/index.html /en/goshen-kiryat-motzkin/ 301!
 
+# Short Goshen aliases — preserve citations and shared links on the canonical branch page
+/goshen /goshen-kiryat-motzkin/ 301!
+/goshen/ /goshen-kiryat-motzkin/ 301!
+/en/goshen /en/goshen-kiryat-motzkin/ 301!
+/en/goshen/ /en/goshen-kiryat-motzkin/ 301!
+
 # Consolidate the unfinished seminar URL on the final canonical landing page
 /events/javier-zaruski /javier-zaruski-seminar/ 301!
 /events/javier-zaruski/ /javier-zaruski-seminar/ 301!
