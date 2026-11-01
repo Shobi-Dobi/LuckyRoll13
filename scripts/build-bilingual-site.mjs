@@ -5,12 +5,13 @@ import { commonTranslations, pageTranslations } from './english-translations.mjs
 import { businessSchema } from './locations-schedule-data.mjs';
 import { renderGeneratedPage, renderSharedFooter } from './location-pages.mjs';
 import { pageMetadataOverrides, socialImageByRoute } from './seo-metadata.mjs';
+import { renderSitemap } from './sitemap-data.mjs';
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDirectory, '..');
 const productionOrigin = 'https://luckyroll13.com';
 const styleAssetVersion = '20261024-2';
-const scriptAssetVersion = '20261026-1';
+const scriptAssetVersion = '20261101-1';
 const eventAssetVersion = '20260928-1';
 
 const serviceGuideRoutes = new Set(['boxing', 'women-boxing', 'bjj', 'kids', 'mma', 'adults']);
@@ -415,5 +416,7 @@ for (const route of routes) {
   await mkdir(path.dirname(destination), { recursive: true });
   await writeFile(destination, english);
 }
+
+await writeFile(path.join(root, 'sitemap.xml'), renderSitemap(routes));
 
 console.log(`Built ${routes.length} Hebrew/English route pairs with style version ${styleAssetVersion} and script version ${scriptAssetVersion}.`);

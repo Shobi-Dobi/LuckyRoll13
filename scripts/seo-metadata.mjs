@@ -174,9 +174,12 @@ export const pageMetadataOverrides = {
     }
   },
   kids: {
+    he: {
+      description: 'אימוני ג׳יו־ג׳יטסו ו־MMA לילדים בקריית מוצקין והקריות, בשני סניפים וקבוצות לפי גיל, עם דגש על ביטחון עצמי, משמעת, כושר וטכניקה.'
+    },
     en: {
       title: 'Kids Martial Arts in Kiryat Motzkin | Lucky Roll13',
-      description: "Kids' martial arts at Neve Ganim and Matnas Goshen in Kiryat Motzkin, with age-based groups focused on confidence, discipline, fitness, and technique."
+      description: "Kids' BJJ at Neve Ganim and Matnas Goshen, plus Kids' MMA at Neve Ganim in Kiryat Motzkin, with age-based groups serving the Krayot."
     }
   },
   'kiryat-motzkin': {

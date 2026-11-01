@@ -1,11 +1,15 @@
 (function initializeLuckyRoll13Tracking(window, document) {
   'use strict';
 
-  var localQaHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  var localQaDisabled = new URLSearchParams(window.location.search).get('qa_no_tracking') === '1';
+  var trackingHostname = String(window.location.hostname || '').toLowerCase();
+  var productionTrackingHosts = {
+    'luckyroll13.com': true,
+    'www.luckyroll13.com': true
+  };
 
-  if (localQaHost && localQaDisabled) {
+  if (!productionTrackingHosts[trackingHostname]) {
     window.__luckyRoll13TrackingSuppressedForQa = true;
+    window.__luckyRoll13TrackingSuppressedForNonProduction = true;
     return;
   }
 
@@ -347,9 +351,17 @@
     }
 
     if (contactMethod) {
+      var contactEventId =
+        'contact-' +
+        Date.now() +
+        '-' +
+        Math.random().toString(36).slice(2, 10);
+
       window.fbq('track', 'Contact', {
         contact_method: contactMethod,
         page_url: window.location.href
+      }, {
+        eventID: contactEventId
       });
     }
   });
@@ -364,13 +376,27 @@
     var interest = readFormValue(form, 'interest');
     var preferredLocation = readFormValue(form, 'preferred-location');
     var storage = getSessionStorage();
+    var leadEventId =
+      formName + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+    var eventIdField = form.elements && form.elements.namedItem('event_id');
+
+    if (!eventIdField && typeof form.appendChild === 'function') {
+      eventIdField = document.createElement('input');
+      eventIdField.type = 'hidden';
+      eventIdField.name = 'event_id';
+      form.appendChild(eventIdField);
+    }
+
+    if (eventIdField) {
+      eventIdField.value = leadEventId;
+    }
 
     if (storage) {
       writeSessionItem(
         storage,
         pendingLeadStorageKey,
         JSON.stringify({
-          id: formName + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10),
+          id: leadEventId,
           formName: formName,
           language: language,
           interest: interest,

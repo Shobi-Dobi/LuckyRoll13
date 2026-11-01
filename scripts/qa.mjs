@@ -3,6 +3,7 @@ import { relative, resolve } from 'node:path';
 import { runInNewContext } from 'node:vm';
 import { business as businessData, locations, scheduleLastUpdated } from './locations-schedule-data.mjs';
 import { pageMetadataOverrides, socialImageByRoute } from './seo-metadata.mjs';
+import { sitemapLastModifiedByRoute } from './sitemap-data.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const failures = [];
@@ -171,7 +172,13 @@ function sourceTextFiles(directory) {
 }
 
 function visibleFaqPairs(html) {
-  return [...html.matchAll(/<details\b[^>]*>[\s\S]*?<summary>([\s\S]*?)<\/summary>[\s\S]*?<p>([\s\S]*?)<\/p>[\s\S]*?<\/details>/gi)]
+  const detailPairs = [...html.matchAll(/<details\b[^>]*>[\s\S]*?<summary>([\s\S]*?)<\/summary>[\s\S]*?<p>([\s\S]*?)<\/p>[\s\S]*?<\/details>/gi)]
+    .map((match) => [plainText(match[1]), plainText(match[2])]);
+
+  if (detailPairs.length) return detailPairs;
+
+  const articleFaq = html.match(/<div\b[^>]*class=["'][^"']*\bboxing-faq\b[^"']*["'][^>]*>([\s\S]*?)<\/div>/i)?.[1] || '';
+  return [...articleFaq.matchAll(/<article\b[^>]*>[\s\S]*?<h3>([\s\S]*?)<\/h3>[\s\S]*?<p>([\s\S]*?)<\/p>[\s\S]*?<\/article>/gi)]
     .map((match) => [plainText(match[1]), plainText(match[2])]);
 }
 
@@ -206,6 +213,7 @@ if (locations.kiryatMotzkin.shortLabel.he !== 'נווה גנים' || locations.k
 if (!locations.kiryatMotzkin.containedInPlace?.name?.he?.includes('נווה גנים') || !locations.kiryatMotzkin.containedInPlace?.name?.en?.includes('Neve Ganim')) fail('central data: Neve Ganim containing neighborhood is missing');
 if (businessData.logo !== 'https://luckyroll13.com/assets/images/luckyroll13-header-logo-1200.webp') fail('central data: current rectangular logo URL is inconsistent');
 if (locations.goshenKiryatMotzkin.address.he !== expectedGoshenAddress.he || locations.goshenKiryatMotzkin.address.en !== expectedGoshenAddress.en) fail('central data: Goshen address does not match the approved source of truth');
+if (locations.goshenKiryatMotzkin.schemaType !== 'SportsActivityLocation') fail('central data: Goshen must be represented as a SportsActivityLocation');
 if (scheduleLastUpdated.iso !== '2026-10-24') fail('central data: lastUpdated must reflect the approved Goshen schedule change');
 if (tuesdayMma.length !== 1 || tuesdayMma[0].time !== '14:30–15:30' || tuesdayMma[0].audience.he !== 'גילאי 8–13') fail('central data: Tuesday MMA must remain 14:30–15:30 for ages 8–13');
 if (locations.kiryatMotzkin.dayGroups.some((group) => group.days.includes('monday') && group.sessions.some((session) => session.training.en === 'MMA'))) fail('central data: MMA was incorrectly moved to Monday');
@@ -218,7 +226,7 @@ for (const [day, sessions] of [['sunday', sundaySessions], ['wednesday', wednesd
   if (!sessions.some((session) => session.time === '20:30–21:30' && session.training.he === 'ג׳יו־ג׳יטסו' && session.audience.he === 'נערים ובוגרים')) fail(`central data: ${day} BJJ 20:30–21:30 for teens and adults is missing`);
 }
 if (!fridaySessions.some((session) => session.time === '08:00–09:00' && session.training.he === 'אימון בוקר' && session.audience.he === '')) fail('central data: Friday 08:00–09:00 must remain generic Morning training');
-if (!fridaySessions.some((session) => session.time === '09:00–10:00' && session.training.he === 'אגרוף' && session.audience.he === 'לנשים בלבד')) fail('central data: Friday women-only boxing 09:00–10:00 is missing');
+if (!fridaySessions.some((session) => session.time === '09:00–10:00' && session.training.he === 'אגרוף לנשים' && session.training.en === "Women's Boxing" && session.audience.he === 'לנשים בלבד')) fail('central data: Friday women-only boxing 09:00–10:00 is missing');
 
 const titles = new Map();
 const descriptions = new Map();
@@ -274,6 +282,7 @@ const contextualScheduleLinks = new Map([
   ['women-boxing/index.html', '/schedule/'],
   ['kids/index.html', '/schedule/'],
   ['mma/index.html', '/schedule/'],
+  ['adults/index.html', '/schedule/'],
   ['kiryat-motzkin/index.html', '/schedule/'],
   ['goshen-kiryat-motzkin/index.html', '/schedule/'],
   ['contact/index.html', '/schedule/'],
@@ -283,6 +292,7 @@ const contextualScheduleLinks = new Map([
   ['en/women-boxing/index.html', '/en/schedule/'],
   ['en/kids/index.html', '/en/schedule/'],
   ['en/mma/index.html', '/en/schedule/'],
+  ['en/adults/index.html', '/en/schedule/'],
   ['en/kiryat-motzkin/index.html', '/en/schedule/'],
   ['en/goshen-kiryat-motzkin/index.html', '/en/schedule/'],
   ['en/contact/index.html', '/en/schedule/']
@@ -362,8 +372,8 @@ for (const [file, expectedCanonical] of allIndexablePages) {
     const expectedPath = isEnglish ? (path === '/' ? '/en/' : `/en${path}`) : path;
     if (!navigationMarkup.includes(`href="${expectedPath}"`)) fail(`${file}: navigation is missing ${expectedPath}`);
   }
-  if (!html.includes(`/assets/style.css?v=20261024-2`) || !html.includes(`/assets/site.js?v=20261026-1`)) fail(`${file}: missing current shared asset cache version`);
-  if (!html.includes(`/assets/tracking.js?v=20261026-1`)) fail(`${file}: missing current tracking asset cache version`);
+  if (!html.includes(`/assets/style.css?v=20261024-2`) || !html.includes(`/assets/site.js?v=20261101-1`)) fail(`${file}: missing current shared asset cache version`);
+  if (!html.includes(`/assets/tracking.js?v=20261101-1`)) fail(`${file}: missing current tracking asset cache version`);
   if (!html.includes(businessData.displayPhone)) fail(`${file}: shared footer does not show the normalized phone number`);
   const telephoneLinks = [...html.matchAll(/href=["'](tel:[^"']+)["']/gi)].map((match) => match[1]);
   if (!telephoneLinks.length || telephoneLinks.some((href) => href !== `tel:${businessData.schemaPhone}`)) fail(`${file}: telephone links must use tel:${businessData.schemaPhone}`);
@@ -399,7 +409,10 @@ for (const [file, expectedCanonical] of allIndexablePages) {
 
   const schemas = jsonLd(html, file);
   if (!schemas.length) fail(`${file}: missing JSON-LD`);
-  if (schemaNodes(schemas).some((schema) => Object.hasOwn(schema, 'openingHoursSpecification'))) fail(`${file}: class timetable must not be represented as business opening hours`);
+  const schemasWithOpeningHours = schemaNodes(schemas).filter((schema) => Object.hasOwn(schema, 'openingHoursSpecification'));
+  if (schemasWithOpeningHours.some((schema) => schema['@id'] !== locations.goshenKiryatMotzkin.schemaId || schema['@type'] !== 'SportsActivityLocation')) {
+    fail(`${file}: opening hours may be declared only on the verified Goshen SportsActivityLocation entity`);
+  }
   const typedSchemaIds = flattenSchemas(schemas)
     .filter((schema) => schema?.['@id'] && schema?.['@type'])
     .map((schema) => schema['@id']);
@@ -451,7 +464,8 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   const expectedScheduleLink = contextualScheduleLinks.get(file);
   if (expectedScheduleLink) {
     const mainMarkup = html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
-    if (!mainMarkup.includes(`href="${expectedScheduleLink}"`)) fail(`${file}: main content is missing contextual schedule link ${expectedScheduleLink}`);
+    const contextualScheduleHrefs = [...mainMarkup.matchAll(/\bhref=["']([^"']+)["']/gi)].map((match) => match[1]);
+    if (!contextualScheduleHrefs.some((href) => href === expectedScheduleLink || href.startsWith(`${expectedScheduleLink}#`))) fail(`${file}: main content is missing contextual schedule link ${expectedScheduleLink}`);
   }
 
   const expectedGoshenLink = contextualGoshenLinks.get(file);
@@ -615,6 +629,7 @@ const schedulePageChecks = [
 for (const { file, language, expectedTables } of schedulePageChecks) {
   const html = readFileSync(resolve(root, file), 'utf8');
   const mainMarkup = html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
+  const mainText = plainText(mainMarkup);
   const schemas = flattenSchemas(jsonLd(html, file));
   const timetable = schemas.find((schema) => schema['@type'] === 'ItemList');
   const visibleTables = mainMarkup.match(/<table\b[^>]*class=["'][^"']*schedule-table[^"']*["'][^>]*>[\s\S]*?<\/table>/gi) || [];
@@ -637,11 +652,11 @@ for (const { file, language, expectedTables } of schedulePageChecks) {
     if (!mainMarkup.includes(address)) fail(`${file}: missing address for ${location.key}`);
     for (const dayGroup of location.dayGroups) {
       const dayLabel = language === 'en' ? dayGroup.label.en : dayGroup.label.he;
-      if (!mainMarkup.includes(dayLabel)) fail(`${file}: missing schedule day label ${dayLabel}`);
+      if (!mainText.includes(dayLabel)) fail(`${file}: missing schedule day label ${dayLabel}`);
       for (const session of dayGroup.sessions) {
         const training = language === 'en' ? session.training.en : session.training.he;
         const audience = language === 'en' ? session.audience.en : session.audience.he;
-        if (!mainMarkup.includes(session.time) || !mainMarkup.includes(training) || (audience && !mainMarkup.includes(audience))) {
+        if (!mainText.includes(session.time) || !mainText.includes(training) || (audience && !mainText.includes(audience))) {
           fail(`${file}: missing approved session ${dayLabel} ${session.time} ${training}`);
         }
       }
@@ -658,17 +673,22 @@ for (const { file, language, pageUrl } of goshenPageChecks) {
   const html = readFileSync(resolve(root, file), 'utf8');
   const mainMarkup = html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
   const schemas = flattenSchemas(jsonLd(html, file));
-  const place = schemas.find((schema) => schema['@id'] === locations.goshenKiryatMotzkin.schemaId && schema['@type'] === 'Place');
+  const locationSchema = schemas.find((schema) => schema['@id'] === locations.goshenKiryatMotzkin.schemaId && schema['@type'] === 'SportsActivityLocation');
   const faq = schemas.find((schema) => schema['@type'] === 'FAQPage');
   const services = schemas.filter((schema) => schema['@type'] === 'Service' && schema.areaServed?.['@id'] === locations.goshenKiryatMotzkin.schemaId);
   const schemaFaqPairs = faq?.mainEntity?.map((entry) => [entry.name, entry.acceptedAnswer?.text]) || [];
   const expectedStreet = language === 'en' ? locations.goshenKiryatMotzkin.address.streetAddress.en : locations.goshenKiryatMotzkin.address.streetAddress.he;
   const expectedLocality = language === 'en' ? locations.goshenKiryatMotzkin.address.addressLocality.en : locations.goshenKiryatMotzkin.address.addressLocality.he;
 
-  if (!place || place.url !== 'https://luckyroll13.com/goshen-kiryat-motzkin/' || place.telephone !== businessData.schemaPhone) fail(`${file}: stable Goshen Place entity is incomplete`);
-  if (place?.address?.streetAddress !== expectedStreet || place?.address?.addressLocality !== expectedLocality || place?.address?.addressCountry !== 'IL') fail(`${file}: Goshen Place address is inconsistent`);
-  if (place?.hasMap !== locations.goshenKiryatMotzkin.mapUrl || !place?.containedInPlace?.name || place?.containedInPlace?.url !== locations.goshenKiryatMotzkin.containedInPlace.url) fail(`${file}: Goshen map or authoritative containing community center is missing`);
-  if (schemas.some((schema) => schema['@id'] === locations.goshenKiryatMotzkin.schemaId && schema['@type'] === 'SportsActivityLocation')) fail(`${file}: Goshen must remain a Place, not an independent SportsActivityLocation`);
+  const openingHours = locationSchema?.openingHoursSpecification;
+  const expectedDays = ['https://schema.org/Monday', 'https://schema.org/Thursday'];
+
+  if (!locationSchema || locationSchema.url !== pageUrl || locationSchema.telephone !== businessData.schemaPhone) fail(`${file}: Goshen SportsActivityLocation entity is incomplete`);
+  if (locationSchema?.parentOrganization?.['@id'] !== businessData.schemaId) fail(`${file}: Goshen location is not linked to the parent Lucky Roll13 organization`);
+  if (locationSchema?.address?.streetAddress !== expectedStreet || locationSchema?.address?.addressLocality !== expectedLocality || locationSchema?.address?.addressCountry !== 'IL') fail(`${file}: Goshen SportsActivityLocation address is inconsistent`);
+  if (locationSchema?.hasMap !== locations.goshenKiryatMotzkin.mapUrl || !locationSchema?.containedInPlace?.name || locationSchema?.containedInPlace?.url !== locations.goshenKiryatMotzkin.containedInPlace.url) fail(`${file}: Goshen map or authoritative containing community center is missing`);
+  if (openingHours?.['@type'] !== 'OpeningHoursSpecification' || JSON.stringify(openingHours?.dayOfWeek) !== JSON.stringify(expectedDays) || openingHours?.opens !== '17:00' || openingHours?.closes !== '19:30') fail(`${file}: Goshen opening hours must be Monday and Thursday 17:00–19:30`);
+  if (schemas.some((schema) => schema['@id'] === locations.goshenKiryatMotzkin.schemaId && schema['@type'] === 'Place')) fail(`${file}: obsolete Goshen Place entity remains`);
   if (services.length !== 3 || services.some((service) => service.provider?.['@id'] !== businessData.schemaId || service.url !== pageUrl)) fail(`${file}: Goshen services are not linked to the business and place`);
   if (services.some((service) => !/BJJ|Brazilian Jiu-Jitsu|ג׳יו־ג׳יטסו/i.test(`${service.name || ''} ${service.serviceType || ''}`) || /MMA|Boxing|אגרוף/i.test(`${service.name || ''} ${service.serviceType || ''}`))) fail(`${file}: Goshen Service schema must describe BJJ only`);
   if (JSON.stringify(visibleFaqPairs(html)) !== JSON.stringify(schemaFaqPairs)) fail(`${file}: visible FAQ and FAQ schema do not match exactly`);
@@ -692,6 +712,22 @@ if (!kidsMain.includes(expectedKiryatAddress.he) || !kidsMain.includes('קק״ל
 if (/רק בקריית מוצקין|only in Kiryat Motzkin/i.test(kidsMain)) fail('kids/index.html: page incorrectly says all kids classes are only in Kiryat Motzkin');
 if (JSON.stringify(visibleFaqPairs(kidsHtml)) !== JSON.stringify(kidsSchemaFaqPairs)) fail('kids/index.html: visible FAQ and FAQ schema do not match exactly');
 
+for (const [file, expectedQuestions] of [
+  ['boxing/index.html', 4],
+  ['en/boxing/index.html', 4],
+  ['bjj/index.html', 3],
+  ['en/bjj/index.html', 3],
+  ['adults/index.html', 4],
+  ['en/adults/index.html', 4]
+]) {
+  const html = readFileSync(resolve(root, file), 'utf8');
+  const faq = flattenSchemas(jsonLd(html, file)).find((schema) => schema['@type'] === 'FAQPage');
+  const schemaPairs = faq?.mainEntity?.map((item) => [item.name, item.acceptedAnswer?.text]) || [];
+  if (schemaPairs.length !== expectedQuestions || JSON.stringify(visibleFaqPairs(html)) !== JSON.stringify(schemaPairs)) {
+    fail(`${file}: visible FAQ and FAQ schema do not match exactly`);
+  }
+}
+
 for (const file of ['mma/index.html', 'en/mma/index.html']) {
   const html = readFileSync(resolve(root, file), 'utf8');
   const mainMarkup = html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
@@ -705,7 +741,7 @@ for (const file of ['mma/index.html', 'en/mma/index.html']) {
 
 const approvedBjjSpellingParagraph = 'באתר Lucky Roll13, המונחים BJJ וג׳יו־ג׳יטסו ברזילאי מתייחסים לאימונים שלנו בקריית מוצקין ובאזור הקריות. בחיפוש נפוצים גם הכתיבים ג\'יו ג\'יטסו וג\'יו-ג\'יטסו.';
 const bjjMainText = plainText(readFileSync(resolve(root, 'bjj/index.html'), 'utf8').match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '');
-if (countOccurrences(bjjMainText, approvedBjjSpellingParagraph) !== 1) fail('bjj/index.html: approved natural spelling paragraph must appear exactly once');
+if (countOccurrences(bjjMainText, approvedBjjSpellingParagraph) !== 0) fail('bjj/index.html: obsolete search-spelling paragraph must be removed');
 
 for (const file of ['women-boxing/index.html', 'en/women-boxing/index.html']) {
   const html = readFileSync(resolve(root, file), 'utf8');
@@ -866,6 +902,31 @@ if (Object.hasOwn(seminarVideo || {}, 'contentUrl')) fail('seminar: VideoObject 
 const tracking = readFileSync(resolve(root, 'assets/tracking.js'), 'utf8');
 const events = readFileSync(resolve(root, 'assets/events.js'), 'utf8');
 
+function simulateTrackingBoot(pageUrl) {
+  const gaEvents = [];
+  const metaEvents = [];
+  const handlers = {};
+  const appendedScripts = [];
+  const document = {
+    documentElement: { lang: 'he' },
+    head: { appendChild: (node) => appendedScripts.push(node) },
+    getElementById: () => null,
+    createElement: () => ({}),
+    addEventListener: (type, handler) => { handlers[type] = handler; }
+  };
+  const window = {
+    location: new URL(pageUrl),
+    dataLayer: [],
+    gtag: (...args) => gaEvents.push(args),
+    fbq: (...args) => metaEvents.push(args),
+    setTimeout: () => {}
+  };
+
+  runInNewContext(tracking, { window, document, URL, URLSearchParams, Date, Math, JSON, encodeURIComponent });
+
+  return { appendedScripts, gaEvents, handlers, metaEvents, window };
+}
+
 function simulateContactTracking() {
   const gaEvents = [];
   const metaEvents = [];
@@ -941,7 +1002,7 @@ function simulateFormSubmission({
     documentElement: { lang: 'he' },
     head: { appendChild: () => {} },
     getElementById: () => ({}),
-    createElement: () => ({}),
+    createElement: () => ({ type: '', name: '', value: '' }),
     addEventListener: (type, handler) => { handlers[type] = handler; }
   };
   const window = {
@@ -970,12 +1031,13 @@ function simulateFormSubmission({
     matches: (selector) => selector === 'form',
     hasAttribute: (name) => Object.hasOwn(attributes, name),
     getAttribute: (name) => attributes[name] ?? null,
-    elements: { namedItem: (name) => fields.get(name) || null }
+    elements: { namedItem: (name) => fields.get(name) || null },
+    appendChild: (field) => fields.set(field.name, field)
   };
 
   handlers.submit({ target: form });
 
-  return { gaEvents, metaEvents, storage };
+  return { fields, gaEvents, metaEvents, storage };
 }
 
 function simulateConfirmedFormLead(storage, {
@@ -1067,7 +1129,39 @@ function simulateSeminarExperience(now, search = '?utm_source=instagram&utm_medi
 for (const eventName of ['whatsapp_click', 'phone_click', 'maps_click', 'waze_click', 'trial_booking_click', 'trial_form_submit', 'generate_lead', 'trial_form_success']) {
   if (!tracking.includes(eventName)) fail(`tracking: missing ${eventName}`);
 }
-if (!tracking.includes('__luckyRoll13TrackingSuppressedForQa') || !tracking.includes("qa_no_tracking") || !tracking.includes("window.location.hostname === 'localhost'")) fail('tracking: local-only QA suppression guard is missing');
+if (
+  !tracking.includes('__luckyRoll13TrackingSuppressedForNonProduction') ||
+  !tracking.includes("'luckyroll13.com': true") ||
+  !tracking.includes("'www.luckyroll13.com': true")
+) fail('tracking: production-host allowlist guard is missing');
+
+for (const productionUrl of ['https://luckyroll13.com/', 'https://www.luckyroll13.com/']) {
+  const productionRuntime = simulateTrackingBoot(productionUrl);
+  const appendedScriptSources = productionRuntime.appendedScripts.map((script) => script.src);
+
+  if (!productionRuntime.window.__luckyRoll13TrackingLoaded) fail(`tracking runtime: ${productionUrl} did not initialize tracking`);
+  if (productionRuntime.window.__luckyRoll13TrackingSuppressedForNonProduction) fail(`tracking runtime: ${productionUrl} was incorrectly suppressed`);
+  if (!appendedScriptSources.some((src) => src?.includes('googletagmanager.com/gtag/js'))) fail(`tracking runtime: ${productionUrl} did not request GA4`);
+  if (!appendedScriptSources.some((src) => src?.includes('connect.facebook.net/en_US/fbevents.js'))) fail(`tracking runtime: ${productionUrl} did not request Meta Pixel`);
+  if (!productionRuntime.gaEvents.some((entry) => entry[0] === 'config' && entry[1] === 'G-P90EZYYDSS')) fail(`tracking runtime: ${productionUrl} did not configure GA4`);
+  if (!productionRuntime.metaEvents.some((entry) => entry[0] === 'track' && entry[1] === 'PageView')) fail(`tracking runtime: ${productionUrl} did not emit Meta PageView`);
+}
+
+for (const nonProductionUrl of [
+  'http://localhost:4173/',
+  'http://127.0.0.1:4173/',
+  'https://deploy-preview-19--luckyroll13.netlify.app/',
+  'https://luckyroll13.netlify.app/'
+]) {
+  const nonProductionRuntime = simulateTrackingBoot(nonProductionUrl);
+
+  if (!nonProductionRuntime.window.__luckyRoll13TrackingSuppressedForNonProduction) fail(`tracking runtime: ${nonProductionUrl} was not suppressed`);
+  if (nonProductionRuntime.window.__luckyRoll13TrackingLoaded) fail(`tracking runtime: ${nonProductionUrl} initialized tracking`);
+  if (nonProductionRuntime.appendedScripts.length) fail(`tracking runtime: ${nonProductionUrl} requested analytics scripts`);
+  if (nonProductionRuntime.gaEvents.length || nonProductionRuntime.metaEvents.length) fail(`tracking runtime: ${nonProductionUrl} emitted analytics events`);
+  if (Object.keys(nonProductionRuntime.handlers).length) fail(`tracking runtime: ${nonProductionUrl} bound analytics event handlers`);
+}
+
 const contactRuntime = simulateContactTracking();
 contactRuntime.click('https://wa.me/972546420206?text=test');
 contactRuntime.click('tel:+972546420206');
@@ -1083,6 +1177,9 @@ for (const eventName of ['whatsapp_click', 'whatsapp_lead', 'phone_click', 'maps
 }
 if (runtimeGaNames.filter((name) => name === 'maps_click').length !== 2) fail('tracking runtime: both verified Google Maps URL patterns must emit maps_click');
 if (contactRuntime.metaEvents.filter((entry) => entry[0] === 'track' && entry[1] === 'Contact').length !== 3) fail('tracking runtime: Meta Contact must fire once for each WhatsApp/phone click and not for navigation');
+for (const entry of contactRuntime.metaEvents.filter((candidate) => candidate[0] === 'track' && candidate[1] === 'Contact')) {
+  if (!entry[3]?.eventID || !String(entry[3].eventID).startsWith('contact-')) fail('tracking runtime: Meta Contact must include an eventID for browser/CAPI deduplication');
+}
 
 const processedNetlifyLeadScenarios = [
   {
@@ -1127,8 +1224,14 @@ for (const scenario of processedNetlifyLeadScenarios) {
   const processedNetlifyLeadRuntime = simulateFormSubmission(scenario);
   const processedNetlifySubmitEvents = processedNetlifyLeadRuntime.gaEvents.filter((entry) => entry[0] === 'event' && entry[1] === 'trial_form_submit');
   const processedNetlifyPendingLead = JSON.parse(processedNetlifyLeadRuntime.storage.get('luckyroll13:pending-form-lead') || 'null');
+  const submittedEventId = processedNetlifyLeadRuntime.fields.get('event_id')?.value;
 
-  if (processedNetlifySubmitEvents.length !== 1 || processedNetlifyPendingLead?.formName !== scenario.formName) {
+  if (
+    processedNetlifySubmitEvents.length !== 1 ||
+    processedNetlifyPendingLead?.formName !== scenario.formName ||
+    !submittedEventId ||
+    submittedEventId !== processedNetlifyPendingLead?.id
+  ) {
     fail(`tracking runtime: ${scenario.label} processed Netlify form with an empty hidden form-name must record its submit and pending lead`);
     continue;
   }
@@ -1228,7 +1331,7 @@ const notFoundHtml = readFileSync(resolve(root, '404.html'), 'utf8');
 if (!notFoundHtml.includes('<meta name="robots" content="noindex,follow">')) fail('404.html: must remain noindex,follow');
 if (/rel=["']canonical["']/i.test(notFoundHtml)) fail('404.html: must not declare a canonical URL');
 if (!notFoundHtml.includes("document.documentElement.classList.add('js-enabled')")) fail('404.html: missing progressive-enhancement initializer');
-if (!notFoundHtml.includes('/assets/style.css?v=20261024-2') || !notFoundHtml.includes('/assets/site.js?v=20261026-1')) fail('404.html: shared asset versions are stale');
+if (!notFoundHtml.includes('/assets/style.css?v=20261024-2') || !notFoundHtml.includes('/assets/site.js?v=20261101-1')) fail('404.html: shared asset versions are stale');
 if (!notFoundHtml.includes('/assets/images/luckyroll13-header-logo-1200.webp') || !notFoundHtml.includes('width="1200" height="292"')) fail('404.html: current header logo is missing');
 if (notFoundHtml.includes('/assets/images/luckyroll13-header-logo-480.webp')) fail('404.html: previous header logo remains');
 if (notFoundHtml.includes('src="/assets/images/luckyroll13-header-logo.webp"')) fail('404.html: oversized 1431px header logo remains');
@@ -1462,6 +1565,8 @@ if (sitemapEntries.length !== allIndexablePages.length) fail(`sitemap: expected 
 if (new Set(sitemapUrls).size !== sitemapUrls.length) fail('sitemap: duplicate URLs detected');
 for (const [, url, lastmod] of sitemapEntries) {
   if (lastmod > today) fail(`sitemap: ${url} has a future lastmod date ${lastmod}`);
+  const expectedLastModified = sitemapLastModifiedByRoute[routeKeyFromUrl(url)];
+  if (!expectedLastModified || lastmod !== expectedLastModified) fail(`sitemap: ${url} has ${lastmod}; expected deterministic route revision ${expectedLastModified || 'missing'}`);
 }
 for (const [, url] of allIndexablePages) {
   if (!sitemap.includes(`<loc>${url}</loc>`)) fail(`sitemap: missing ${url}`);
@@ -1474,12 +1579,7 @@ for (const [, url] of allIndexablePages) {
 }
 if (sitemap.includes('/events/javier-zaruski/')) fail('sitemap: contains redirected seminar URL');
 if (sitemap.includes('/nesher/')) fail('sitemap: retired Nesher location remains indexable');
-for (const goshenUrl of ['https://luckyroll13.com/goshen-kiryat-motzkin/', 'https://luckyroll13.com/en/goshen-kiryat-motzkin/']) {
-  if (!sitemap.includes(`<loc>${goshenUrl}</loc><lastmod>2026-10-24</lastmod>`)) fail(`sitemap: Goshen lastmod is not 2026-10-24 for ${goshenUrl}`);
-}
-for (const guideUrl of ['https://luckyroll13.com/guide/', 'https://luckyroll13.com/en/guide/']) {
-  if (!sitemap.includes(`<loc>${guideUrl}</loc><lastmod>2026-10-24</lastmod>`)) fail(`sitemap: guide lastmod is not 2026-10-24 for ${guideUrl}`);
-}
+if (new Set(sitemapEntries.map((entry) => entry[2])).size < 2) fail('sitemap: all routes incorrectly share one lastmod date');
 
 const siteScript = readFileSync(resolve(root, 'assets/site.js'), 'utf8');
 const styles = readFileSync(resolve(root, 'assets/style.css'), 'utf8');
@@ -1501,7 +1601,7 @@ if (!/html\.js-enabled\s+\.links\.is-open\s*\{[^}]*display:\s*flex/i.test(styles
 if (!bilingualBuildScript.includes('/assets/images/luckyroll13-header-logo-1200.webp') || bilingualBuildScript.includes('class="logo" src="/assets/images/luckyroll13-header-logo-480.webp"')) {
   fail('bilingual build: current header logo is not preserved');
 }
-if (!bilingualBuildScript.includes("const styleAssetVersion = '20261024-2'") || !bilingualBuildScript.includes("const scriptAssetVersion = '20261026-1'")) {
+if (!bilingualBuildScript.includes("const styleAssetVersion = '20261024-2'") || !bilingualBuildScript.includes("const scriptAssetVersion = '20261101-1'")) {
   fail('bilingual build: current style and script cache versions are not preserved');
 }
 if (!bilingualBuildScript.includes('accessibility|guide') || !bilingualTranslations.includes("'למדריך לבחירת אומנות לחימה': 'Read the martial arts selection guide'")) {
