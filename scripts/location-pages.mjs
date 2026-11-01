@@ -1,7 +1,7 @@
 import {
   business,
   businessSchema,
-  goshenPlaceSchema,
+  goshenActivityLocationSchema,
   localized,
   locations,
   scheduleLastUpdated
@@ -388,13 +388,14 @@ function renderSchedulePage(language) {
 function renderGoshenPage(language) {
   const copy = pageCopy.goshen[language];
   const location = locations.goshenKiryatMotzkin;
+  const schedulePath = `${language === 'en' ? '/en/schedule/' : '/schedule/'}#schedule-goshenKiryatMotzkin`;
   const services = copy.services.map((service) => `<article class="location-service"><h3>${service.title}</h3><p>${service.text}</p><a href="${service.href}">${service.linkLabel}</a></article>`).join('');
   const faqs = copy.faq.map(([question, answer]) => `<details><summary>${question}</summary><p>${answer}</p></details>`).join('');
   return `<main id="main">
-  <section class="page-hero"><div class="wrap">${renderBreadcrumbs('goshen', language)}<div class="eyebrow">${copy.eyebrow}</div><h1>${copy.h1}</h1><p class="lead">${copy.intro}</p><div class="actions"><a class="btn" data-trial-cta href="${whatsappUrl(copy.whatsapp)}">${copy.cta}</a><a class="btn alt" href="${language === 'en' ? '/en/schedule/' : '/schedule/'}">${copy.scheduleLink}</a></div></div></section>
+  <section class="page-hero"><div class="wrap">${renderBreadcrumbs('goshen', language)}<div class="eyebrow">${copy.eyebrow}</div><h1>${copy.h1}</h1><p class="lead">${copy.intro}</p><div class="actions"><a class="btn" data-trial-cta href="${whatsappUrl(copy.whatsapp)}">${copy.cta}</a><a class="btn alt" href="${schedulePath}">${copy.scheduleLink}</a></div></div></section>
   <section class="section"><div class="wrap content"><p class="lead">${copy.localIntro}</p><h2>${copy.servicesTitle}</h2><div class="grid location-services">${services}</div></div></section>
   <section class="section"><div class="wrap contact"><h2>${copy.addressTitle}</h2><p><strong>${copy.addressLabel}:</strong> ${localized(location.address, language)}</p><div class="actions"><a class="btn" href="${escapeHtml(location.mapUrl)}" target="_blank" rel="noopener">${copy.directions}</a><a class="btn alt" href="${escapeHtml(location.wazeUrl)}" target="_blank" rel="noopener">${copy.waze}</a><a class="btn alt" href="tel:${business.schemaPhone}"><bdi dir="ltr">${business.displayPhone}</bdi></a></div></div></section>
-  <section class="section" aria-labelledby="goshen-schedule-title"><div class="wrap"><div class="schedule-location schedule-location--goshen"><h2 id="goshen-schedule-title">${copy.scheduleTitle}</h2>${renderScheduleTable(location, language, copy.tableCaption, copy.columns)}<div class="actions"><a class="btn alt" href="${language === 'en' ? '/en/schedule/' : '/schedule/'}">${copy.scheduleLink}</a></div></div></div></section>
+  <section class="section" aria-labelledby="goshen-schedule-title"><div class="wrap"><div class="schedule-location schedule-location--goshen"><h2 id="goshen-schedule-title">${copy.scheduleTitle}</h2>${renderScheduleTable(location, language, copy.tableCaption, copy.columns)}<div class="actions"><a class="btn alt" href="${schedulePath}">${copy.scheduleLink}</a></div></div></div></section>
   <section class="section"><div class="wrap contact"><h2>${copy.ctaTitle}</h2><p>${copy.ctaText}</p><div class="actions"><a class="btn" data-trial-cta href="${whatsappUrl(copy.whatsapp)}">${copy.cta}</a><a class="btn alt" href="tel:${business.schemaPhone}"><bdi dir="ltr">${business.displayPhone}</bdi></a></div></div></section>
   <section class="section faq" aria-labelledby="goshen-faq-title"><div class="wrap content"><div class="eyebrow">${copy.faqEyebrow}</div><h2 id="goshen-faq-title">${copy.faqTitle}</h2>${faqs}</div></section>
 </main>`;
@@ -418,8 +419,8 @@ export function renderSharedFooter(language) {
 export function renderGeneratedPage(pageKey, language, { header, footer, assetVersions }) {
   const copy = pageCopy[pageKey][language];
   const graph = pageKey === 'schedule'
-    ? [businessSchema(language), goshenPlaceSchema(language), webPageSchema(pageKey, language, copy), breadcrumbSchema(pageKey, language, copy), scheduleItemList(language)]
-    : [businessSchema(language), goshenPlaceSchema(language), ...goshenServiceSchemas(language), webPageSchema(pageKey, language, copy), breadcrumbSchema(pageKey, language, copy), faqSchema(language, copy.faq)];
+    ? [businessSchema(language), goshenActivityLocationSchema(language), webPageSchema(pageKey, language, copy), breadcrumbSchema(pageKey, language, copy), scheduleItemList(language)]
+    : [businessSchema(language), goshenActivityLocationSchema(language), ...goshenServiceSchemas(language), webPageSchema(pageKey, language, copy), breadcrumbSchema(pageKey, language, copy), faqSchema(language, copy.faq)];
   const main = pageKey === 'schedule' ? renderSchedulePage(language) : renderGoshenPage(language);
   const mobileLabel = language === 'en' ? 'Send us a WhatsApp message' : 'שלחו הודעה ב־WhatsApp';
   return `<!doctype html>

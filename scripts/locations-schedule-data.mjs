@@ -94,7 +94,7 @@ export const locations = {
           {
             time: '09:00–10:00',
             service: 'women-boxing',
-            training: { he: 'אגרוף', en: 'Boxing' },
+            training: { he: 'אגרוף לנשים', en: "Women's Boxing" },
             audience: { he: 'לנשים בלבד', en: 'Women only' }
           },
           {
@@ -114,7 +114,7 @@ export const locations = {
   },
   goshenKiryatMotzkin: {
     key: 'goshenKiryatMotzkin',
-    schemaType: 'Place',
+    schemaType: 'SportsActivityLocation',
     schemaId: 'https://luckyroll13.com/#goshen-kiryat-motzkin',
     route: { he: '/goshen-kiryat-motzkin/', en: '/en/goshen-kiryat-motzkin/' },
     name: { he: 'מתנ״ס גושן, קריית מוצקין', en: 'Matnas Goshen, Kiryat Motzkin' },
@@ -213,20 +213,30 @@ export function businessSchema(language) {
   };
 }
 
-export function goshenPlaceSchema(language) {
+export function goshenActivityLocationSchema(language) {
   const location = locations.goshenKiryatMotzkin;
   return {
-    '@type': 'Place',
+    '@type': location.schemaType,
     '@id': location.schemaId,
     name: `${business.name} – ${localized(location.name, language)}`,
-    url: `https://luckyroll13.com${location.route.he}`,
+    url: `https://luckyroll13.com${localized(location.route, language)}`,
     telephone: business.schemaPhone,
+    parentOrganization: { '@id': business.schemaId },
     address: postalAddress(location, language),
     containedInPlace: {
       '@type': 'Place',
       name: localized(location.containedInPlace.name, language),
       url: location.containedInPlace.url
     },
-    hasMap: location.mapUrl
+    hasMap: location.mapUrl,
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: [
+        'https://schema.org/Monday',
+        'https://schema.org/Thursday'
+      ],
+      opens: '17:00',
+      closes: '19:30'
+    }
   };
 }
