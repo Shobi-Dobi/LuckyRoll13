@@ -750,10 +750,25 @@ for (const file of ['women-boxing/index.html', 'en/women-boxing/index.html']) {
   const socialImage = 'https://luckyroll13.com/assets/images/women-boxing-social-20261021.jpg';
   if (meta(html, 'property', 'og:image') !== socialImage || meta(html, 'name', 'twitter:image') !== socialImage) fail(`${file}: optimized women-boxing social image is missing`);
   if (meta(html, 'property', 'og:image:type') !== 'image/jpeg' || meta(html, 'property', 'og:image:width') !== '1200' || meta(html, 'property', 'og:image:height') !== '630') fail(`${file}: women-boxing social image dimensions or type are missing`);
+  const service = flattenSchemas(jsonLd(html, file)).find((schema) => schema['@type'] === 'Service');
+  if (
+    service?.hoursAvailable?.['@type'] !== 'OpeningHoursSpecification' ||
+    service.hoursAvailable.dayOfWeek !== 'https://schema.org/Friday' ||
+    service.hoursAvailable.opens !== '09:00' ||
+    service.hoursAvailable.closes !== '10:00'
+  ) fail(`${file}: women-only Boxing Service schema must publish Friday 09:00–10:00 availability`);
+  const personalTrainingLink = file.startsWith('en/') ? '/en/adults/' : '/adults/';
+  if (!html.includes('women-boxing-personal-training.webp') || !html.includes(`href="${personalTrainingLink}"`)) {
+    fail(`${file}: women personal-training feature image or link is missing`);
+  }
 }
 
 const womenBoxingSocialImage = resolve(root, 'assets/images/women-boxing-social-20261021.jpg');
 if (!existsSync(womenBoxingSocialImage) || statSync(womenBoxingSocialImage).size > 250_000) fail('women-boxing: optimized social image is missing or larger than 250 KB');
+for (const filename of ['women-boxing-personal-training-480.webp', 'women-boxing-personal-training-720.webp', 'women-boxing-personal-training.webp']) {
+  const image = resolve(root, 'assets/images', filename);
+  if (!existsSync(image) || statSync(image).size > 150_000) fail(`women-boxing: responsive personal-training image is missing or too large: ${filename}`);
+}
 
 for (const file of ['contact/index.html', 'adults/index.html', 'en/contact/index.html', 'en/adults/index.html']) {
   const html = readFileSync(resolve(root, file), 'utf8');
@@ -1205,7 +1220,7 @@ const processedNetlifyLeadScenarios = [
     formName: 'women-boxing-lead',
     language: 'he',
     interest: 'אגרוף לנשים',
-    preferredLocation: '',
+    preferredLocation: 'kiryat-motzkin',
     pageUrl: 'https://luckyroll13.com/women-boxing/',
     thankYouUrl: 'https://luckyroll13.com/thank-you.html'
   },
@@ -1214,7 +1229,7 @@ const processedNetlifyLeadScenarios = [
     formName: 'women-boxing-lead',
     language: 'en',
     interest: "Women's Boxing",
-    preferredLocation: '',
+    preferredLocation: 'kiryat-motzkin',
     pageUrl: 'https://luckyroll13.com/en/women-boxing/',
     thankYouUrl: 'https://luckyroll13.com/en/thank-you/'
   }
@@ -1538,6 +1553,9 @@ for (const { file, name, language, action } of [
     if (!/value=["']goshen-kiryat-motzkin["'][^>]*>[\s\S]*?(?:מתנ״ס גושן|Matnas Goshen|Goshen Community Center)/i.test(form.inner)) fail(`${file}: Goshen location option is missing from the kids form`);
     if (!/value=["']BJJ["'][^>]*data-available-locations=["'][^"']*kiryat-motzkin[^"']*goshen-kiryat-motzkin[^"']*["']/i.test(form.inner)) fail(`${file}: BJJ must be available at both Kiryat Motzkin locations in the kids form`);
     if (!/value=["']MMA["'][^>]*data-available-locations=["']kiryat-motzkin["']/i.test(form.inner)) fail(`${file}: MMA must be limited to Kiryat Motzkin in the kids form`);
+  }
+  if (name === 'women-boxing-lead' && !/<input\b[^>]*name=["']preferred-location["'][^>]*value=["']kiryat-motzkin["']/i.test(form.inner)) {
+    fail(`${file}: women boxing leads must be attributed to the Neve Ganim location`);
   }
 }
 

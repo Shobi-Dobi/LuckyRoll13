@@ -6,7 +6,7 @@ const sitemapOrigin = 'https://luckyroll13.com';
 export const sitemapLastModifiedByRoute = Object.freeze({
   home: '2026-10-26',
   boxing: '2026-11-01',
-  'women-boxing': '2026-11-01',
+  'women-boxing': '2026-11-06',
   bjj: '2026-11-01',
   kids: '2026-11-01',
   mma: '2026-11-01',
