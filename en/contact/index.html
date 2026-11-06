@@ -14,60 +14,106 @@
   <meta property="og:image:height" content="1066">
   <meta property="og:image:width" content="1600">
   <meta property="og:image:type" content="image/webp"><meta property="og:image:alt" content="The Lucky Roll13 team at the training gym">
-  <link href="/assets/logo.png" rel="icon"/><link href="/assets/style.css?v=20261024-2" rel="stylesheet"/><script defer src="/assets/tracking.js?v=20261101-1"></script><script defer src="/assets/site.js?v=20261101-1"></script>
+  <link href="/assets/logo.png" rel="icon"/><link href="/assets/style.css?v=20261106-1" rel="stylesheet"/><script defer src="/assets/tracking.js?v=20261101-1"></script><script defer src="/assets/site.js?v=20261101-1"></script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "SportsActivityLocation",
-  "@id": "https://luckyroll13.com/#business",
-  "name": "Lucky Roll13",
-  "url": "https://luckyroll13.com/",
-  "telephone": "+972546420206",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "26 Menachem Begin St.",
-    "addressLocality": "Kiryat Motzkin",
-    "addressCountry": "IL"
-  },
-  "areaServed": [
+  "@graph": [
     {
-      "@type": "City",
-      "name": "Kiryat Motzkin"
+      "@type": "SportsActivityLocation",
+      "@id": "https://luckyroll13.com/#business",
+      "name": "Lucky Roll13",
+      "url": "https://luckyroll13.com/",
+      "telephone": "+972546420206",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "26 Menachem Begin St.",
+        "addressLocality": "Kiryat Motzkin",
+        "addressCountry": "IL"
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Kiryat Motzkin"
+        },
+        {
+          "@type": "City",
+          "name": "Kiryat Bialik"
+        },
+        {
+          "@type": "City",
+          "name": "Kiryat Yam"
+        },
+        {
+          "@type": "City",
+          "name": "Kiryat Ata"
+        },
+        {
+          "@type": "Place",
+          "name": "Kiryat Haim"
+        },
+        {
+          "@type": "Place",
+          "name": "Krayot"
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/luckyRoll13/",
+        "https://www.instagram.com/luckyroll13_boxing_jiujitsu/",
+        "https://maps.google.com/?cid=8832126799717426719"
+      ],
+      "hasMap": "https://maps.google.com/?cid=8832126799717426719",
+      "alternateName": "Lucky Roll13 – Boxing & Jiu-Jitsu",
+      "logo": "https://luckyroll13.com/assets/images/luckyroll13-header-logo-1200.webp",
+      "image": "https://luckyroll13.com/assets/images/hero.webp",
+      "containedInPlace": {
+        "@type": "Place",
+        "name": "Neve Ganim neighborhood, Kiryat Motzkin"
+      },
+      "parentOrganization": {
+        "@id": "https://luckyroll13.com/#organization"
+      }
     },
     {
-      "@type": "City",
-      "name": "Kiryat Bialik"
+      "@type": "SportsActivityLocation",
+      "@id": "https://luckyroll13.com/#goshen-kiryat-motzkin",
+      "name": "Lucky Roll13 – Goshen Community Center, Kiryat Motzkin",
+      "url": "https://luckyroll13.com/en/goshen-kiryat-motzkin/",
+      "telephone": "+972546420206",
+      "parentOrganization": {
+        "@id": "https://luckyroll13.com/#organization"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "23A KKL St.",
+        "addressLocality": "Kiryat Motzkin",
+        "addressCountry": "IL"
+      },
+      "containedInPlace": {
+        "@type": "Place",
+        "name": "Goshen Community Center",
+        "url": "https://www.mozkin.org.il/page.php?ht=&id=1996&m=42&type=matClass"
+      },
+      "hasMap": "https://www.google.com/maps/dir/?api=1&destination=%D7%9E%D7%AA%D7%A0%D7%B4%D7%A1%20%D7%92%D7%95%D7%A9%D7%9F%2C%20%D7%A9%D7%93%D7%A8%D7%95%D7%AA%20%D7%A7%D7%A7%D7%B4%D7%9C%2023%D7%90%2C%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%9E%D7%95%D7%A6%D7%A7%D7%99%D7%9F"
     },
     {
-      "@type": "City",
-      "name": "Kiryat Yam"
-    },
-    {
-      "@type": "City",
-      "name": "Kiryat Ata"
-    },
-    {
-      "@type": "Place",
-      "name": "Kiryat Haim"
-    },
-    {
-      "@type": "Place",
-      "name": "Krayot"
+      "@type": "SportsOrganization",
+      "@id": "https://luckyroll13.com/#organization",
+      "name": "Lucky Roll13",
+      "alternateName": "Lucky Roll13 – Boxing & Jiu-Jitsu",
+      "url": "https://luckyroll13.com/",
+      "logo": "https://luckyroll13.com/assets/images/luckyroll13-header-logo-1200.webp",
+      "telephone": "+972546420206",
+      "location": [
+        {
+          "@id": "https://luckyroll13.com/#business"
+        },
+        {
+          "@id": "https://luckyroll13.com/#goshen-kiryat-motzkin"
+        }
+      ]
     }
-  ],
-  "sameAs": [
-    "https://www.facebook.com/luckyRoll13/",
-    "https://www.instagram.com/luckyroll13_boxing_jiujitsu/",
-    "https://maps.google.com/?cid=8832126799717426719"
-  ],
-  "hasMap": "https://maps.google.com/?cid=8832126799717426719",
-  "alternateName": "Lucky Roll13 – Boxing & Jiu-Jitsu",
-  "logo": "https://luckyroll13.com/assets/images/luckyroll13-header-logo-1200.webp",
-  "image": "https://luckyroll13.com/assets/images/hero.webp",
-  "containedInPlace": {
-    "@type": "Place",
-    "name": "Neve Ganim neighborhood, Kiryat Motzkin"
-  }
+  ]
 }
 </script>
   <meta content="summary_large_image" name="twitter:card"/><meta content="Contact | Lucky Roll13 Kiryat Motzkin and Krayot" name="twitter:title"/>
@@ -83,7 +129,7 @@
   "description": "Book a trial class at Lucky Roll13 and get details about martial arts training at our Neve Ganim and Matnas Goshen locations in Kiryat Motzkin.",
   "inLanguage": "en-US",
   "about": {
-    "@id": "https://luckyroll13.com/#business"
+    "@id": "https://luckyroll13.com/#organization"
   }
 }
 </script>
@@ -125,7 +171,7 @@
   </div>
 </header>
 <main id="main">
-  <section class="page-hero"><div class="wrap"><div class="eyebrow">Come meet us</div><h1>It starts with one message</h1><p class="lead">Tell us whether you are interested in Boxing, Brazilian Jiu-Jitsu, Kids classes, MMA, or Personal Training, and we will guide you to the right program and location.</p></div></section>
+  <section class="page-hero"><div class="wrap"><div class="eyebrow">Come meet us</div><h1>Contact Lucky Roll13 in Kiryat Motzkin</h1><p class="lead">Tell us whether you are interested in Boxing, Brazilian Jiu-Jitsu, Kids classes, MMA, or Personal Training, and we will guide you to the right program and location.</p></div></section>
   <section class="section"><div class="wrap contact">
     <h2>Lucky Roll13</h2>
     <p class="lead">📍 <strong>Main location:</strong> 26 Menachem Begin St., Kiryat Motzkin<br/>📍 <strong>Goshen Community Center location:</strong> 23A KKL St., Kiryat Motzkin<br/>📞 <a href="tel:+972546420206"><bdi dir="ltr">054-642-0206</bdi></a><br/>Service area: Kiryat Motzkin and Krayot</p>

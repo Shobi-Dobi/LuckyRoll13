@@ -14,7 +14,7 @@ const pageCopy = {
     he: {
       title: 'מערכת שעות אימונים | ג׳יו ג׳יטסו, אגרוף ו־MMA | Lucky Roll13',
       description: 'מערכת השעות המעודכנת של Lucky Roll13 לילדים ולבוגרים בשני סניפים בקריית מוצקין: סניף נווה גנים במנחם בגין 26 וסניף מתנ״ס גושן בקק״ל 23א׳.',
-      h1: 'מערכת שעות האימונים של Lucky Roll13',
+      h1: 'מערכת שעות אימוני אומנויות לחימה בקריית מוצקין',
       eyebrow: 'LUCKY ROLL13 · מערכת שעות',
       intro: 'ב־Lucky Roll13 מתקיימים אימוני ילדים ובוגרים, ג׳יו־ג׳יטסו ברזילאי (BJJ), אגרוף ו־MMA. כאן תמצאו את מערכת השעות המעודכנת בסניף נווה גנים ברחוב מנחם בגין 26 ובסניף מתנ״ס גושן ברחוב קק״ל 23א׳, שניהם בקריית מוצקין.',
       breadcrumb: 'מערכת שעות',
@@ -32,7 +32,7 @@ const pageCopy = {
     en: {
       title: 'Training Schedule | BJJ, Boxing & MMA | Lucky Roll13',
       description: 'View the current Lucky Roll13 timetable for children and adults at two Kiryat Motzkin locations: Neve Ganim at 26 Menachem Begin St. and Matnas Goshen at 23A KKL St.',
-      h1: 'Lucky Roll13 Training Schedule',
+      h1: 'Martial Arts Training Schedule in Kiryat Motzkin',
       eyebrow: 'LUCKY ROLL13 · TRAINING SCHEDULE',
       intro: 'Lucky Roll13 offers classes for children and adults, Brazilian Jiu-Jitsu (BJJ), Boxing and MMA. This page shows the current schedule at the Neve Ganim location at 26 Menachem Begin St. and the Matnas Goshen location at 23A KKL St., both in Kiryat Motzkin.',
       breadcrumb: 'Training Schedule',

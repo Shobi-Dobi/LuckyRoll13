@@ -10,7 +10,7 @@ import { renderSitemap } from './sitemap-data.mjs';
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDirectory, '..');
 const productionOrigin = 'https://luckyroll13.com';
-const styleAssetVersion = '20261024-2';
+const styleAssetVersion = '20261106-1';
 const scriptAssetVersion = '20261101-1';
 const eventAssetVersion = '20260928-1';
 
