@@ -17,7 +17,7 @@ export const sitemapLastModifiedByRoute = Object.freeze({
   'javier-zaruski-seminar': '2026-10-26',
   'kiryat-motzkin': '2026-11-01',
   goshen: '2026-11-06',
-  schedule: '2026-11-06',
+  schedule: '2026-11-07',
   contact: '2026-11-06',
   accessibility: '2026-10-26',
   guide: '2026-10-26'

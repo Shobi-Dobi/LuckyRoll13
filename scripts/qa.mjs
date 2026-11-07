@@ -214,7 +214,7 @@ if (!locations.kiryatMotzkin.containedInPlace?.name?.he?.includes('נווה גנ
 if (businessData.logo !== 'https://luckyroll13.com/assets/images/luckyroll13-header-logo-1200.webp') fail('central data: current rectangular logo URL is inconsistent');
 if (locations.goshenKiryatMotzkin.address.he !== expectedGoshenAddress.he || locations.goshenKiryatMotzkin.address.en !== expectedGoshenAddress.en) fail('central data: Goshen address does not match the approved source of truth');
 if (locations.goshenKiryatMotzkin.schemaType !== 'SportsActivityLocation') fail('central data: Goshen must be represented as a SportsActivityLocation');
-if (scheduleLastUpdated.iso !== '2026-10-24') fail('central data: lastUpdated must reflect the approved Goshen schedule change');
+if (scheduleLastUpdated.iso !== '2026-11-07') fail('central data: lastUpdated must reflect the approved Friday Neve Ganim schedule change');
 if (tuesdayMma.length !== 1 || tuesdayMma[0].time !== '14:30–15:30' || tuesdayMma[0].audience.he !== 'גילאי 8–13') fail('central data: Tuesday MMA must remain 14:30–15:30 for ages 8–13');
 if (locations.kiryatMotzkin.dayGroups.some((group) => group.days.includes('monday') && group.sessions.some((session) => session.training.en === 'MMA'))) fail('central data: MMA was incorrectly moved to Monday');
 if (goshenSessions.length !== 3) fail('central data: Goshen must contain the three approved age-group sessions');
@@ -225,8 +225,9 @@ if (locations.goshenKiryatMotzkin.dayGroups.some((group) => group.days.join(',')
 for (const [day, sessions] of [['sunday', sundaySessions], ['wednesday', wednesdaySessions]]) {
   if (!sessions.some((session) => session.time === '20:30–21:30' && session.training.he === 'ג׳יו־ג׳יטסו' && session.audience.he === 'נערים ובוגרים')) fail(`central data: ${day} BJJ 20:30–21:30 for teens and adults is missing`);
 }
-if (!fridaySessions.some((session) => session.time === '08:00–09:00' && session.training.he === 'אימון בוקר' && session.audience.he === '')) fail('central data: Friday 08:00–09:00 must remain generic Morning training');
+if (!fridaySessions.some((session) => session.time === '08:00–09:00' && session.training.he === 'ג׳יו־ג׳יטסו — אימון בוקר' && session.training.en === 'Brazilian Jiu-Jitsu (BJJ) — Morning training' && session.service === 'bjj')) fail('central data: Friday 08:00–09:00 must be BJJ morning training at Neve Ganim');
 if (!fridaySessions.some((session) => session.time === '09:00–10:00' && session.training.he === 'אגרוף לנשים' && session.training.en === "Women's Boxing" && session.audience.he === 'לנשים בלבד')) fail('central data: Friday women-only boxing 09:00–10:00 is missing');
+if (!fridaySessions.some((session) => session.time === '10:00–12:00' && session.training.he === 'מזרן פתוח' && session.training.en === 'Open mat' && session.audience.he === 'פתוח לכולם' && session.audience.en === 'Open to everyone' && session.service === 'bjj')) fail('central data: Friday 10:00–12:00 open mat must be open to everyone at Neve Ganim');
 
 const titles = new Map();
 const descriptions = new Map();

@@ -1,7 +1,7 @@
 export const scheduleLastUpdated = {
-  iso: '2026-10-24',
-  he: '24 באוקטובר 2026',
-  en: 'October 24, 2026'
+  iso: '2026-11-07',
+  he: '7 בנובמבר 2026',
+  en: 'November 7, 2026'
 };
 
 export const business = {
@@ -89,7 +89,8 @@ export const locations = {
         sessions: [
           {
             time: '08:00–09:00',
-            training: { he: 'אימון בוקר', en: 'Morning training' },
+            service: 'bjj',
+            training: { he: 'ג׳יו־ג׳יטסו — אימון בוקר', en: 'Brazilian Jiu-Jitsu (BJJ) — Morning training' },
             audience: { he: '', en: '' }
           },
           {
@@ -100,8 +101,9 @@ export const locations = {
           },
           {
             time: '10:00–12:00',
+            service: 'bjj',
             training: { he: 'מזרן פתוח', en: 'Open mat' },
-            audience: { he: '', en: '' }
+            audience: { he: 'פתוח לכולם', en: 'Open to everyone' }
           },
           {
             time: '12:00–13:00',
