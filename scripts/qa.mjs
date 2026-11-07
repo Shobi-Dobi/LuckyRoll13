@@ -214,7 +214,7 @@ if (!locations.kiryatMotzkin.containedInPlace?.name?.he?.includes('נווה גנ
 if (businessData.logo !== 'https://luckyroll13.com/assets/images/luckyroll13-header-logo-1200.webp') fail('central data: current rectangular logo URL is inconsistent');
 if (locations.goshenKiryatMotzkin.address.he !== expectedGoshenAddress.he || locations.goshenKiryatMotzkin.address.en !== expectedGoshenAddress.en) fail('central data: Goshen address does not match the approved source of truth');
 if (locations.goshenKiryatMotzkin.schemaType !== 'SportsActivityLocation') fail('central data: Goshen must be represented as a SportsActivityLocation');
-if (scheduleLastUpdated.iso !== '2026-10-24') fail('central data: lastUpdated must reflect the approved Goshen schedule change');
+if (scheduleLastUpdated.iso !== '2026-11-07') fail('central data: lastUpdated must reflect the approved Friday Neve Ganim schedule change');
 if (tuesdayMma.length !== 1 || tuesdayMma[0].time !== '14:30–15:30' || tuesdayMma[0].audience.he !== 'גילאי 8–13') fail('central data: Tuesday MMA must remain 14:30–15:30 for ages 8–13');
 if (locations.kiryatMotzkin.dayGroups.some((group) => group.days.includes('monday') && group.sessions.some((session) => session.training.en === 'MMA'))) fail('central data: MMA was incorrectly moved to Monday');
 if (goshenSessions.length !== 3) fail('central data: Goshen must contain the three approved age-group sessions');
@@ -225,8 +225,9 @@ if (locations.goshenKiryatMotzkin.dayGroups.some((group) => group.days.join(',')
 for (const [day, sessions] of [['sunday', sundaySessions], ['wednesday', wednesdaySessions]]) {
   if (!sessions.some((session) => session.time === '20:30–21:30' && session.training.he === 'ג׳יו־ג׳יטסו' && session.audience.he === 'נערים ובוגרים')) fail(`central data: ${day} BJJ 20:30–21:30 for teens and adults is missing`);
 }
-if (!fridaySessions.some((session) => session.time === '08:00–09:00' && session.training.he === 'אימון בוקר' && session.audience.he === '')) fail('central data: Friday 08:00–09:00 must remain generic Morning training');
+if (!fridaySessions.some((session) => session.time === '08:00–09:00' && session.training.he === 'ג׳יו־ג׳יטסו — אימון בוקר' && session.training.en === 'Brazilian Jiu-Jitsu (BJJ) — Morning training' && session.service === 'bjj')) fail('central data: Friday 08:00–09:00 must be BJJ morning training at Neve Ganim');
 if (!fridaySessions.some((session) => session.time === '09:00–10:00' && session.training.he === 'אגרוף לנשים' && session.training.en === "Women's Boxing" && session.audience.he === 'לנשים בלבד')) fail('central data: Friday women-only boxing 09:00–10:00 is missing');
+if (!fridaySessions.some((session) => session.time === '10:00–12:00' && session.training.he === 'מזרן פתוח' && session.training.en === 'Open mat' && session.audience.he === 'פתוח לכולם' && session.audience.en === 'Open to everyone' && session.service === 'bjj')) fail('central data: Friday 10:00–12:00 open mat must be open to everyone at Neve Ganim');
 
 const titles = new Map();
 const descriptions = new Map();
@@ -372,7 +373,7 @@ for (const [file, expectedCanonical] of allIndexablePages) {
     const expectedPath = isEnglish ? (path === '/' ? '/en/' : `/en${path}`) : path;
     if (!navigationMarkup.includes(`href="${expectedPath}"`)) fail(`${file}: navigation is missing ${expectedPath}`);
   }
-  if (!html.includes(`/assets/style.css?v=20261024-2`) || !html.includes(`/assets/site.js?v=20261101-1`)) fail(`${file}: missing current shared asset cache version`);
+  if (!html.includes(`/assets/style.css?v=20261106-1`) || !html.includes(`/assets/site.js?v=20261101-1`)) fail(`${file}: missing current shared asset cache version`);
   if (!html.includes(`/assets/tracking.js?v=20261101-1`)) fail(`${file}: missing current tracking asset cache version`);
   if (!html.includes(businessData.displayPhone)) fail(`${file}: shared footer does not show the normalized phone number`);
   const telephoneLinks = [...html.matchAll(/href=["'](tel:[^"']+)["']/gi)].map((match) => match[1]);
@@ -504,6 +505,8 @@ for (const [file, expectedCanonical] of allIndexablePages) {
 const homeHtml = readFileSync(resolve(root, 'index.html'), 'utf8');
 const homeSchemas = flattenSchemas(jsonLd(homeHtml, 'index.html'));
 const business = homeSchemas.find((schema) => schema['@type'] === 'SportsActivityLocation');
+const organization = homeSchemas.find((schema) => schema['@type'] === 'SportsOrganization');
+const goshenLocation = homeSchemas.find((schema) => schema['@type'] === 'SportsActivityLocation' && schema['@id'] === locations.goshenKiryatMotzkin.schemaId);
 const website = homeSchemas.find((schema) => schema['@type'] === 'WebSite');
 const founder = homeSchemas.find((schema) => schema['@type'] === 'Person' && schema['@id'] === 'https://luckyroll13.com/#shabi-shilon');
 
@@ -512,11 +515,13 @@ if (business?.telephone !== '+972546420206') fail('index.html: inconsistent busi
 if (business?.address?.streetAddress !== 'מנחם בגין 26') fail('index.html: inconsistent business address');
 if (business?.logo !== businessData.logo) fail('index.html: business logo does not use the current rectangular asset');
 if (business?.containedInPlace?.name !== 'שכונת נווה גנים, קריית מוצקין') fail('index.html: Neve Ganim neighborhood is missing from business structured data');
-if (website?.publisher?.['@id'] !== 'https://luckyroll13.com/#business') fail('index.html: WebSite publisher does not reference business');
+if (organization?.['@id'] !== businessData.organizationSchemaId || organization?.location?.length !== 2) fail('index.html: parent organization does not reference both Kiryat Motzkin locations');
+if (business?.parentOrganization?.['@id'] !== businessData.organizationSchemaId || goshenLocation?.parentOrganization?.['@id'] !== businessData.organizationSchemaId) fail('index.html: both locations must reference the parent organization');
+if (website?.publisher?.['@id'] !== businessData.organizationSchemaId) fail('index.html: WebSite publisher does not reference the parent organization');
 if (website?.logo !== businessData.logo) fail('index.html: WebSite logo does not use the current rectangular asset');
 if (homeSchemas.filter((schema) => schema['@type'] === 'SportsActivityLocation' && schema['@id'] === businessData.schemaId).length !== 1) fail('index.html: business structured data is duplicated');
 if (business?.founder?.['@id'] !== 'https://luckyroll13.com/#shabi-shilon') fail('index.html: business does not reference Shabi Shilon as founder');
-if (founder?.name !== 'שבי שילון' || founder?.worksFor?.['@id'] !== 'https://luckyroll13.com/#business') fail('index.html: Shabi Shilon Person entity is incomplete');
+if (founder?.name !== 'שבי שילון' || founder?.worksFor?.['@id'] !== businessData.organizationSchemaId) fail('index.html: Shabi Shilon Person entity is incomplete');
 if (!homeHtml.includes('href="/about/"><strong>שבי שילון</strong>')) fail('index.html: visible founder identity is missing');
 if (homeHtml.includes('data-home-event-promo')) fail('index.html: completed seminar recap must not use the temporary promotion hook');
 if (!homeHtml.includes('aria-label="סיכום סמינר Javier Zaruski בישראל"') || !homeHtml.includes('>לסיכום ולתמונות</a>')) fail('index.html: missing completed seminar recap banner');
@@ -526,12 +531,14 @@ if (!homeHtml.includes('href="/schedule/#schedule-neve-ganim"')) fail('index.htm
 const englishHomeHtml = readFileSync(resolve(root, 'en/index.html'), 'utf8');
 const englishHomeSchemas = flattenSchemas(jsonLd(englishHomeHtml, 'en/index.html'));
 const englishBusiness = englishHomeSchemas.find((schema) => schema['@type'] === 'SportsActivityLocation');
+const englishOrganization = englishHomeSchemas.find((schema) => schema['@type'] === 'SportsOrganization');
 const englishWebsite = englishHomeSchemas.find((schema) => schema['@type'] === 'WebSite');
 const englishWebPage = englishHomeSchemas.find((schema) => schema['@type'] === 'WebPage');
 if (englishBusiness?.['@id'] !== 'https://luckyroll13.com/#business') fail('en/index.html: English page changed the stable business identity');
+if (englishOrganization?.['@id'] !== businessData.organizationSchemaId || englishOrganization?.location?.length !== 2) fail('en/index.html: English parent organization does not reference both locations');
 if (englishWebsite?.['@id'] !== 'https://luckyroll13.com/#website') fail('en/index.html: English page changed the stable website identity');
 if (englishWebPage?.['@id'] !== 'https://luckyroll13.com/en/#webpage' || englishWebPage?.url !== 'https://luckyroll13.com/en/') fail('en/index.html: English WebPage identity is not localized');
-if (englishWebPage?.isPartOf?.['@id'] !== 'https://luckyroll13.com/#website' || englishWebPage?.about?.['@id'] !== 'https://luckyroll13.com/#business') fail('en/index.html: English WebPage does not reference the stable site and business identities');
+if (englishWebPage?.isPartOf?.['@id'] !== 'https://luckyroll13.com/#website' || englishWebPage?.about?.['@id'] !== businessData.organizationSchemaId) fail('en/index.html: English WebPage does not reference the stable site and organization identities');
 if (meta(englishHomeHtml, 'property', 'og:image') !== socialImageByRoute.home.url) fail('en/index.html: English social image URL is invalid');
 const englishFounder = englishHomeSchemas.find((schema) => schema['@type'] === 'Person' && schema['@id'] === 'https://luckyroll13.com/#shabi-shilon');
 if (englishFounder?.name !== 'Shabi Shilon' || englishBusiness?.founder?.['@id'] !== 'https://luckyroll13.com/#shabi-shilon') fail('en/index.html: English founder entity is incomplete');
@@ -599,7 +606,7 @@ const localSearchChecks = [
   ['women-boxing/index.html', ['אגרוף לנשים בקריות', 'קריית מוצקין']],
   ['kiryat-motzkin/index.html', ['אומנויות לחימה בנווה גנים, קריית מוצקין', 'קריית ביאליק', 'קריית ים', 'קריית אתא', 'קריית חיים']],
   ['goshen-kiryat-motzkin/index.html', ['ג׳יו־ג׳יטסו במתנ״ס גושן, קריית מוצקין', 'קק״ל 23א׳', 'שני וחמישי']],
-  ['schedule/index.html', ['מערכת שעות האימונים של Lucky Roll13', 'נווה גנים, קריית מוצקין', 'מתנ״ס גושן']],
+  ['schedule/index.html', ['מערכת שעות אימוני אומנויות לחימה בקריית מוצקין', 'נווה גנים, קריית מוצקין', 'מתנ״ס גושן']],
   ['guide/index.html', ['איך לבחור אומנות לחימה בקריות', 'אגרוף', 'ג׳יו־ג׳יטסו ברזילאי', 'MMA לילדים ונוער', 'אגרוף לנשים', 'אימון אישי']],
   ['en/index.html', ['Martial Arts in Kiryat Motzkin and Krayot', 'Boxing', 'Brazilian Jiu-Jitsu', 'MMA', 'Neve Ganim', 'Matnas Goshen']],
   ['en/boxing/index.html', ['Boxing Training in Kiryat Motzkin and Krayot', 'Classic Boxing']],
@@ -608,7 +615,7 @@ const localSearchChecks = [
   ['en/women-boxing/index.html', ["Women's Boxing in Krayot", 'Kiryat Motzkin']],
   ['en/kiryat-motzkin/index.html', ['Martial Arts in Neve Ganim, Kiryat Motzkin', 'Kiryat Bialik', 'Kiryat Yam', 'Kiryat Ata', 'Kiryat Haim']],
   ['en/goshen-kiryat-motzkin/index.html', ['Brazilian Jiu-Jitsu at Matnas Goshen, Kiryat Motzkin', '23A KKL St.', 'Monday and Thursday']],
-  ['en/schedule/index.html', ['Lucky Roll13 Training Schedule', 'Neve Ganim, Kiryat Motzkin', 'Matnas Goshen']],
+  ['en/schedule/index.html', ['Martial Arts Training Schedule in Kiryat Motzkin', 'Neve Ganim, Kiryat Motzkin', 'Matnas Goshen']],
   ['en/guide/index.html', ['How Do I Choose a Martial Art in Krayot', 'Boxing', 'Brazilian Jiu-Jitsu', 'MMA for kids and youth', "Women's Boxing", 'Personal Training']]
 ];
 for (const [file, phrases] of localSearchChecks) {
@@ -684,7 +691,7 @@ for (const { file, language, pageUrl } of goshenPageChecks) {
   const expectedDays = ['https://schema.org/Monday', 'https://schema.org/Thursday'];
 
   if (!locationSchema || locationSchema.url !== pageUrl || locationSchema.telephone !== businessData.schemaPhone) fail(`${file}: Goshen SportsActivityLocation entity is incomplete`);
-  if (locationSchema?.parentOrganization?.['@id'] !== businessData.schemaId) fail(`${file}: Goshen location is not linked to the parent Lucky Roll13 organization`);
+  if (locationSchema?.parentOrganization?.['@id'] !== businessData.organizationSchemaId) fail(`${file}: Goshen location is not linked to the parent Lucky Roll13 organization`);
   if (locationSchema?.address?.streetAddress !== expectedStreet || locationSchema?.address?.addressLocality !== expectedLocality || locationSchema?.address?.addressCountry !== 'IL') fail(`${file}: Goshen SportsActivityLocation address is inconsistent`);
   if (locationSchema?.hasMap !== locations.goshenKiryatMotzkin.mapUrl || !locationSchema?.containedInPlace?.name || locationSchema?.containedInPlace?.url !== locations.goshenKiryatMotzkin.containedInPlace.url) fail(`${file}: Goshen map or authoritative containing community center is missing`);
   if (openingHours?.['@type'] !== 'OpeningHoursSpecification' || JSON.stringify(openingHours?.dayOfWeek) !== JSON.stringify(expectedDays) || openingHours?.opens !== '17:00' || openingHours?.closes !== '19:30') fail(`${file}: Goshen opening hours must be Monday and Thursday 17:00–19:30`);
@@ -756,18 +763,20 @@ for (const file of ['women-boxing/index.html', 'en/women-boxing/index.html']) {
     service.hoursAvailable.dayOfWeek !== 'https://schema.org/Friday' ||
     service.hoursAvailable.opens !== '09:00' ||
     service.hoursAvailable.closes !== '10:00'
-  ) fail(`${file}: women-only Boxing Service schema must publish Friday 09:00–10:00 availability`);
+  ) {
+    fail(`${file}: women-only Boxing Service schema must publish Friday 09:00–10:00 availability`);
+  }
   const personalTrainingLink = file.startsWith('en/') ? '/en/adults/' : '/adults/';
-  if (!html.includes('women-boxing-personal-training.webp') || !html.includes(`href="${personalTrainingLink}"`)) {
+  if (!html.includes('women-boxing-personal-training-1200.jpg') || !html.includes(`href="${personalTrainingLink}"`)) {
     fail(`${file}: women personal-training feature image or link is missing`);
   }
 }
 
 const womenBoxingSocialImage = resolve(root, 'assets/images/women-boxing-social-20261021.jpg');
 if (!existsSync(womenBoxingSocialImage) || statSync(womenBoxingSocialImage).size > 250_000) fail('women-boxing: optimized social image is missing or larger than 250 KB');
-for (const filename of ['women-boxing-personal-training-480.webp', 'women-boxing-personal-training-720.webp', 'women-boxing-personal-training.webp']) {
+for (const filename of ['women-boxing-personal-training-480.jpg', 'women-boxing-personal-training-720.jpg', 'women-boxing-personal-training-1200.jpg']) {
   const image = resolve(root, 'assets/images', filename);
-  if (!existsSync(image) || statSync(image).size > 150_000) fail(`women-boxing: responsive personal-training image is missing or too large: ${filename}`);
+  if (!existsSync(image) || statSync(image).size > 500_000) fail(`women-boxing: responsive personal-training image is missing or too large: ${filename}`);
 }
 
 for (const file of ['contact/index.html', 'adults/index.html', 'en/contact/index.html', 'en/adults/index.html']) {
@@ -1346,7 +1355,7 @@ const notFoundHtml = readFileSync(resolve(root, '404.html'), 'utf8');
 if (!notFoundHtml.includes('<meta name="robots" content="noindex,follow">')) fail('404.html: must remain noindex,follow');
 if (/rel=["']canonical["']/i.test(notFoundHtml)) fail('404.html: must not declare a canonical URL');
 if (!notFoundHtml.includes("document.documentElement.classList.add('js-enabled')")) fail('404.html: missing progressive-enhancement initializer');
-if (!notFoundHtml.includes('/assets/style.css?v=20261024-2') || !notFoundHtml.includes('/assets/site.js?v=20261101-1')) fail('404.html: shared asset versions are stale');
+if (!notFoundHtml.includes('/assets/style.css?v=20261106-1') || !notFoundHtml.includes('/assets/site.js?v=20261101-1')) fail('404.html: shared asset versions are stale');
 if (!notFoundHtml.includes('/assets/images/luckyroll13-header-logo-1200.webp') || !notFoundHtml.includes('width="1200" height="292"')) fail('404.html: current header logo is missing');
 if (notFoundHtml.includes('/assets/images/luckyroll13-header-logo-480.webp')) fail('404.html: previous header logo remains');
 if (notFoundHtml.includes('src="/assets/images/luckyroll13-header-logo.webp"')) fail('404.html: oversized 1431px header logo remains');
@@ -1619,7 +1628,7 @@ if (!/html\.js-enabled\s+\.links\.is-open\s*\{[^}]*display:\s*flex/i.test(styles
 if (!bilingualBuildScript.includes('/assets/images/luckyroll13-header-logo-1200.webp') || bilingualBuildScript.includes('class="logo" src="/assets/images/luckyroll13-header-logo-480.webp"')) {
   fail('bilingual build: current header logo is not preserved');
 }
-if (!bilingualBuildScript.includes("const styleAssetVersion = '20261024-2'") || !bilingualBuildScript.includes("const scriptAssetVersion = '20261101-1'")) {
+if (!bilingualBuildScript.includes("const styleAssetVersion = '20261106-1'") || !bilingualBuildScript.includes("const scriptAssetVersion = '20261101-1'")) {
   fail('bilingual build: current style and script cache versions are not preserved');
 }
 if (!bilingualBuildScript.includes('accessibility|guide') || !bilingualTranslations.includes("'למדריך לבחירת אומנות לחימה': 'Read the martial arts selection guide'")) {

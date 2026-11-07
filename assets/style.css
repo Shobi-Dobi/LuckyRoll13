@@ -91,13 +91,13 @@ html.js-enabled .links a, html.js-enabled .links a:not(.cta) { width: 100%; padd
 .breadcrumbs ol { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0; padding: 0; list-style: none; }
 .breadcrumbs li:not(:last-child)::after { content: "/"; margin-inline-start: 8px; color: #66717c; }
 .breadcrumbs a { text-underline-offset: 4px; }
-.schedule-locations { display: grid; gap: 24px; margin-top: 34px; }
-.schedule-location { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--blue); border-radius: 22px; padding: clamp(20px, 4vw, 32px); }
+.schedule-locations { display: grid; gap: 24px; margin-top: 34px; min-width: 0; }
+.schedule-location { min-width: 0; background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--blue); border-radius: 22px; padding: clamp(20px, 4vw, 32px); }
 .schedule-location--goshen { border-top-color: #e34b4b; }
 .schedule-location h2 { margin-top: 0; }
 .schedule-location address { color: var(--muted); font-style: normal; }
 .schedule-updated { color: var(--muted); font-size: 15px; }
-.schedule-table-wrap { overflow-x: auto; margin-top: 24px; border: 1px solid #303844; border-radius: 16px; }
+.schedule-table-wrap { width: 100%; max-width: 100%; overflow-x: auto; margin-top: 24px; border: 1px solid #303844; border-radius: 16px; }
 .schedule-table-wrap:focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
 .schedule-table { width: 100%; min-width: 620px; border-collapse: collapse; background: #0b0e12; }
 .schedule-table caption { padding: 16px; color: var(--text); font-size: 18px; font-weight: 800; text-align: start; }

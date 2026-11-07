@@ -1,11 +1,12 @@
 export const scheduleLastUpdated = {
-  iso: '2026-10-24',
-  he: '24 באוקטובר 2026',
-  en: 'October 24, 2026'
+  iso: '2026-11-07',
+  he: '7 בנובמבר 2026',
+  en: 'November 7, 2026'
 };
 
 export const business = {
   name: 'Lucky Roll13',
+  organizationSchemaId: 'https://luckyroll13.com/#organization',
   schemaId: 'https://luckyroll13.com/#business',
   url: 'https://luckyroll13.com/',
   displayPhone: '054-642-0206',
@@ -88,7 +89,8 @@ export const locations = {
         sessions: [
           {
             time: '08:00–09:00',
-            training: { he: 'אימון בוקר', en: 'Morning training' },
+            service: 'bjj',
+            training: { he: 'ג׳יו־ג׳יטסו — אימון בוקר', en: 'Brazilian Jiu-Jitsu (BJJ) — Morning training' },
             audience: { he: '', en: '' }
           },
           {
@@ -99,8 +101,9 @@ export const locations = {
           },
           {
             time: '10:00–12:00',
+            service: 'bjj',
             training: { he: 'מזרן פתוח', en: 'Open mat' },
-            audience: { he: '', en: '' }
+            audience: { he: 'פתוח לכולם', en: 'Open to everyone' }
           },
           {
             time: '12:00–13:00',
@@ -131,7 +134,7 @@ export const locations = {
     accent: 'goshen',
     containedInPlace: {
       name: { he: 'מתנ״ס גושן', en: 'Matnas Goshen Community Center' },
-      url: 'https://www.mozkin.org.il/page.php?bc=AC5&id=140&m=42&type=matClass'
+      url: 'https://www.mozkin.org.il/page.php?ht=&id=1996&m=42&type=matClass'
     },
     dayGroups: [
       {
@@ -200,6 +203,7 @@ export function businessSchema(language) {
     alternateName: 'Lucky Roll13 – Boxing & Jiu-Jitsu',
     url: business.url,
     telephone: business.schemaPhone,
+    parentOrganization: { '@id': business.organizationSchemaId },
     logo: business.logo,
     image: business.image,
     address: postalAddress(locations.kiryatMotzkin, language),
@@ -221,7 +225,7 @@ export function goshenActivityLocationSchema(language) {
     name: `${business.name} – ${localized(location.name, language)}`,
     url: `https://luckyroll13.com${localized(location.route, language)}`,
     telephone: business.schemaPhone,
-    parentOrganization: { '@id': business.schemaId },
+    parentOrganization: { '@id': business.organizationSchemaId },
     address: postalAddress(location, language),
     containedInPlace: {
       '@type': 'Place',

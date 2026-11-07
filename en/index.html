@@ -100,7 +100,7 @@
 
   <link
     rel="stylesheet"
-    href="/assets/style.css?v=20261024-2"
+    href="/assets/style.css?v=20261106-1"
   >
 
   <script defer src="/assets/tracking.js?v=20261101-1"></script><script defer src="/assets/site.js?v=20261101-1"></script><script defer src="/assets/events.js?v=20260928-1"></script>
@@ -208,6 +208,30 @@
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "SportsOrganization",
+      "@id": "https://luckyroll13.com/#organization",
+      "name": "Lucky Roll13",
+      "alternateName": "Lucky Roll13 – Boxing & Jiu-Jitsu",
+      "url": "https://luckyroll13.com/",
+      "logo": "https://luckyroll13.com/assets/images/luckyroll13-header-logo-1200.webp",
+      "telephone": "+972546420206",
+      "founder": {
+        "@id": "https://luckyroll13.com/#shabi-shilon"
+      },
+      "location": [
+        {
+          "@id": "https://luckyroll13.com/#business"
+        },
+        {
+          "@id": "https://luckyroll13.com/#goshen-kiryat-motzkin"
+        }
+      ],
+      "sameAs": [
+        "https://www.facebook.com/luckyRoll13/",
+        "https://www.instagram.com/luckyroll13_boxing_jiujitsu/"
+      ]
+    },
+    {
       "@type": "SportsActivityLocation",
       "@id": "https://luckyroll13.com/#business",
       "name": "Lucky Roll13",
@@ -216,6 +240,9 @@
       "logo": "https://luckyroll13.com/assets/images/luckyroll13-header-logo-1200.webp",
       "image": "https://luckyroll13.com/assets/images/hero.webp",
       "telephone": "+972546420206",
+      "parentOrganization": {
+        "@id": "https://luckyroll13.com/#organization"
+      },
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "26 Menachem Begin St.",
@@ -305,6 +332,37 @@
       }
     },
     {
+      "@type": "SportsActivityLocation",
+      "@id": "https://luckyroll13.com/#goshen-kiryat-motzkin",
+      "name": "Lucky Roll13 – Goshen Community Center, Kiryat Motzkin",
+      "url": "https://luckyroll13.com/en/goshen-kiryat-motzkin/",
+      "telephone": "+972546420206",
+      "parentOrganization": {
+        "@id": "https://luckyroll13.com/#organization"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "23A KKL St.",
+        "addressLocality": "Kiryat Motzkin",
+        "addressCountry": "IL"
+      },
+      "containedInPlace": {
+        "@type": "Place",
+        "name": "Goshen Community Center",
+        "url": "https://www.mozkin.org.il/page.php?ht=&id=1996&m=42&type=matClass"
+      },
+      "hasMap": "https://www.google.com/maps/dir/?api=1&destination=%D7%9E%D7%AA%D7%A0%D7%B4%D7%A1%20%D7%92%D7%95%D7%A9%D7%9F%2C%20%D7%A9%D7%93%D7%A8%D7%95%D7%AA%20%D7%A7%D7%A7%D7%B4%D7%9C%2023%D7%90%2C%20%D7%A7%D7%A8%D7%99%D7%99%D7%AA%20%D7%9E%D7%95%D7%A6%D7%A7%D7%99%D7%9F",
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "https://schema.org/Monday",
+          "https://schema.org/Thursday"
+        ],
+        "opens": "17:00",
+        "closes": "19:30"
+      }
+    },
+    {
       "@type": "Person",
       "@id": "https://luckyroll13.com/#shabi-shilon",
       "name": "Shabi Shilon",
@@ -313,7 +371,7 @@
       "image": "https://luckyroll13.com/assets/images/shabi-personal-1.jpeg",
       "jobTitle": "Founder of Lucky Roll13 and Boxing and Brazilian Jiu-Jitsu coach",
       "worksFor": {
-        "@id": "https://luckyroll13.com/#business"
+        "@id": "https://luckyroll13.com/#organization"
       },
       "knowsAbout": [
         "Boxing",
@@ -330,7 +388,7 @@
       "name": "Lucky Roll13",
       "alternateName": "Lucky Roll13 – Boxing & Jiu-Jitsu",
       "publisher": {
-        "@id": "https://luckyroll13.com/#business"
+        "@id": "https://luckyroll13.com/#organization"
       },
       "logo": "https://luckyroll13.com/assets/images/luckyroll13-header-logo-1200.webp",
       "inLanguage": "en-US"
@@ -346,7 +404,7 @@
         "@id": "https://luckyroll13.com/#website"
       },
       "about": {
-        "@id": "https://luckyroll13.com/#business"
+        "@id": "https://luckyroll13.com/#organization"
       }
     }
   ]
