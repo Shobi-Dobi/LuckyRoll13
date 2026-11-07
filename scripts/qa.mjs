@@ -379,6 +379,9 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   const telephoneLinks = [...html.matchAll(/href=["'](tel:[^"']+)["']/gi)].map((match) => match[1]);
   if (!telephoneLinks.length || telephoneLinks.some((href) => href !== `tel:${businessData.schemaPhone}`)) fail(`${file}: telephone links must use tel:${businessData.schemaPhone}`);
   if (/ההרשמה לשנת האימונים החדשה פתוחה|registration for the new training year is open/i.test(html)) fail(`${file}: stale training-year registration claim remains`);
+  if (/קריות\s+ובנשר|בקריות\s+ובנשר|הקריות\s+ונשר|Krayot\s+and\s+Nesher|in\s+Krayot\s+and\s+Nesher/i.test(html)) {
+    fail(`${file}: retired Nesher service-area wording remains in an indexable page`);
+  }
   if (isEnglish && html.replace('>עברית<', '><').match(/[\u0590-\u05ff]/)) fail(`${file}: untranslated Hebrew text remains`);
   if (isEnglish && /translate\.google|googtrans|google\.translate/i.test(html)) fail(`${file}: runtime translation widget detected`);
   if (html.includes('https://luckyroll13.com/en/assets/')) fail(`${file}: production asset URL was incorrectly localized under /en/`);
