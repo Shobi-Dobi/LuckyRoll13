@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { commonTranslations, pageTranslations } from './english-translations.mjs';
-import { businessSchema } from './locations-schedule-data.mjs';
+import { business, businessSchema } from './locations-schedule-data.mjs';
 import { renderGeneratedPage, renderSharedFooter } from './location-pages.mjs';
 import { pageMetadataOverrides, socialImageByRoute } from './seo-metadata.mjs';
 import { renderSitemap } from './sitemap-data.mjs';
@@ -228,6 +228,7 @@ function normalizeBusinessStructuredData(html, language, route) {
           value.alternateName = normalizedBusiness.alternateName;
           value.url = normalizedBusiness.url;
           value.telephone = normalizedBusiness.telephone;
+          value.email = normalizedBusiness.email;
           value.logo = normalizedBusiness.logo;
           value.image = normalizedBusiness.image;
           value.address = normalizedBusiness.address;
@@ -235,6 +236,11 @@ function normalizeBusinessStructuredData(html, language, route) {
           value.areaServed = normalizedBusiness.areaServed;
           value.sameAs = normalizedBusiness.sameAs;
           value.hasMap = normalizedBusiness.hasMap;
+          changed = true;
+        }
+
+        if (value['@id'] === business.organizationSchemaId && types.includes('SportsOrganization')) {
+          value.email = business.email;
           changed = true;
         }
 

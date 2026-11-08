@@ -11,6 +11,7 @@ export const business = {
   url: 'https://luckyroll13.com/',
   displayPhone: '054-642-0206',
   schemaPhone: '+972546420206',
+  email: 'just_shabi@luckyroll13.com',
   facebook: 'https://www.facebook.com/luckyRoll13/',
   instagram: 'https://www.instagram.com/luckyroll13_boxing_jiujitsu/',
   googleMaps: 'https://maps.google.com/?cid=8832126799717426719',
@@ -203,6 +204,7 @@ export function businessSchema(language) {
     alternateName: 'Lucky Roll13 – Boxing & Jiu-Jitsu',
     url: business.url,
     telephone: business.schemaPhone,
+    email: business.email,
     parentOrganization: { '@id': business.organizationSchemaId },
     logo: business.logo,
     image: business.image,
@@ -225,6 +227,7 @@ export function goshenActivityLocationSchema(language) {
     name: `${business.name} – ${localized(location.name, language)}`,
     url: `https://luckyroll13.com${localized(location.route, language)}`,
     telephone: business.schemaPhone,
+    email: business.email,
     parentOrganization: { '@id': business.organizationSchemaId },
     address: postalAddress(location, language),
     containedInPlace: {
