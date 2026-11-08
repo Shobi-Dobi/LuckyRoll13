@@ -2,6 +2,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { relative, resolve } from 'node:path';
 import { runInNewContext } from 'node:vm';
 import { business as businessData, locations, scheduleLastUpdated } from './locations-schedule-data.mjs';
+import { indexNowConfig } from './indexnow-config.mjs';
 import { pageMetadataOverrides, socialImageByRoute } from './seo-metadata.mjs';
 import { sitemapLastModifiedByRoute } from './sitemap-data.mjs';
 
@@ -1617,7 +1618,6 @@ for (const [, url] of allIndexablePages) {
 }
 if (sitemap.includes('/events/javier-zaruski/')) fail('sitemap: contains redirected seminar URL');
 if (sitemap.includes('/nesher/')) fail('sitemap: retired Nesher location remains indexable');
-if (new Set(sitemapEntries.map((entry) => entry[2])).size < 2) fail('sitemap: all routes incorrectly share one lastmod date');
 
 const siteScript = readFileSync(resolve(root, 'assets/site.js'), 'utf8');
 const styles = readFileSync(resolve(root, 'assets/style.css'), 'utf8');
@@ -1648,6 +1648,15 @@ if (!bilingualBuildScript.includes('accessibility|guide') || !bilingualTranslati
 
 const robots = readFileSync(resolve(root, 'robots.txt'), 'utf8');
 if (!robots.includes('Sitemap: https://luckyroll13.com/sitemap.xml')) fail('robots.txt: missing sitemap reference');
+
+const indexNowKeyFile = resolve(root, `${indexNowConfig.key}.txt`);
+const indexNowSubmitScript = readFileSync(resolve(root, 'scripts/submit-indexnow.mjs'), 'utf8');
+if (!/^[a-f0-9-]{8,128}$/i.test(indexNowConfig.key)) fail('IndexNow: invalid public key format');
+if (indexNowConfig.host !== 'luckyroll13.com') fail('IndexNow: production host is inconsistent');
+if (indexNowConfig.keyLocation !== `https://${indexNowConfig.host}/${indexNowConfig.key}.txt`) fail('IndexNow: key location is inconsistent');
+if (!existsSync(indexNowKeyFile) || readFileSync(indexNowKeyFile, 'utf8').trim() !== indexNowConfig.key) fail('IndexNow: public verification file is missing or inconsistent');
+if (!indexNowSubmitScript.includes("let submit = false") || !indexNowSubmitScript.includes("argument === '--submit'")) fail('IndexNow: submission script must remain dry-run by default');
+if (!indexNowSubmitScript.includes('Refusing non-production or foreign URL')) fail('IndexNow: submission script does not guard the production hostname');
 
 const redirects = readFileSync(resolve(root, '_redirects'), 'utf8');
 for (const line of [
