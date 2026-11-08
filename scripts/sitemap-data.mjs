@@ -4,23 +4,23 @@ const sitemapOrigin = 'https://luckyroll13.com';
 // only the affected route when its visible content, metadata or structured data
 // changes; a build by itself must not make every URL appear newly modified.
 export const sitemapLastModifiedByRoute = Object.freeze({
-  home: '2026-11-06',
-  boxing: '2026-11-01',
-  'women-boxing': '2026-11-06',
-  bjj: '2026-11-06',
-  kids: '2026-11-06',
-  mma: '2026-11-01',
-  adults: '2026-11-01',
-  about: '2026-10-26',
-  collaborations: '2026-10-26',
-  events: '2026-10-26',
-  'javier-zaruski-seminar': '2026-10-26',
-  'kiryat-motzkin': '2026-11-01',
-  goshen: '2026-11-06',
-  schedule: '2026-11-07',
-  contact: '2026-11-06',
-  accessibility: '2026-10-26',
-  guide: '2026-10-26'
+  home: '2026-11-08',
+  boxing: '2026-11-08',
+  'women-boxing': '2026-11-08',
+  bjj: '2026-11-08',
+  kids: '2026-11-08',
+  mma: '2026-11-08',
+  adults: '2026-11-08',
+  about: '2026-11-08',
+  collaborations: '2026-11-08',
+  events: '2026-11-08',
+  'javier-zaruski-seminar': '2026-11-08',
+  'kiryat-motzkin': '2026-11-08',
+  goshen: '2026-11-08',
+  schedule: '2026-11-08',
+  contact: '2026-11-08',
+  accessibility: '2026-11-08',
+  guide: '2026-11-08'
 });
 
 function escapeXml(value) {
