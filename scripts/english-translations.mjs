@@ -1080,6 +1080,8 @@ export const pageTranslations = {
     'אזור פעילות: קריית מוצקין והקריות': 'Service area: Kiryat Motzkin and Krayot',
     'הסניף הראשי:': 'Main location:',
     'סניף מתנ״ס גושן:': 'Goshen Community Center location:',
+    'דוא״ל לפניות ישירות:': 'Direct email:',
+    'שלחו דוא״ל': 'Send an email',
     '<a href="/bjj/">אימוני ג׳יו־ג׳יטסו</a>, <a href="/boxing/">אגרוף</a>, <a href="/women-boxing/">אגרוף לנשים</a>, MMA ואימוני ילדים מתקיימים בקריית מוצקין. בסניף גושן מתקיימים אימוני ג׳יו־ג׳יטסו לילדים ולבוגרים בימי שני וחמישי.': '<a href="/bjj/">Brazilian Jiu-Jitsu</a>, <a href="/boxing/">Boxing</a>, <a href="/women-boxing/">Women\'s Boxing</a>, MMA, and kids classes take place in Kiryat Motzkin. Brazilian Jiu-Jitsu classes for children and adults are held at the Goshen location on Mondays and Thursdays.',
     'מערכת שעות': 'Training schedule',
     'המיקום שלנו בקריית מוצקין': 'Our Kiryat Motzkin location',

@@ -206,7 +206,7 @@ const sundaySessions = daySessions(locations.kiryatMotzkin, 'sunday');
 const wednesdaySessions = daySessions(locations.kiryatMotzkin, 'wednesday');
 const goshenSessions = locations.goshenKiryatMotzkin.dayGroups.flatMap((group) => group.sessions);
 
-if (businessData.name !== 'Lucky Roll13' || businessData.displayPhone !== '054-642-0206' || businessData.schemaPhone !== '+972546420206') fail('central data: business name or phone does not match the approved source of truth');
+if (businessData.name !== 'Lucky Roll13' || businessData.displayPhone !== '054-642-0206' || businessData.schemaPhone !== '+972546420206' || businessData.email !== 'just_shabi@luckyroll13.com') fail('central data: business name, phone, or email does not match the approved source of truth');
 if (locations.kiryatMotzkin.address.he !== expectedKiryatAddress.he || locations.kiryatMotzkin.address.en !== expectedKiryatAddress.en) fail('central data: Kiryat Motzkin address does not match the approved source of truth');
 if (locations.kiryatMotzkin.name.he !== 'נווה גנים, קריית מוצקין' || locations.kiryatMotzkin.name.en !== 'Neve Ganim, Kiryat Motzkin') fail('central data: Neve Ganim location name is missing');
 if (locations.kiryatMotzkin.shortLabel.he !== 'נווה גנים' || locations.kiryatMotzkin.shortLabel.en !== 'Neve Ganim' || locations.kiryatMotzkin.scheduleAnchor !== 'schedule-neve-ganim') fail('central data: Neve Ganim label or schedule anchor is inconsistent');
@@ -376,6 +376,7 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   if (!html.includes(`/assets/style.css?v=20261106-1`) || !html.includes(`/assets/site.js?v=20261101-1`)) fail(`${file}: missing current shared asset cache version`);
   if (!html.includes(`/assets/tracking.js?v=20261101-1`)) fail(`${file}: missing current tracking asset cache version`);
   if (!html.includes(businessData.displayPhone)) fail(`${file}: shared footer does not show the normalized phone number`);
+  if (!html.includes(`href="mailto:${businessData.email}"`) || !html.includes(businessData.email)) fail(`${file}: shared footer does not show the approved direct email link`);
   const telephoneLinks = [...html.matchAll(/href=["'](tel:[^"']+)["']/gi)].map((match) => match[1]);
   if (!telephoneLinks.length || telephoneLinks.some((href) => href !== `tel:${businessData.schemaPhone}`)) fail(`${file}: telephone links must use tel:${businessData.schemaPhone}`);
   if (/ההרשמה לשנת האימונים החדשה פתוחה|registration for the new training year is open/i.test(html)) fail(`${file}: stale training-year registration claim remains`);
@@ -439,6 +440,7 @@ for (const [file, expectedCanonical] of allIndexablePages) {
     if (localBusiness.sameAs?.some((url) => /easy\.co\.il|b144\.co\.il/i.test(url))) fail(`${file}: LocalBusiness references an unapproved conflicting directory`);
     if (localBusiness.hasMap !== googleMapsBusinessUrl) fail(`${file}: LocalBusiness hasMap is not the exact Google Business Profile`);
     if (localBusiness.telephone !== businessData.schemaPhone) fail(`${file}: LocalBusiness telephone is inconsistent`);
+    if (localBusiness.email !== businessData.email) fail(`${file}: LocalBusiness email is inconsistent`);
     const expectedStreet = isEnglish
       ? locations.kiryatMotzkin.address.streetAddress.en
       : locations.kiryatMotzkin.address.streetAddress.he;
@@ -792,10 +794,16 @@ for (const file of ['contact/index.html', 'adults/index.html', 'en/contact/index
 for (const file of ['contact/index.html', 'en/contact/index.html']) {
   const html = readFileSync(resolve(root, file), 'utf8');
   const mainMarkup = html.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
+  if (!mainMarkup.includes(`href="mailto:${businessData.email}"`) || !mainMarkup.includes(businessData.email)) fail(`${file}: contact content is missing the approved direct email link`);
   const prefix = file.startsWith('en/') ? '/en' : '';
   for (const servicePath of [`${prefix}/bjj/`, `${prefix}/women-boxing/`]) {
     if (!mainMarkup.includes(`href="${servicePath}"`)) fail(`${file}: contact content is missing high-intent service link ${servicePath}`);
   }
+}
+
+{
+  const notFoundHtml = readFileSync(resolve(root, '404.html'), 'utf8');
+  if (!notFoundHtml.includes(`href="mailto:${businessData.email}"`) || !notFoundHtml.includes(businessData.email)) fail('404.html: footer is missing the approved direct email link');
 }
 
 for (const file of ['index.html', 'contact/index.html', 'schedule/index.html', 'goshen-kiryat-motzkin/index.html', 'en/index.html', 'en/contact/index.html', 'en/schedule/index.html', 'en/goshen-kiryat-motzkin/index.html']) {
