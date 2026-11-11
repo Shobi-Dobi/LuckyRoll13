@@ -6,3 +6,6 @@
 
 [build.processing.html]
   pretty_urls = true
+
+[[plugins]]
+  package = "./.netlify/plugins/indexnow-after-deploy"
