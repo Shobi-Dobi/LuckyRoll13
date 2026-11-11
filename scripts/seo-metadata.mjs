@@ -173,6 +173,16 @@ export const pageMetadataOverrides = {
       description: 'Boxing in Kiryat Motzkin and Krayot for beginners and advanced students, with group and personal training focused on technique, footwork, and fitness.'
     }
   },
+  'women-boxing': {
+    he: {
+      title: 'אגרוף נשים בקריית מוצקין והקריות | Lucky Roll13',
+      description: 'קבוצת אגרוף נשים בקריית מוצקין, סניף נווה גנים, בימי שישי 09:00–10:00. אימון מקצועי ותומך שמתאים גם למתחילות ללא ניסיון.'
+    },
+    en: {
+      title: "Women's Boxing in Kiryat Motzkin & Krayot | Lucky Roll13",
+      description: "Women's Boxing at the Neve Ganim location in Kiryat Motzkin, Fridays 09:00–10:00. Professional, supportive training suitable for complete beginners."
+    }
+  },
   kids: {
     he: {
       description: 'אימוני ג׳יו־ג׳יטסו ו־MMA לילדים בקריית מוצקין והקריות, בשני סניפים וקבוצות לפי גיל, עם דגש על ביטחון עצמי, משמעת, כושר וטכניקה.'
@@ -184,7 +194,7 @@ export const pageMetadataOverrides = {
   },
   'kiryat-motzkin': {
     he: {
-      title: 'אומנויות לחימה בנווה גנים, קריית מוצקין | Lucky Roll13'
+      title: 'אומנויות לחימה בקריית מוצקין | Lucky Roll13'
     },
     en: {
       title: 'Martial Arts in Neve Ganim, Kiryat Motzkin | Lucky Roll13',
