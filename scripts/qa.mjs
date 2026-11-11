@@ -103,6 +103,25 @@ function alternate(html, language) {
     .find((attributes) => attributes.rel === 'alternate' && attributes.hreflang === language)?.href;
 }
 
+function checkEncodedWhatsappText(html, file) {
+  const whatsappTextValues = [...html.matchAll(/href=["']https:\/\/wa\.me\/[^"'?]+\?text=([^"'&]*)/gi)]
+    .map((match) => match[1]);
+
+  for (const value of whatsappTextValues) {
+    if (/[^\x00-\x7f]/.test(value)) {
+      fail(`${file}: WhatsApp text parameter contains raw Unicode instead of percent-encoding`);
+    }
+    if (/%(?![0-9a-f]{2})/i.test(value)) {
+      fail(`${file}: WhatsApp text parameter contains an invalid percent escape`);
+    }
+    try {
+      decodeURIComponent(value);
+    } catch (error) {
+      fail(`${file}: WhatsApp text parameter cannot be decoded (${error.message})`);
+    }
+  }
+}
+
 function jsonLd(html, file) {
   const blocks = [];
   const pattern = /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
@@ -318,6 +337,7 @@ for (const [file, expectedCanonical] of allIndexablePages) {
   }
 
   const html = readFileSync(fullPath, 'utf8');
+  checkEncodedWhatsappText(html, file);
   const title = html.match(/<title>([\s\S]*?)<\/title>/i)?.[1].trim();
   const description = meta(html, 'name', 'description');
   const h1Count = (html.match(/<h1\b/gi) || []).length;
@@ -804,6 +824,7 @@ for (const file of ['contact/index.html', 'en/contact/index.html']) {
 
 {
   const notFoundHtml = readFileSync(resolve(root, '404.html'), 'utf8');
+  checkEncodedWhatsappText(notFoundHtml, '404.html');
   if (!notFoundHtml.includes(`href="mailto:${businessData.email}"`) || !notFoundHtml.includes(businessData.email)) fail('404.html: footer is missing the approved direct email link');
 }
 
