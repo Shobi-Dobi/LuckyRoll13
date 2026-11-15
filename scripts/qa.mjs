@@ -1674,6 +1674,7 @@ const indexNowKeyFile = resolve(root, `${indexNowConfig.key}.txt`);
 const indexNowSubmitScript = readFileSync(resolve(root, 'scripts/submit-indexnow.mjs'), 'utf8');
 const netlifyConfig = readFileSync(resolve(root, 'netlify.toml'), 'utf8');
 const indexNowDeployPluginPath = resolve(root, '.netlify/plugins/indexnow-after-deploy/index.js');
+const indexNowDeployManifestPath = resolve(root, '.netlify/plugins/indexnow-after-deploy/manifest.yml');
 const indexNowDeployPlugin = existsSync(indexNowDeployPluginPath) ? readFileSync(indexNowDeployPluginPath, 'utf8') : '';
 if (!/^[a-f0-9-]{8,128}$/i.test(indexNowConfig.key)) fail('IndexNow: invalid public key format');
 if (indexNowConfig.host !== 'luckyroll13.com') fail('IndexNow: production host is inconsistent');
@@ -1682,6 +1683,7 @@ if (!existsSync(indexNowKeyFile) || readFileSync(indexNowKeyFile, 'utf8').trim()
 if (!indexNowSubmitScript.includes("let submit = false") || !indexNowSubmitScript.includes("argument === '--submit'")) fail('IndexNow: submission script must remain dry-run by default');
 if (!indexNowSubmitScript.includes('Refusing non-production or foreign URL')) fail('IndexNow: submission script does not guard the production hostname');
 if (!netlifyConfig.includes('package = "./.netlify/plugins/indexnow-after-deploy"')) fail('IndexNow: Netlify production-deploy automation is not configured');
+if (!existsSync(indexNowDeployManifestPath) || !readFileSync(indexNowDeployManifestPath, 'utf8').includes('name: netlify-plugin-luckyroll13-indexnow')) fail('IndexNow: Netlify local plugin manifest is missing or inconsistent');
 if (!indexNowDeployPlugin.includes("context !== productionContext")) fail('IndexNow: Netlify automation must skip non-production deploys');
 if (!indexNowDeployPlugin.includes("['scripts/submit-indexnow.mjs', '--submit']")) fail('IndexNow: Netlify automation must use the guarded submission script');
 if (!indexNowDeployPlugin.includes('maximumAttempts = 3')) fail('IndexNow: Netlify automation must retry temporary post-deploy failures');
