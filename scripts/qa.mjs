@@ -213,8 +213,8 @@ function daySessions(location, day) {
 }
 
 const expectedKiryatAddress = {
-  he: 'מנחם בגין 26, קריית מוצקין',
-  en: '26 Menachem Begin St., Kiryat Motzkin'
+  he: 'רחוב מנחם בגין 26, נווה גנים, קריית מוצקין, 2623175',
+  en: '26 Menachem Begin Street, Neve Ganim, Kiryat Motzkin, 2623175'
 };
 const expectedGoshenAddress = {
   he: 'רחוב קק״ל 23א׳, קריית מוצקין — בתוך מתנ״ס גושן',
@@ -468,7 +468,7 @@ for (const [file, expectedCanonical] of allIndexablePages) {
     const expectedLocality = isEnglish
       ? locations.kiryatMotzkin.address.addressLocality.en
       : locations.kiryatMotzkin.address.addressLocality.he;
-    if (localBusiness.address?.streetAddress !== expectedStreet || localBusiness.address?.addressLocality !== expectedLocality || localBusiness.address?.addressCountry !== 'IL') fail(`${file}: LocalBusiness address is inconsistent`);
+    if (localBusiness.address?.streetAddress !== expectedStreet || localBusiness.address?.addressLocality !== expectedLocality || localBusiness.address?.postalCode !== '2623175' || localBusiness.address?.addressCountry !== 'IL') fail(`${file}: LocalBusiness address is inconsistent`);
     const actualAreas = Array.isArray(localBusiness.areaServed)
       ? localBusiness.areaServed.map((area) => [area['@type'], area.name])
       : [];
@@ -538,7 +538,7 @@ const founder = homeSchemas.find((schema) => schema['@type'] === 'Person' && sch
 
 if (business?.['@id'] !== 'https://luckyroll13.com/#business') fail('index.html: inconsistent business @id');
 if (business?.telephone !== '+972546420206') fail('index.html: inconsistent business telephone');
-if (business?.address?.streetAddress !== 'מנחם בגין 26') fail('index.html: inconsistent business address');
+if (business?.address?.streetAddress !== 'רחוב מנחם בגין 26' || business?.address?.postalCode !== '2623175') fail('index.html: inconsistent business address');
 if (business?.logo !== businessData.logo) fail('index.html: business logo does not use the current rectangular asset');
 if (business?.containedInPlace?.name !== 'שכונת נווה גנים, קריית מוצקין') fail('index.html: Neve Ganim neighborhood is missing from business structured data');
 if (organization?.['@id'] !== businessData.organizationSchemaId || organization?.location?.length !== 2) fail('index.html: parent organization does not reference both Kiryat Motzkin locations');

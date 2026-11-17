@@ -61,6 +61,7 @@ export const commonTranslations = {
   'קריית חיים': 'Kiryat Haim',
   'נשר': 'Nesher',
   'מנחם בגין 26': '26 Menachem Begin St.',
+  'רחוב מנחם בגין 26, נווה גנים, קריית מוצקין, 2623175': '26 Menachem Begin Street, Neve Ganim, Kiryat Motzkin, 2623175',
   'בתוך מתחם הגרייט שייפ': 'inside the Great Shape complex',
   'בתוך מתחם Great Shape': 'inside the Great Shape complex',
   'בתוך Great Shape': 'inside Great Shape',

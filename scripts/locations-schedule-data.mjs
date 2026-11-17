@@ -29,10 +29,11 @@ export const locations = {
     shortLabel: { he: 'נווה גנים', en: 'Neve Ganim' },
     scheduleAnchor: 'schedule-neve-ganim',
     address: {
-      he: 'מנחם בגין 26, קריית מוצקין',
-      en: '26 Menachem Begin St., Kiryat Motzkin',
-      streetAddress: { he: 'מנחם בגין 26', en: '26 Menachem Begin St.' },
+      he: 'רחוב מנחם בגין 26, נווה גנים, קריית מוצקין, 2623175',
+      en: '26 Menachem Begin Street, Neve Ganim, Kiryat Motzkin, 2623175',
+      streetAddress: { he: 'רחוב מנחם בגין 26', en: '26 Menachem Begin Street' },
       addressLocality: { he: 'קריית מוצקין', en: 'Kiryat Motzkin' },
+      postalCode: '2623175',
       addressCountry: 'IL'
     },
     mapUrl: business.googleMaps,
@@ -171,12 +172,14 @@ export function localized(value, language) {
 }
 
 export function postalAddress(location, language) {
-  return {
+  const address = {
     '@type': 'PostalAddress',
     streetAddress: localized(location.address.streetAddress, language),
     addressLocality: localized(location.address.addressLocality, language),
     addressCountry: location.address.addressCountry
   };
+  if (location.address.postalCode) address.postalCode = location.address.postalCode;
+  return address;
 }
 
 export function businessSchema(language) {
