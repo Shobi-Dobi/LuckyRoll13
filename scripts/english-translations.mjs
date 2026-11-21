@@ -766,6 +766,7 @@ export const pageTranslations = {
   },
 
   about: {
+    'הכרטיס המאומת של Lucky Roll13 ב־Mat Track': 'Lucky Roll13, verified on Mat Track',
     'בר סרוסי': 'Bar Sarusi',
     'מאמן אגרוף ואגרוף תאילנדי': 'Boxing and Muay Thai coach',
     'אימוני אגרוף אישיים': 'Personal Boxing training',
