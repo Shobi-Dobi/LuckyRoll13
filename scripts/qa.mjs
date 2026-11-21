@@ -191,7 +191,8 @@ function sourceTextFiles(directory) {
   });
 }
 
-function visibleFaqPairs(html) {
+function visibleFaqPairs(pageHtml) {
+  const html = pageHtml.match(/<main\b[^>]*>[\s\S]*?<\/main>/i)?.[0] || '';
   const detailPairs = [...html.matchAll(/<details\b[^>]*>[\s\S]*?<summary>([\s\S]*?)<\/summary>[\s\S]*?<p>([\s\S]*?)<\/p>[\s\S]*?<\/details>/gi)]
     .map((match) => [plainText(match[1]), plainText(match[2])]);
 
@@ -394,7 +395,7 @@ for (const [file, expectedCanonical] of allIndexablePages) {
     const expectedPath = isEnglish ? (path === '/' ? '/en/' : `/en${path}`) : path;
     if (!navigationMarkup.includes(`href="${expectedPath}"`)) fail(`${file}: navigation is missing ${expectedPath}`);
   }
-  if (!html.includes(`/assets/style.css?v=20261106-1`) || !html.includes(`/assets/site.js?v=20261101-1`)) fail(`${file}: missing current shared asset cache version`);
+  if (!html.includes(`/assets/style.css?v=20261121-1`) || !html.includes(`/assets/site.js?v=20261121-1`)) fail(`${file}: missing current shared asset cache version`);
   if (!html.includes(`/assets/tracking.js?v=20261101-1`)) fail(`${file}: missing current tracking asset cache version`);
   if (!html.includes(businessData.displayPhone)) fail(`${file}: shared footer does not show the normalized phone number`);
   if (!html.includes(`href="mailto:${businessData.email}"`) || !html.includes(businessData.email)) fail(`${file}: shared footer does not show the approved direct email link`);
@@ -1388,7 +1389,7 @@ const notFoundHtml = readFileSync(resolve(root, '404.html'), 'utf8');
 if (!notFoundHtml.includes('<meta name="robots" content="noindex,follow">')) fail('404.html: must remain noindex,follow');
 if (/rel=["']canonical["']/i.test(notFoundHtml)) fail('404.html: must not declare a canonical URL');
 if (!notFoundHtml.includes("document.documentElement.classList.add('js-enabled')")) fail('404.html: missing progressive-enhancement initializer');
-if (!notFoundHtml.includes('/assets/style.css?v=20261106-1') || !notFoundHtml.includes('/assets/site.js?v=20261101-1')) fail('404.html: shared asset versions are stale');
+if (!notFoundHtml.includes('/assets/style.css?v=20261121-1') || !notFoundHtml.includes('/assets/site.js?v=20261121-1')) fail('404.html: shared asset versions are stale');
 if (!notFoundHtml.includes('/assets/images/luckyroll13-header-logo-1200.webp') || !notFoundHtml.includes('width="1200" height="292"')) fail('404.html: current header logo is missing');
 if (notFoundHtml.includes('/assets/images/luckyroll13-header-logo-480.webp')) fail('404.html: previous header logo remains');
 if (notFoundHtml.includes('src="/assets/images/luckyroll13-header-logo.webp"')) fail('404.html: oversized 1431px header logo remains');
@@ -1652,7 +1653,7 @@ if (!/@media\s*\(max-width:\s*820px\)[\s\S]*?\.location-services\s*\{[^}]*grid-t
 if (!siteScript.includes("isEnglish ? '/en/accessibility/' : '/accessibility/'")) fail('site navigation: localized accessibility statement link is not added to public footers');
 if (!siteScript.includes('attributionKeys') || !siteScript.includes('utm_')) fail('site navigation: language switching does not preserve campaign attribution');
 if (!siteScript.includes('form[data-kids-lead-form]') || !siteScript.includes('data-available-locations')) fail('kids form: incompatible location and training choices are not synchronized');
-if (!siteScript.includes("event.key === 'Escape'") || !siteScript.includes('closeButton.addEventListener')) fail('site navigation: keyboard Escape or close control support is missing');
+if (!siteScript.includes("event.key !== 'Escape'") || !siteScript.includes('closeButton.addEventListener')) fail('site navigation: keyboard Escape or close control support is missing');
 if (!/\.links\s*\{[^}]*display:\s*flex/i.test(styles)) fail('site navigation: no-JavaScript navigation fallback is not visible');
 if (!/\.menu-toggle,\s*\.menu-close\s*\{[^}]*display:\s*none/i.test(styles)) fail('site navigation: progressive enhancement controls are visible without JavaScript');
 if (!/html\.js-enabled\s+\.links\s*\{[^}]*display:\s*none/i.test(styles)) fail('site navigation: closed enhanced panel is not hidden');
@@ -1660,7 +1661,7 @@ if (!/html\.js-enabled\s+\.links\.is-open\s*\{[^}]*display:\s*flex/i.test(styles
 if (!bilingualBuildScript.includes('/assets/images/luckyroll13-header-logo-1200.webp') || bilingualBuildScript.includes('class="logo" src="/assets/images/luckyroll13-header-logo-480.webp"')) {
   fail('bilingual build: current header logo is not preserved');
 }
-if (!bilingualBuildScript.includes("const styleAssetVersion = '20261106-1'") || !bilingualBuildScript.includes("const scriptAssetVersion = '20261101-1'")) {
+if (!bilingualBuildScript.includes("const styleAssetVersion = '20261121-1'") || !bilingualBuildScript.includes("const scriptAssetVersion = '20261121-1'")) {
   fail('bilingual build: current style and script cache versions are not preserved');
 }
 if (!bilingualBuildScript.includes('accessibility|guide') || !bilingualTranslations.includes("'למדריך לבחירת אומנות לחימה': 'Read the martial arts selection guide'")) {

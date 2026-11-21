@@ -366,7 +366,7 @@ function renderHead(pageKey, language, copy, graph, assetVersions) {
   <link rel="icon" href="/assets/logo.png">
   <link rel="stylesheet" href="/assets/style.css?v=${assetVersions.style}">
   ${schemaScript(graph)}
-  <script defer src="/assets/tracking.js?v=${assetVersions.script}"></script>
+  <script defer src="/assets/tracking.js?v=${assetVersions.tracking}"></script>
   <script defer src="/assets/site.js?v=${assetVersions.script}"></script>
 </head>`;
 }

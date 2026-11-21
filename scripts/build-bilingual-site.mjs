@@ -10,8 +10,9 @@ import { renderSitemap } from './sitemap-data.mjs';
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDirectory, '..');
 const productionOrigin = 'https://luckyroll13.com';
-const styleAssetVersion = '20261106-1';
-const scriptAssetVersion = '20261101-1';
+const styleAssetVersion = '20261121-1';
+const scriptAssetVersion = '20261121-1';
+const trackingAssetVersion = '20261101-1';
 const eventAssetVersion = '20260928-1';
 
 const serviceGuideRoutes = new Set(['boxing', 'women-boxing', 'bjj', 'kids', 'mma', 'adults']);
@@ -36,34 +37,55 @@ const routes = [
   { key: 'guide', he: '/guide/', en: '/en/guide/', file: 'guide/index.html', staticBilingual: true }
 ];
 
-const navItems = [
-  ['/', 'דף הבית', 'Home'],
+const services = [
   ['/bjj/', 'ג׳יו־ג׳יטסו', 'Brazilian Jiu-Jitsu'],
   ['/boxing/', 'אגרוף', 'Boxing'],
   ['/women-boxing/', 'אגרוף נשים', "Women's Boxing"],
   ['/kids/', 'ילדים ונוער', 'Kids and Youth'],
   ['/mma/', 'MMA', 'MMA'],
-  ['/adults/', 'אימונים אישיים', 'Personal Training'],
+  ['/adults/', 'אימונים אישיים', 'Personal Training']
+];
+
+const branchPages = [
+  ['/kiryat-motzkin/', 'נווה גנים, קריית מוצקין', 'Neve Ganim, Kiryat Motzkin'],
+  ['/goshen-kiryat-motzkin/', 'מתנ״ס גושן, קריית מוצקין', 'Matnas Goshen, Kiryat Motzkin']
+];
+
+const schoolPages = [
   ['/about/', 'עלינו', 'About'],
   ['/collaborations/', 'שיתופי פעולה', 'Collaborations'],
-  ['/events/', 'סמינרים ואירועים', 'Seminars and Events'],
-  ['/kiryat-motzkin/', 'קריית מוצקין', 'Kiryat Motzkin'],
-  ['/goshen-kiryat-motzkin/', 'סניף גושן', 'Goshen Location'],
-  ['/schedule/', 'מערכת שעות', 'Schedule'],
-  ['/contact/', 'צור קשר', 'Contact']
+  ['/events/', 'סמינרים ואירועים', 'Seminars and Events']
 ];
 
 function languageHeader(route, language) {
   const english = language === 'en';
   const logoHome = english ? '/en/' : '/';
-  const navLinks = navItems.map(([hePath, heLabel, enLabel]) => {
-    const itemRoute = routes.find((candidate) => candidate.he === hePath);
-    const href = english ? itemRoute.en : hePath;
-    const label = english ? enLabel : heLabel;
-    const current = (english ? route.en : route.he) === href ? ' aria-current="page"' : '';
+
+  function navLink([hePath, heLabel, enLabel]) {
+    const href = english ? routes.find((candidate) => candidate.he === hePath).en : hePath;
+    const current = route[language] === href ? ' aria-current="page"' : '';
     const className = hePath === '/contact/' ? ' class="cta"' : '';
-    return `        <a${className} href="${href}"${current}>${label}</a>`;
-  }).join('\n');
+    return `<a${className} href="${href}"${current}>${english ? enLabel : heLabel}</a>`;
+  }
+
+  function navGroup(label, pages) {
+    const items = pages.map((page) => `          <li>${navLink(page)}</li>`).join('\n');
+    return `<details class="nav-group" name="primary-nav-group">
+        <summary>${label}</summary>
+        <ul class="nav-submenu">
+${items}
+        </ul>
+      </details>`;
+  }
+
+  const navLinks = [
+    navLink(['/', 'דף הבית', 'Home']),
+    navGroup(english ? 'Services' : 'שירותים', services),
+    navGroup(english ? 'Locations We Serve' : 'אזורי פעילות', branchPages),
+    navGroup(english ? 'Our School' : 'בית הספר', schoolPages),
+    navLink(['/schedule/', 'מערכת שעות', 'Schedule']),
+    navLink(['/contact/', 'צור קשר', 'Contact'])
+  ].map((item) => `      ${item}`).join('\n');
 
   const heCurrent = english ? '' : ' aria-current="page"';
   const enCurrent = english ? ' aria-current="page"' : '';
@@ -282,7 +304,7 @@ function addLanguageSeo(html, route, language) {
   html = html.replace(/\/assets\/site\.js(?:\?v=[^"']*)?/g, `/assets/site.js?v=${scriptAssetVersion}`);
   html = html.replace(/\/assets\/events\.css(?:\?v=[^"']*)?/g, `/assets/events.css?v=${eventAssetVersion}`);
   html = html.replace(/\/assets\/events\.js(?:\?v=[^"']*)?/g, `/assets/events.js?v=${eventAssetVersion}`);
-  html = html.replace(/\/assets\/tracking\.js(?:\?v=[^"']*)?/g, `/assets/tracking.js?v=${scriptAssetVersion}`);
+  html = html.replace(/\/assets\/tracking\.js(?:\?v=[^"']*)?/g, `/assets/tracking.js?v=${trackingAssetVersion}`);
   html = html.replace(
     /<a\b(?![^>]*\bdata-trial-cta\b)([^>]*)>(\s*[^<]*(?:אימון ניסיון|trial class)[^<]*\s*)<\/a>/gi,
     '<a data-trial-cta$1>$2</a>'
@@ -360,7 +382,8 @@ for (const route of routes) {
     const pageOptions = {
       assetVersions: {
         style: styleAssetVersion,
-        script: scriptAssetVersion
+        script: scriptAssetVersion,
+        tracking: trackingAssetVersion
       }
     };
     let hebrew = renderGeneratedPage(route.key, 'he', {

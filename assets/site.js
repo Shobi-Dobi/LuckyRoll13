@@ -128,11 +128,19 @@
   var openLabel = menuButton.getAttribute('data-open-label') || menuButton.getAttribute('aria-label');
   var closeLabel = menuButton.getAttribute('data-close-label') || openLabel;
 
+  function closeGroups() {
+    navigation.querySelectorAll('.nav-group[open]').forEach(function closeGroup(group) {
+      group.open = false;
+    });
+  }
+
   function setMenuState(isOpen, returnFocus) {
     navigation.classList.toggle('is-open', isOpen);
+    document.body.classList.toggle('navigation-open', isOpen);
     menuButton.setAttribute('aria-expanded', String(isOpen));
     menuButton.setAttribute('aria-label', isOpen ? closeLabel : openLabel);
 
+    if (!isOpen) closeGroups();
     if (returnFocus) menuButton.focus();
   }
 
@@ -153,15 +161,32 @@
   });
 
   document.addEventListener('keydown', function closeWithEscape(event) {
-    if (event.key === 'Escape' && navigation.classList.contains('is-open')) {
+    if (event.key !== 'Escape') return;
+    var openGroup = navigation.querySelector('.nav-group[open]');
+    if (openGroup) {
+      openGroup.open = false;
+      openGroup.querySelector('summary').focus();
+    } else if (navigation.classList.contains('is-open')) {
       setMenuState(false, true);
     }
   });
 
   document.addEventListener('click', function closeOutsideNavigation(event) {
-    if (navigation.classList.contains('is-open') && !navigation.contains(event.target) && !menuButton.contains(event.target)) {
+    if (!navigation.contains(event.target) && !menuButton.contains(event.target)) {
       setMenuState(false, false);
     }
+  });
+
+  navigation.addEventListener('focusout', function closeOnFocusExit(event) {
+    var group = event.target.closest('.nav-group[open]');
+    if (group && !group.contains(event.relatedTarget)) group.open = false;
+    if (event.relatedTarget && !navigation.contains(event.relatedTarget) && !menuButton.contains(event.relatedTarget)) {
+      setMenuState(false, false);
+    }
+  });
+
+  window.matchMedia('(min-width: 1200px)').addEventListener('change', function resetNavigation() {
+    setMenuState(false, false);
   });
 
   var currentPath = window.location.pathname.replace(/index\.html$/, '');

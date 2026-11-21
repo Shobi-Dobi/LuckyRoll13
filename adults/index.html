@@ -21,7 +21,7 @@
   <meta property="og:image:height" content="1600">
   <meta property="og:image:width" content="1280">
   <meta property="og:image:type" content="image/webp"><meta property="og:image:alt" content="אימון אישי באגרוף ב־Lucky Roll13">
-<link href="/assets/logo.png" rel="icon"/><link href="/assets/style.css?v=20261106-1" rel="stylesheet"/><script defer src="/assets/tracking.js?v=20261101-1"></script><script defer src="/assets/site.js?v=20261101-1"></script>
+<link href="/assets/logo.png" rel="icon"/><link href="/assets/style.css?v=20261121-1" rel="stylesheet"/><script defer src="/assets/tracking.js?v=20261101-1"></script><script defer src="/assets/site.js?v=20261121-1"></script>
 <style>
 .coach-profile{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.72fr);gap:32px;align-items:center}
 .coach-profile>img{width:100%;height:560px;object-fit:cover;border-radius:18px}
@@ -196,20 +196,35 @@
     </div>
     <nav id="primary-navigation" class="links" aria-label="ניווט ראשי">
       <button class="menu-close" type="button"><span>סגירה</span><span class="menu-close-icon" aria-hidden="true">×</span></button>
-        <a href="/">דף הבית</a>
-        <a href="/bjj/">ג׳יו־ג׳יטסו</a>
-        <a href="/boxing/">אגרוף</a>
-        <a href="/women-boxing/">אגרוף נשים</a>
-        <a href="/kids/">ילדים ונוער</a>
-        <a href="/mma/">MMA</a>
-        <a href="/adults/" aria-current="page">אימונים אישיים</a>
-        <a href="/about/">עלינו</a>
-        <a href="/collaborations/">שיתופי פעולה</a>
-        <a href="/events/">סמינרים ואירועים</a>
-        <a href="/kiryat-motzkin/">קריית מוצקין</a>
-        <a href="/goshen-kiryat-motzkin/">סניף גושן</a>
-        <a href="/schedule/">מערכת שעות</a>
-        <a class="cta" href="/contact/">צור קשר</a>
+      <a href="/">דף הבית</a>
+      <details class="nav-group" name="primary-nav-group">
+        <summary>שירותים</summary>
+        <ul class="nav-submenu">
+          <li><a href="/bjj/">ג׳יו־ג׳יטסו</a></li>
+          <li><a href="/boxing/">אגרוף</a></li>
+          <li><a href="/women-boxing/">אגרוף נשים</a></li>
+          <li><a href="/kids/">ילדים ונוער</a></li>
+          <li><a href="/mma/">MMA</a></li>
+          <li><a href="/adults/" aria-current="page">אימונים אישיים</a></li>
+        </ul>
+      </details>
+      <details class="nav-group" name="primary-nav-group">
+        <summary>אזורי פעילות</summary>
+        <ul class="nav-submenu">
+          <li><a href="/kiryat-motzkin/">נווה גנים, קריית מוצקין</a></li>
+          <li><a href="/goshen-kiryat-motzkin/">מתנ״ס גושן, קריית מוצקין</a></li>
+        </ul>
+      </details>
+      <details class="nav-group" name="primary-nav-group">
+        <summary>בית הספר</summary>
+        <ul class="nav-submenu">
+          <li><a href="/about/">עלינו</a></li>
+          <li><a href="/collaborations/">שיתופי פעולה</a></li>
+          <li><a href="/events/">סמינרים ואירועים</a></li>
+        </ul>
+      </details>
+      <a href="/schedule/">מערכת שעות</a>
+      <a class="cta" href="/contact/">צור קשר</a>
     </nav>
   </div>
 </header>
