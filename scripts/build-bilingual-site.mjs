@@ -11,7 +11,7 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(scriptDirectory, '..');
 const productionOrigin = 'https://luckyroll13.com';
 const styleAssetVersion = '20261121-1';
-const scriptAssetVersion = '20261121-1';
+const scriptAssetVersion = '20261121-2';
 const trackingAssetVersion = '20261101-1';
 const eventAssetVersion = '20260928-1';
 

@@ -177,15 +177,18 @@
     }
   });
 
+  var wideNavigation = window.matchMedia('(min-width: 1200px)');
+
   navigation.addEventListener('focusout', function closeOnFocusExit(event) {
     var group = event.target.closest('.nav-group[open]');
-    if (group && !group.contains(event.relatedTarget)) group.open = false;
+    // Keep touch targets in place between pointer-down and click in the compact menu.
+    if (wideNavigation.matches && group && !group.contains(event.relatedTarget)) group.open = false;
     if (event.relatedTarget && !navigation.contains(event.relatedTarget) && !menuButton.contains(event.relatedTarget)) {
       setMenuState(false, false);
     }
   });
 
-  window.matchMedia('(min-width: 1200px)').addEventListener('change', function resetNavigation() {
+  wideNavigation.addEventListener('change', function resetNavigation() {
     setMenuState(false, false);
   });
 
