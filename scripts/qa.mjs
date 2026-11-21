@@ -551,7 +551,7 @@ if (business?.founder?.['@id'] !== 'https://luckyroll13.com/#shabi-shilon') fail
 if (founder?.name !== 'שבי שילון' || founder?.worksFor?.['@id'] !== businessData.organizationSchemaId) fail('index.html: Shabi Shilon Person entity is incomplete');
 if (!homeHtml.includes('href="/about/"><strong>שבי שילון</strong>')) fail('index.html: visible founder identity is missing');
 if (homeHtml.includes('data-home-event-promo')) fail('index.html: completed seminar recap must not use the temporary promotion hook');
-if (!homeHtml.includes('aria-label="סיכום סמינר Javier Zaruski בישראל"') || !homeHtml.includes('>לסיכום ולתמונות</a>')) fail('index.html: missing completed seminar recap banner');
+if (homeHtml.includes('seminar-promo') || /UFC Gym (?:Nesher|נשר)/i.test(homeHtml)) fail('index.html: retired seminar promotion remains on the current home page');
 if (!homeHtml.includes('href="/kiryat-motzkin/"')) fail('index.html: missing Kiryat Motzkin link');
 if (!homeHtml.includes('href="/schedule/#schedule-neve-ganim"')) fail('index.html: missing direct Neve Ganim schedule link');
 
@@ -1721,14 +1721,11 @@ for (const [file] of allIndexablePages) {
   if (/דרך בר יהודה 113|113 Derech Bar Yehuda/i.test(html)) fail(`${file}: retired Nesher address remains in an indexable page`);
 }
 
-for (const page of ['bjj/index.html', 'collaborations/index.html']) {
+for (const page of ['bjj/index.html', 'collaborations/index.html', 'en/bjj/index.html', 'en/collaborations/index.html']) {
   const pageHtml = readFileSync(resolve(root, page), 'utf8');
-  if (!pageHtml.includes('Javier Zaruski – Israel Seminar 🇮🇱')) fail(`${page}: missing approved seminar heading`);
-  if (!pageHtml.includes('סמינר עבר · 25.9.2026')) fail(`${page}: past-event label is missing`);
-  if (!pageHtml.includes('>לסיכום ולתמונות</a>')) fail(`${page}: recap CTA is missing`);
-  if (!pageHtml.includes('href="/javier-zaruski-seminar/"')) fail(`${page}: missing seminar link`);
-  if (!pageHtml.includes('data-preserve-utm') || !pageHtml.includes('data-seminar-promo')) fail(`${page}: seminar promotion does not preserve attribution or archive cleanly`);
-  if (!pageHtml.includes('/assets/events.js?v=20260928-1')) fail(`${page}: current event-state script version is not loaded`);
+  if (pageHtml.includes('data-seminar-promo') || /UFC Gym (?:Nesher|נשר)/i.test(pageHtml)) {
+    fail(`${page}: retired Nesher seminar promotion remains on a current service page`);
+  }
 }
 
 const englishSeminarHtml = readFileSync(resolve(root, 'en/javier-zaruski-seminar/index.html'), 'utf8');
